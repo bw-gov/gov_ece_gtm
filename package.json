@@ -1,0 +1,18 @@
+{
+  "name": "gov-ece-gtm-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "update": "python scripts/update_news.py",
+    "build": "python scripts/build_html.py",
+    "refresh": "python scripts/update_news.py && python scripts/build_html.py"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.24.0",
+    "@babel/core": "^7.24.0",
+    "@babel/preset-env": "^7.24.0",
+    "@babel/preset-react": "^7.24.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  }
+}
