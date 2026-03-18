@@ -63,6 +63,12 @@ def build():
     with open(TEMPLATE) as f:
         template_src = f.read()
 
+    # Strip "export default" — valid in ES modules but breaks plain <script> tags
+    template_src = template_src.replace(
+        "export default function BrightwheelDashboard",
+        "function BrightwheelDashboard"
+    )
+
     # Inject data at the top of the component file
     full_jsx = districts_js + "\n\n" + template_src
 
