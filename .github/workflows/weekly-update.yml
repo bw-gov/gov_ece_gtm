@@ -1,0 +1,46 @@
+name: Weekly District Intelligence Update
+
+on:
+  schedule:
+    # Every Sunday at 7:00 AM UTC (3 AM ET)
+    - cron: "0 7 * * 0"
+  workflow_dispatch:
+    # Also allows you to click "Run workflow" manually in GitHub anytime
+
+jobs:
+  update-and-rebuild:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # needed to commit changes back to the repo
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Set up Node.js (for Babel JSX compilation)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Node dependencies
+        run: npm install
+
+      - name: Run news + board meeting update
+        run: python scripts/update_news.py
+
+      - name: Rebuild dashboard HTML
+        run: python scripts/build_html.py
+
+      - name: Commit and push if anything changed
+        run: |
+          git config --local user.name  "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/districts.json index.html
+          # Only commit if there are actual changes
+          git diff --staged --quiet || git commit -m "Auto-update: district news and board notes $(date +'%Y-%m-%d')"
+          git push
