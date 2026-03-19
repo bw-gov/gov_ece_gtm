@@ -72,6 +72,24 @@ function buildContextPersonalization(district) {
   return { hook, hasSummer, hasGrant, hasLeadership };
 }
 
+// Detect whether a district already uses EC (brightwheel's curriculum)
+function districtAlreadyUsesEC(district) {
+  const vendor = (district.curriculumVendor || "").toLowerCase();
+  const curric = (district.curriculum || "").toLowerCase();
+  return vendor.includes("ec") || vendor.includes("experience") ||
+         curric.includes("ec") || curric.includes("experience curriculum") ||
+         curric.includes("brightwheel");
+}
+
+// Detect whether a district has federal funding signals
+function districtHasFederalFunding(district) {
+  const signals = (district.buyingSignals || []).join(" ").toLowerCase();
+  const ctx     = (district.districtContext || []).map((c) => c.summary).join(" ").toLowerCase();
+  const notes   = (district.notes || "").toLowerCase();
+  return ["title i", "head start", "federal", "esser", "idea", "preschool development grant"]
+    .some((kw) => signals.includes(kw) || ctx.includes(kw) || notes.includes(kw));
+}
+
 function generateEmail(district, template) {
   // For call-to-confirm contacts, use a role-based greeting instead of a name
   const greeting = district.callToConfirm
@@ -79,6 +97,8 @@ function generateEmail(district, template) {
     : `Hi ${district.director.split(" ")[0]},`;
 
   const { hook, hasSummer, hasGrant } = buildContextPersonalization(district);
+  const alreadyEC      = districtAlreadyUsesEC(district);
+  const hasFedFunding  = districtHasFederalFunding(district);
 
   const summerLine = hasSummer
     ? `brightwheel's Experience Preschool is especially well-suited for 4–8 week summer bridge programs, with lessons pre-packaged and organized by the day so your team can hit the ground running.`
@@ -88,6 +108,13 @@ function generateEmail(district, template) {
 Christie Cooley
 Head of District Partnerships | brightwheel
 christie.cooley@mybrightwheel.com | 678-464-1018`;
+
+  // ── Florida Summer Bridge personalization paragraph ──────────────────────
+  const summerBridgePersonalizationLine = alreadyEC
+    ? `Since your teachers are already familiar with EC's format, Summer Bridge is a natural extension — and we can work with you on kit timing to align with your program start date.`
+    : hasFedFunding
+    ? `EC supports Title I and Head Start compliance reporting, which can simplify documentation for any federally funded portions of your summer program.`
+    : `Many Florida districts are using Summer Bridge as a lower-stakes entry point to pilot EC — with an eye toward full-year PreK adoption in the fall once they see the outcomes.`;
 
   const templates = {
     initial: `Subject: Supporting VPK → Kindergarten Readiness at ${district.district}
@@ -133,6 +160,32 @@ No pressure — just here when the timing is right.
 ${signature}`,
 
     linkedin: `Hi there, I'm Christie at brightwheel — I work with Florida school districts on VPK-to-Kindergarten transition programming. I'd love to connect and share how brightwheel's Experience Preschool is helping districts like ${district.district} support readiness scores${hasSummer ? " and summer bridge programs" : ""}. Happy to connect!`,
+
+    summerBridge: `Subject: EC for ${district.district}'s Summer Bridge Program — Ready to Ship
+
+${greeting}
+
+Florida's new Summer Bridge Program is now in effect, and districts are on the clock. Summer programs move fast — shorter timelines, leaner budgets, and less runway to get teachers ready. That's why I wanted to reach out now, while there's still time to lock in a solution for this summer.
+
+Experience Curriculum (EC), offered in partnership with brightwheel, is a play-based, research-backed early childhood curriculum that ships everything teachers need in a ready-to-use monthly kit. One box for a 4-week program, two for an 8-week program — no procurement complexity, no supply coordination, no prep burden on your team.
+
+Here's why EC is a strong fit for Summer Bridge specifically:
+
+• Aligned to Florida's requirements. EC is aligned to the Florida Early Learning and Developmental Standards: 4 Years Old to Kindergarten, with emergent literacy instruction built into every lesson, directly meeting Rule 6A-6.0530 requirements.
+
+• Ready for at-risk VPK students. EC's structured lesson guides and low prep burden make it practical even with smaller, mixed-ability cohorts like the below-10th-percentile students Summer Bridge serves.
+
+• Built-in progress tracking. Student observations and portfolios are integrated through the brightwheel app, making it straightforward to document attendance, outcomes, and progress for your October 1 annual report to the Department.
+
+• Fast to implement. New or substitute teachers can run EC without deep onboarding — important when summer staffing is less predictable.
+
+${summerBridgePersonalizationLine}
+
+I'd be happy to share a quick overview or send sample materials. Use the link below to schedule a quick connect.
+
+Schedule time with me: https://calendly.com/christie-cooley-brightwheel
+
+${signature}`,
   };
 
   return templates[template] || "";
@@ -161,6 +214,7 @@ export default function BrightwheelDashboard() {
   const [selectedTemplate, setSelectedTemplate] = useState("initial");
   const [emailPreview, setEmailPreview] = useState("");
   const [showEmailPreview, setShowEmailPreview] = useState(false);
+  const [showSummerBridge, setShowSummerBridge] = useState(false);
 
   const showNotif = (msg, color = "green") => {
     setNotification({ msg, color });
@@ -856,7 +910,9 @@ export default function BrightwheelDashboard() {
               {modalTab === "outreach" && (
                 <div>
                   <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Outreach Actions</h3>
-                  <div className="grid grid-cols-2 gap-3 mb-6">
+
+                  {/* Standard sequence */}
+                  <div className="grid grid-cols-2 gap-3 mb-5">
                     {[
                       { label: "Email #1 — Initial", key: "initial" },
                       { label: "Email #2 — Follow Up", key: "followup1" },
@@ -877,6 +933,55 @@ export default function BrightwheelDashboard() {
                         </div>
                       </div>
                     ))}
+                  </div>
+
+                  {/* Florida Summer Bridge toggle */}
+                  <div className="border-t border-dashed border-gray-200 pt-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-semibold text-green-700 bg-green-50 border border-green-200 px-2 py-0.5 rounded-full">🌴 FL Summer Bridge</span>
+                        <span className="text-xs text-gray-400">Florida districts only</span>
+                      </div>
+                      <button
+                        onClick={() => setShowSummerBridge((v) => !v)}
+                        className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${showSummerBridge ? "bg-green-500" : "bg-gray-200"}`}
+                      >
+                        <span className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow transition-transform ${showSummerBridge ? "translate-x-4" : "translate-x-1"}`} />
+                      </button>
+                    </div>
+
+                    {showSummerBridge && (
+                      <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                        <div className="flex items-start gap-2 mb-3">
+                          <div className="flex-1">
+                            <p className="text-xs font-semibold text-green-800 mb-0.5">FL Summer Bridge — Initial Outreach</p>
+                            <p className="text-xs text-green-600 leading-relaxed">
+                              Highlights Florida's Summer Bridge mandate, EC's alignment to Rule 6A-6.0530, and compliance reporting.
+                              Auto-personalizes based on whether this district already uses EC and whether federal funding is on record.
+                            </p>
+                          </div>
+                        </div>
+                        {/* Auto-personalization indicator */}
+                        <div className="bg-white border border-green-200 rounded p-2 mb-3 text-xs text-green-700">
+                          <span className="font-semibold">Personalization applied: </span>
+                          {districtAlreadyUsesEC(selectedDistrict)
+                            ? "✅ Existing EC user — messaging adapted to Summer Bridge extension"
+                            : districtHasFederalFunding(selectedDistrict)
+                            ? "💰 Federal funding on record — messaging adapted to Title I / Head Start reporting"
+                            : "🆕 New EC prospect — messaging adapted to Summer Bridge as a pilot entry point"}
+                        </div>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => { setEmailPreview(generateEmail(selectedDistrict, "summerBridge")); setShowEmailPreview(true); }}
+                            className="text-xs border border-green-300 bg-white text-green-700 px-2 py-1 rounded hover:bg-green-50"
+                          >Preview</button>
+                          <button
+                            onClick={() => { queueEmail(selectedDistrict, "summerBridge"); }}
+                            className="text-xs bg-green-600 text-white px-2 py-1 rounded hover:bg-green-700"
+                          >Queue →</button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
