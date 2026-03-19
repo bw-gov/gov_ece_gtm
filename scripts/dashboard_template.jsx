@@ -216,6 +216,34 @@ export default function BrightwheelDashboard() {
   const [showEmailPreview, setShowEmailPreview] = useState(false);
   const [showSummerBridge, setShowSummerBridge] = useState(false);
 
+  // ── BULK SELECTION ──
+  const [selectedIds, setSelectedIds] = useState(new Set());
+  const [bulkTemplate, setBulkTemplate] = useState("initial");
+
+  const toggleSelect = (id) =>
+    setSelectedIds((prev) => { const s = new Set(prev); s.has(id) ? s.delete(id) : s.add(id); return s; });
+
+  const allVisibleSelected =
+    filtered.length > 0 && filtered.every((d) => selectedIds.has(d.id));
+  const someVisibleSelected = filtered.some((d) => selectedIds.has(d.id));
+
+  const toggleSelectAll = () => {
+    if (allVisibleSelected) {
+      setSelectedIds((prev) => { const s = new Set(prev); filtered.forEach((d) => s.delete(d.id)); return s; });
+    } else {
+      setSelectedIds((prev) => { const s = new Set(prev); filtered.forEach((d) => s.add(d.id)); return s; });
+    }
+  };
+
+  const clearSelection = () => setSelectedIds(new Set());
+
+  const bulkQueue = (template) => {
+    const toQueue = districts.filter((d) => selectedIds.has(d.id));
+    toQueue.forEach((d) => queueEmail(d, template));
+    showNotif(`${toQueue.length} email${toQueue.length !== 1 ? "s" : ""} queued ✓`);
+    clearSelection();
+  };
+
   const showNotif = (msg, color = "green") => {
     setNotification({ msg, color });
     setTimeout(() => setNotification(null), 3500);
@@ -399,6 +427,16 @@ export default function BrightwheelDashboard() {
               <table className="w-full text-xs">
                 <thead className="bg-gray-50 text-gray-500 uppercase text-xs tracking-wide">
                   <tr>
+                    <th className="px-3 py-3 w-8">
+                      <input
+                        type="checkbox"
+                        checked={allVisibleSelected}
+                        ref={(el) => { if (el) el.indeterminate = someVisibleSelected && !allVisibleSelected; }}
+                        onChange={toggleSelectAll}
+                        className="rounded border-gray-300 text-indigo-600 cursor-pointer"
+                        title={allVisibleSelected ? "Deselect all" : "Select all visible"}
+                      />
+                    </th>
                     {["Priority", "District", "Director", "Curriculum", "Adopted", "Age", "Enrollment", "Signals", "Status", "Actions"].map((h) => (
                       <th key={h} className="px-3 py-3 text-left font-medium">{h}</th>
                     ))}
@@ -409,7 +447,16 @@ export default function BrightwheelDashboard() {
                     const p = getPriorityLabel(d.priority);
                     const age = 2026 - d.curriculumAdoptionYear;
                     return (
-                      <tr key={d.id} className={`border-t border-gray-100 hover:bg-indigo-50 transition-colors ${i % 2 === 0 ? "bg-white" : "bg-gray-50/30"}`}>
+                      <tr key={d.id} className={`border-t border-gray-100 hover:bg-indigo-50 transition-colors ${selectedIds.has(d.id) ? "bg-indigo-50 border-l-2 border-l-indigo-400" : i % 2 === 0 ? "bg-white" : "bg-gray-50/30"}`}>
+                        <td className="px-3 py-2.5 w-8">
+                          <input
+                            type="checkbox"
+                            checked={selectedIds.has(d.id)}
+                            onChange={() => toggleSelect(d.id)}
+                            onClick={(e) => e.stopPropagation()}
+                            className="rounded border-gray-300 text-indigo-600 cursor-pointer"
+                          />
+                        </td>
                         <td className="px-3 py-2.5">
                           <div className="flex flex-col gap-1">
                             <span className={`px-2 py-0.5 rounded-full text-xs font-medium w-fit ${p.color}`}>{p.label}</span>
@@ -482,6 +529,46 @@ export default function BrightwheelDashboard() {
                 <div className="text-center py-12 text-gray-400">No districts match your filters.</div>
               )}
             </div>
+
+            {/* ── BULK ACTION BAR ── */}
+            {selectedIds.size > 0 && (
+              <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-full max-w-3xl px-4">
+                <div className="bg-gray-900 text-white rounded-2xl shadow-2xl px-5 py-4 flex items-center gap-4 flex-wrap">
+                  {/* Count + clear */}
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    <span className="bg-indigo-500 text-white text-xs font-bold px-2.5 py-1 rounded-full">{selectedIds.size}</span>
+                    <span className="text-sm font-medium">{selectedIds.size === 1 ? "district" : "districts"} selected</span>
+                    <button onClick={clearSelection} className="text-gray-400 hover:text-white text-xs ml-1 underline">Clear</button>
+                  </div>
+
+                  <div className="flex-1" />
+
+                  {/* Standard queue buttons */}
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-xs text-gray-400 mr-1">Queue for all:</span>
+                    {[
+                      { label: "Initial Email", key: "initial", color: "bg-indigo-600 hover:bg-indigo-500" },
+                      { label: "Follow-up 1", key: "followup1", color: "bg-indigo-600 hover:bg-indigo-500" },
+                      { label: "Follow-up 2", key: "followup2", color: "bg-indigo-600 hover:bg-indigo-500" },
+                    ].map((t) => (
+                      <button
+                        key={t.key}
+                        onClick={() => bulkQueue(t.key)}
+                        className={`text-xs text-white px-3 py-1.5 rounded-lg font-medium transition-colors ${t.color}`}
+                      >{t.label}</button>
+                    ))}
+
+                    {/* FL Summer Bridge — primary CTA */}
+                    <button
+                      onClick={() => bulkQueue("summerBridge")}
+                      className="text-xs bg-green-500 hover:bg-green-400 text-white px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1.5 transition-colors border border-green-400"
+                    >
+                      🌴 FL Summer Bridge
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
