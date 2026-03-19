@@ -32,18 +32,57 @@ function getPriorityLabel(score) {
 }
 
 // ─── EMAIL TEMPLATES ─────────────────────────────────────────────────────────
+
+function buildContextPersonalization(district) {
+  // Pull the richest context snippets for email personalization
+  const ctx = district.districtContext || [];
+  const signals = district.buyingSignals || [];
+
+  // Prefer strategic context, then funding, then website
+  const strategic = ctx.find((c) => c.type === "strategic");
+  const funding    = ctx.find((c) => c.type === "funding");
+  const website    = ctx.find((c) => c.type === "website");
+
+  // Check signals for useful hooks
+  const hasSummer    = signals.some((s) => s.toLowerCase().includes("summer"));
+  const hasGrant     = signals.some((s) => s.toLowerCase().includes("grant") || s.toLowerCase().includes("funding"));
+  const hasLeadership = signals.some((s) => s.toLowerCase().includes("contact change") || s.toLowerCase().includes("appointed"));
+
+  let hook = "";
+
+  if (strategic) {
+    hook = `I came across ${district.district}'s recent strategic priorities around early childhood — it sounds like readiness outcomes are a real focus right now.`;
+  } else if (hasSummer) {
+    hook = `I noticed ${district.district} has an upcoming summer program — brightwheel's Experience Preschool is designed for exactly that kind of 4–8 week bridge program, with lessons pre-packaged by the day.`;
+  } else if (hasGrant) {
+    const grantEntry = funding || ctx.find((c) => c.type === "funding");
+    if (grantEntry) {
+      hook = `I saw that ${district.district} recently received additional early childhood funding — this feels like a great moment to make sure those dollars go as far as possible for VPK students.`;
+    } else {
+      hook = `With new early childhood funding flowing to districts across Florida, this feels like a timely moment to connect around VPK support.`;
+    }
+  } else if (website) {
+    hook = `I was exploring ${district.district}'s early childhood program page and it's clear your team is investing meaningfully in VPK readiness.`;
+  } else if (hasLeadership) {
+    hook = `I understand there may have been some recent changes on your early childhood leadership team — I wanted to reach out as you're getting settled.`;
+  } else {
+    hook = `brightwheel's Experience Preschool is a flexible, play-based curriculum designed to support VPK-to-Kindergarten transitions, with lessons pre-packaged and organized by the day so your team isn't starting from scratch.`;
+  }
+
+  return { hook, hasSummer, hasGrant, hasLeadership };
+}
+
 function generateEmail(district, template) {
   // For call-to-confirm contacts, use a role-based greeting instead of a name
   const greeting = district.callToConfirm
     ? `Dear ${district.director},`
     : `Hi ${district.director.split(" ")[0]},`;
-  const hasSummerSignal = district.buyingSignals.some((s) =>
-    s.toLowerCase().includes("summer")
-  );
 
-  const summerPersonalization = hasSummerSignal
-    ? `I also noticed ${district.district} has a summer program coming up — brightwheel's Experience Preschool is especially well-suited for 4–8 week summer bridge programs, with lessons pre-packaged and organized by the day so your team can hit the ground running.`
-    : `brightwheel's Experience Preschool is a flexible, play-based curriculum designed to support 4–8 week summer programs that help incoming Kindergarten students build the skills measured in readiness assessments. Because lessons are pre-packaged and organized by the day, many districts use it for summer bridge programs.`;
+  const { hook, hasSummer, hasGrant } = buildContextPersonalization(district);
+
+  const summerLine = hasSummer
+    ? `brightwheel's Experience Preschool is especially well-suited for 4–8 week summer bridge programs, with lessons pre-packaged and organized by the day so your team can hit the ground running.`
+    : `brightwheel's Experience Preschool is a flexible, play-based curriculum designed to help VPK students build the skills measured in Kindergarten readiness assessments — with pre-packaged daily lessons that many districts use for summer bridge programming.`;
 
   const signature = `Best,
 Christie Cooley
@@ -55,9 +94,9 @@ christie.cooley@mybrightwheel.com | 678-464-1018`;
 
 ${greeting}
 
-Many districts are looking for ways to increase Kindergarten readiness scores and support VPK students transitioning into Kindergarten.
+${hook}
 
-${summerPersonalization}
+${summerLine}
 
 I'd be happy to share a quick overview or send sample materials — just reply here or use the link below to schedule a quick connect.
 
@@ -73,7 +112,7 @@ Just following up on my note from last week. I know things are busy, so I'll kee
 
 brightwheel's Experience Preschool is already in use across 50+ Florida school districts to support VPK students transitioning into Kindergarten. Directors consistently tell us two things: the pre-packaged daily lessons cut their prep time significantly, and families love the built-in progress updates.
 
-${hasSummerSignal ? `Given your summer program coming up, I'd love to get sample materials in your hands before the session starts.` : `If summer readiness or transition programming is on your radar, I'd love to get sample materials in front of your team.`}
+${hasSummer ? `Given your summer program coming up, I'd love to get sample materials in your hands before the session starts.` : hasGrant ? `With the funding your district has secured, I'd love to help make sure it's going toward a curriculum that moves the needle on readiness outcomes.` : `If summer readiness or transition programming is on your radar, I'd love to get sample materials in front of your team.`}
 
 Happy to send over a case study from a district similar to ${district.district}, or schedule a quick overview — whatever is most useful.
 
@@ -85,15 +124,15 @@ ${greeting}
 
 Last nudge, I promise.
 
-Many districts are looking for ways to increase Kindergarten readiness scores and support VPK students transitioning into Kindergarten. Brightwheel's Experience Preschool is a flexible, play-based curriculum designed to support exactly that — with lessons pre-packaged and organized by the day so your team isn't starting from scratch.
+${hook}
 
-${hasSummerSignal ? `With your summer program coming up, the timing feels right. I can have sample materials to you in 24 hours.` : `If this is something worth exploring for an upcoming program cycle, I can have sample materials to you in 24 hours.`}
+${hasSummer ? `With your summer program coming up, the timing feels right. I can have sample materials to you in 24 hours.` : `If this is something worth exploring for an upcoming program cycle, I can have sample materials to you in 24 hours.`}
 
 No pressure — just here when the timing is right.
 
 ${signature}`,
 
-    linkedin: `Hi there, I'm Christie at brightwheel — I work with Florida school districts on VPK-to-Kindergarten transition programming. I'd love to connect and share how brightwheel's Experience Preschool is helping districts like ${district.district} support readiness scores and summer bridge programs. Happy to connect!`,
+    linkedin: `Hi there, I'm Christie at brightwheel — I work with Florida school districts on VPK-to-Kindergarten transition programming. I'd love to connect and share how brightwheel's Experience Preschool is helping districts like ${district.district} support readiness scores${hasSummer ? " and summer bridge programs" : ""}. Happy to connect!`,
   };
 
   return templates[template] || "";
@@ -349,7 +388,10 @@ export default function BrightwheelDashboard() {
                             {d.boardNotes && d.boardNotes.length > 0 && (
                               <span className="bg-blue-50 text-blue-700 border border-blue-200 px-2 py-0.5 rounded text-xs">📋 {d.boardNotes.length} board note{d.boardNotes.length > 1 ? "s" : ""}</span>
                             )}
-                            {d.buyingSignals.length === 0 && (!d.boardNotes || d.boardNotes.length === 0) && <span className="text-gray-300">—</span>}
+                            {d.districtContext && d.districtContext.length > 0 && (
+                              <span className="bg-purple-50 text-purple-700 border border-purple-200 px-2 py-0.5 rounded text-xs">🔍 {d.districtContext.length} intel</span>
+                            )}
+                            {d.buyingSignals.length === 0 && (!d.boardNotes || d.boardNotes.length === 0) && (!d.districtContext || d.districtContext.length === 0) && <span className="text-gray-300">—</span>}
                           </div>
                         </td>
                         <td className="px-3 py-2.5">
@@ -633,7 +675,7 @@ export default function BrightwheelDashboard() {
 
             {/* Modal Tabs */}
             <div className="border-b border-gray-200 px-6 flex gap-1">
-              {["overview", "buying signals", "board notes", "outreach", "log activity"].map((t) => (
+              {["overview", "buying signals", "board notes", "district intel", "outreach", "log activity"].map((t) => (
                 <button
                   key={t}
                   onClick={() => setModalTab(t)}
@@ -758,6 +800,54 @@ export default function BrightwheelDashboard() {
                           <p className="text-sm text-gray-700">{note.summary}</p>
                         </div>
                       ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {modalTab === "district intel" && (
+                <div>
+                  <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">District Intelligence</h3>
+                  <p className="text-xs text-gray-400 mb-4">Auto-populated weekly from district websites, strategic plans, and funding sources. Used to personalize outreach emails.</p>
+                  {(!selectedDistrict.districtContext || selectedDistrict.districtContext.length === 0) ? (
+                    <div className="bg-gray-50 border border-dashed border-gray-200 rounded-lg p-8 text-center text-gray-400">
+                      <p className="font-medium text-sm">No context captured yet.</p>
+                      <p className="text-xs mt-1">The weekly GitHub Action will populate this from district websites, strategic plans, and funding news.</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {[...(selectedDistrict.districtContext || [])].sort((a,b) => b.date.localeCompare(a.date)).map((ctx, i) => {
+                        const typeColor = {
+                          strategic: "bg-purple-50 border-purple-200 text-purple-700",
+                          funding:   "bg-green-50 border-green-200 text-green-700",
+                          website:   "bg-blue-50 border-blue-200 text-blue-700",
+                        }[ctx.type] || "bg-gray-50 border-gray-200 text-gray-600";
+                        const typeLabel = {
+                          strategic: "📋 Strategic Plan",
+                          funding:   "💰 Funding",
+                          website:   "🌐 District Website",
+                        }[ctx.type] || ctx.type;
+                        return (
+                          <div key={i} className="bg-white border border-gray-200 rounded-lg p-3">
+                            <div className="flex items-center justify-between mb-2">
+                              <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${typeColor}`}>{typeLabel}</span>
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs text-gray-400">{ctx.date}</span>
+                                {ctx.source && <a href={ctx.source} target="_blank" rel="noreferrer" className="text-xs text-indigo-500 hover:underline">Source ↗</a>}
+                              </div>
+                            </div>
+                            <p className="text-sm text-gray-700 leading-relaxed">{ctx.summary}</p>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                  {selectedDistrict.districtContext && selectedDistrict.districtContext.length > 0 && (
+                    <div className="mt-4 p-3 bg-indigo-50 border border-indigo-200 rounded-lg">
+                      <p className="text-xs font-semibold text-indigo-700 mb-1">📧 Email personalization preview</p>
+                      <p className="text-xs text-indigo-600 leading-relaxed italic">
+                        "{buildContextPersonalization(selectedDistrict).hook}"
+                      </p>
                     </div>
                   )}
                 </div>
