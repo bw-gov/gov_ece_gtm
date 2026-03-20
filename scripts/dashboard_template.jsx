@@ -1,5 +1,6 @@
 // ─── PRIORITY SCORING ALGORITHM ──────────────────────────────────────────────
 function calculatePriorityScore(d) {
+  const GOOGLE_CLIENT_ID = "642445271504-vr3au2pic0ma5aekadpq4icrv9t9eekj.apps.googleusercontent.com";
   let score = 0;
   const currentYear = 2026;
   const age = currentYear - d.curriculumAdoptionYear;
