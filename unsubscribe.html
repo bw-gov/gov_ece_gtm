@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unsubscribe — brightwheel</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-gray-50 flex items-center justify-center p-6">
+
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-200 max-w-md w-full p-8 text-center">
+
+    <!-- Brand header -->
+    <div class="mb-6">
+      <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-indigo-50 mb-3">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" fill="#5046e5"/>
+          <path d="M8 12l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="text-sm font-semibold text-indigo-600 tracking-wide uppercase">brightwheel</div>
+    </div>
+
+    <!-- State: confirmation ask -->
+    <div id="state-ask">
+      <h1 class="text-xl font-bold text-gray-900 mb-3">Unsubscribe from outreach?</h1>
+      <p class="text-gray-500 text-sm mb-6 leading-relaxed" id="subtext">Loading…</p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <button id="btn-confirm" onclick="handleUnsubscribe()"
+          class="bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white px-6 py-2.5 rounded-lg font-medium text-sm transition-colors">
+          Yes, unsubscribe me
+        </button>
+        <button onclick="handleKeep()"
+          class="border border-gray-300 text-gray-600 hover:bg-gray-50 active:bg-gray-100 px-6 py-2.5 rounded-lg font-medium text-sm transition-colors">
+          No, keep me on the list
+        </button>
+      </div>
+    </div>
+
+    <!-- State: successfully unsubscribed -->
+    <div id="state-done" class="hidden">
+      <div class="text-5xl mb-4">✅</div>
+      <h1 class="text-xl font-bold text-gray-900 mb-2">You've been unsubscribed</h1>
+      <p class="text-gray-500 text-sm leading-relaxed">
+        You won't receive any more outreach emails from Christie at brightwheel.
+        If this was a mistake, reply to any previous email and ask to be re-added.
+      </p>
+    </div>
+
+    <!-- State: chose to stay -->
+    <div id="state-keep" class="hidden">
+      <div class="text-5xl mb-4">👍</div>
+      <h1 class="text-xl font-bold text-gray-900 mb-2">You're all set!</h1>
+      <p class="text-gray-500 text-sm leading-relaxed">
+        No changes were made. You'll continue to receive updates from brightwheel.
+      </p>
+    </div>
+
+    <!-- State: error fallback -->
+    <div id="state-error" class="hidden">
+      <div class="text-5xl mb-4">⚠️</div>
+      <h1 class="text-xl font-bold text-gray-900 mb-2">Something went wrong</h1>
+      <p class="text-gray-500 text-sm leading-relaxed">
+        We couldn't process your request automatically.
+        Please reply directly to Christie's email and ask to be removed — she'll take care of it right away.
+      </p>
+    </div>
+
+    <p class="text-xs text-gray-300 mt-8">© brightwheel · Florida District Outreach</p>
+  </div>
+
+  <script>
+    // ── Google Form logger ──────────────────────────────────────────────────────
+    const FORM_ACTION  = "https://docs.google.com/forms/d/e/1FAIpQLScL5oTOdkJJsDVxScVardYwB5hV3Z_riOUUDG-K432obDVhaA/formResponse";
+    const ENTRY_NAME     = "entry.1554560373";
+    const ENTRY_EMAIL    = "entry.191444148";
+    const ENTRY_DISTRICT = "entry.853419503";
+
+    // ── Read URL params ─────────────────────────────────────────────────────────
+    const params   = new URLSearchParams(window.location.search);
+    const name     = params.get("name")     || "there";
+    const email    = params.get("email")    || "";
+    const district = params.get("district") || "";
+
+    // ── Personalise the ask state ───────────────────────────────────────────────
+    document.getElementById("subtext").innerHTML =
+      "Hi <strong>" + name + "</strong>, would you like to stop receiving outreach emails from " +
+      "Christie at brightwheel" +
+      (district ? " regarding <strong>" + district + "</strong>" : "") + "?";
+
+    // ── State switcher ──────────────────────────────────────────────────────────
+    function show(id) {
+      ["state-ask", "state-done", "state-keep", "state-error"].forEach(function(s) {
+        document.getElementById(s).classList.add("hidden");
+      });
+      document.getElementById(id).classList.remove("hidden");
+    }
+
+    // ── Confirm unsubscribe ─────────────────────────────────────────────────────
+    async function handleUnsubscribe() {
+      const btn = document.getElementById("btn-confirm");
+      btn.textContent = "Processing…";
+      btn.disabled = true;
+
+      const body = new URLSearchParams();
+      body.append(ENTRY_NAME,     name);
+      body.append(ENTRY_EMAIL,    email);
+      body.append(ENTRY_DISTRICT, district);
+
+      try {
+        await fetch(FORM_ACTION, {
+          method:  "POST",
+          mode:    "no-cors",   // Google Forms doesn't send CORS headers
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body:    body.toString(),
+        });
+        show("state-done");
+      } catch (e) {
+        show("state-error");
+      }
+    }
+
+    // ── Keep on list ────────────────────────────────────────────────────────────
+    function handleKeep() {
+      show("state-keep");
+    }
+  </script>
+
+</body>
+</html>
