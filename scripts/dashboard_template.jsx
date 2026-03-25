@@ -7,6 +7,8 @@ const SLACK_WEBHOOK_URL = ""; // e.g. "https://hooks.slack.com/services/T.../B..
 // ─── EMAIL HELPERS ────────────────────────────────────────────────────────────
 // Unsubscribe landing page + Google Form logger
 const UNSUB_PAGE = "https://sudeeptasridhara.github.io/gov_ece_gtm/unsubscribe.html";
+// Learn-more redirect — routes through GitHub Pages so Gmail doesn't show a Drive attachment preview
+const LEARN_MORE_URL = "https://sudeeptasridhara.github.io/gov_ece_gtm/learn-more.html";
 
 // Parse "Subject: ..." off the first line of a generated email body
 function parseEmailParts(fullBody) {
@@ -220,11 +222,10 @@ function generateEmail(district, template) {
       hiGreeting +
       ep(`Many districts are looking for ways to increase Kindergarten readiness scores and support students transitioning into Kindergarten.`) +
       ep(`Brightwheel's Experience Preschool is a flexible, play-based curriculum designed to support 4–8 week summer programs that help incoming Kindergarten students build the skills measured in readiness assessments. Because lessons are pre-packaged and organized by the day, many districts use it for summer programs.`) +
-      ep(`${ea("https://drive.google.com/file/d/1T0MH4mV0OvG5JmZgU8qK-5EF7xcSUIpO/view", "Click here to learn more")} if your program is planning summer readiness or transition programming.`) +
+      ep(`${ea(LEARN_MORE_URL, "Click here to learn more")} if your program is planning summer readiness or transition programming.`) +
       ep(`I'd be happy to share a quick overview or send sample materials. Use the link below to schedule a quick connect.`) +
       calendlyLink,
       unsubUrl,
-      false
     ),
 
     // ── Summer Long (all states) ──────────────────────────────────────────────
@@ -240,11 +241,10 @@ function generateEmail(district, template) {
         <li style="${S.li}"><strong>Easy to Implement:</strong> Whether your staff includes seasoned veterans or teachers just finding their footing, Experience Curriculum is ready to run from day one with access to free onboarding &amp; training.</li>
         <li style="${S.li}"><strong>Built-in progress monitoring:</strong> Student observations and attendance documentation are integrated through the Brightwheel app.</li>
       </ul>` +
-      ep(`${ea("https://drive.google.com/file/d/1T0MH4mV0OvG5JmZgU8qK-5EF7xcSUIpO/view", "Click here to learn more")} if your program is planning summer readiness or transition programming for VPK students.`) +
+      ep(`${ea(LEARN_MORE_URL, "Click here to learn more")} if your program is planning summer readiness or transition programming for VPK students.`) +
       ep(`I'd be happy to share a quick overview or send sample materials. Use the link below to schedule a quick connect.`) +
       calendlyLink,
       unsubUrl,
-      false
     ),
 
     // ── Summer Short (all states) ─────────────────────────────────────────────
@@ -263,7 +263,6 @@ function generateEmail(district, template) {
       ep(`Happy to send additional materials or jump on a quick call if it's helpful. Schedule time with me at the link below or just reply and we can find a time.`) +
       calendlyLink,
       unsubUrl,
-      false
     ),
 
     // ── FL Summer Bridge (Long) ───────────────────────────────────────────────
@@ -279,11 +278,10 @@ function generateEmail(district, template) {
         <li style="${S.li}"><strong>Easy to Implement:</strong> Whether your staff includes seasoned veterans or teachers just finding their footing, Experience Curriculum is ready to run from day one with access to free onboarding &amp; training.</li>
         <li style="${S.li}"><strong>Built-in progress monitoring:</strong> Student observations and attendance documentation are integrated through the Brightwheel app.</li>
       </ul>` +
-      ep(`${ea("https://drive.google.com/file/d/1T0MH4mV0OvG5JmZgU8qK-5EF7xcSUIpO/view", "Click here to learn more")} if your program is planning summer readiness or transition programming for VPK students.`) +
+      ep(`${ea(LEARN_MORE_URL, "Click here to learn more")} if your program is planning summer readiness or transition programming for VPK students.`) +
       ep(`I'd be happy to share a quick overview or send sample materials. Use the link below to schedule a quick connect.`) +
       calendlyLink,
       unsubUrl,
-      false  // no banner image
     ),
 
     // ── FL Summer Bridge (Short) ──────────────────────────────────────────────
@@ -302,7 +300,6 @@ function generateEmail(district, template) {
       ep(`Happy to send additional materials or jump on a quick call if it's helpful. Schedule time with me at the link below or just reply and we can find a time.`) +
       calendlyLink,
       unsubUrl,
-      false  // no banner image
     ),
   };
 
