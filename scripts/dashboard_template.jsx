@@ -5,9 +5,6 @@ const GOOGLE_CLIENT_ID = "642445271504-vr3au2pic0ma5aekadpq4icrv9t9eekj.apps.goo
 const SLACK_WEBHOOK_URL = ""; // e.g. "https://hooks.slack.com/services/T.../B.../xxx"
 
 // ─── EMAIL HELPERS ────────────────────────────────────────────────────────────
-const EC_BANNER_URL = "https://sudeeptasridhara.github.io/gov_ece_gtm/assets/ec-banner.png";
-// PDF attached to Summer Bridge emails — upload ec-overview.pdf to your GitHub Pages assets/ folder
-const EC_OVERVIEW_PDF_URL = "https://sudeeptasridhara.github.io/gov_ece_gtm/assets/ec-overview.pdf";
 // Unsubscribe landing page + Google Form logger
 const UNSUB_PAGE = "https://sudeeptasridhara.github.io/gov_ece_gtm/unsubscribe.html";
 
@@ -47,61 +44,6 @@ function buildRawEmail(to, subject, htmlBody) {
     .replace(/=+$/, "");
 }
 
-// Build a multipart RFC 2822 message with an HTML body + PDF attachment
-async function buildRawEmailWithAttachment(to, subject, htmlBody, pdfUrl, pdfFileName) {
-  const boundary = "==Boundary_" + Math.random().toString(36).slice(2, 14);
-  const utf8Subject = "=?utf-8?B?" + btoa(unescape(encodeURIComponent(subject))) + "?=";
-  // Base64-encode the HTML body (76-char line wrapping per RFC 2045)
-  const htmlB64 = btoa(unescape(encodeURIComponent(htmlBody))).match(/.{1,76}/g).join("\r\n");
-
-  // Fetch PDF and convert to base64
-  let pdfB64 = null;
-  try {
-    const resp = await fetch(pdfUrl);
-    if (resp.ok) {
-      const buf = await resp.arrayBuffer();
-      const bytes = new Uint8Array(buf);
-      let bin = "";
-      bytes.forEach((b) => { bin += String.fromCharCode(b); });
-      pdfB64 = btoa(bin).match(/.{1,76}/g).join("\r\n");
-    }
-  } catch (e) {
-    console.warn("EC Overview PDF fetch failed — sending without attachment:", e);
-  }
-
-  if (!pdfB64) {
-    // Fall back to regular email without attachment
-    return buildRawEmail(to, subject, htmlBody);
-  }
-
-  const raw =
-    "To: " + to + "\r\n" +
-    "Subject: " + utf8Subject + "\r\n" +
-    "MIME-Version: 1.0\r\n" +
-    'Content-Type: multipart/mixed; boundary="' + boundary + '"\r\n' +
-    "\r\n" +
-    "--" + boundary + "\r\n" +
-    "Content-Type: text/html; charset=utf-8\r\n" +
-    "Content-Transfer-Encoding: base64\r\n" +
-    "\r\n" +
-    htmlB64 + "\r\n" +
-    "\r\n" +
-    "--" + boundary + "\r\n" +
-    "Content-Type: application/pdf\r\n" +
-    "Content-Transfer-Encoding: base64\r\n" +
-    'Content-Disposition: attachment; filename="' + pdfFileName + '"\r\n' +
-    "\r\n" +
-    pdfB64 + "\r\n" +
-    "\r\n" +
-    "--" + boundary + "--";
-
-  // raw is all ASCII (subject is encoded, body+PDF are base64), so btoa works directly
-  return btoa(raw)
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=+$/, "");
-}
-
 // HTML email building blocks
 const S = {
   wrap:  'font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#333333;line-height:1.6;max-width:600px;margin:0;padding:0;',
@@ -115,10 +57,6 @@ const S = {
 function ep(text) { return `<p style="${S.p}">${text}</p>`; }
 function ea(href, label) { return `<a href="${href}" style="${S.a}">${label}</a>`; }
 
-function emailImage() {
-  return `<img src="${EC_BANNER_URL}" alt="Experience Preschool — brightwheel" width="580" style="width:100%;max-width:580px;display:block;margin:24px 0;border-radius:6px;" />`;
-}
-
 function emailSignature() {
   return `<div style="${S.sig}">Best,<br><strong style="color:#222;">Christie Cooley</strong><br>Head of District Partnerships | brightwheel<br>${ea("mailto:christie.cooley@mybrightwheel.com","christie.cooley@mybrightwheel.com")} | 678-464-1018</div>`;
 }
@@ -127,12 +65,11 @@ function buildUnsubUrl(name, email, district) {
   return `${UNSUB_PAGE}?name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&district=${encodeURIComponent(district)}`;
 }
 
-function buildHtmlEmail(subject, bodyHtml, unsubUrl, includeImage = true) {
+function buildHtmlEmail(subject, bodyHtml, unsubUrl) {
   const unsubFooter = unsubUrl
     ? `<div style="margin-top:28px;padding-top:12px;border-top:1px solid #e5e7eb;font-size:11px;color:#b0b7c3;text-align:center;">Don't want to receive these emails?&nbsp;<a href="${unsubUrl}" style="color:#b0b7c3;text-decoration:underline;">Unsubscribe</a></div>`
     : "";
-  const imageBlock = includeImage ? emailImage() : "";
-  const html = `<!DOCTYPE html><html><body style="${S.wrap}">${bodyHtml}${imageBlock}${emailSignature()}${unsubFooter}</body></html>`;
+  const html = `<!DOCTYPE html><html><body style="${S.wrap}">${bodyHtml}${emailSignature()}${unsubFooter}</body></html>`;
   return `Subject: ${subject}\n\n${html}`;
 }
 
