@@ -372,6 +372,13 @@ export default function BrightwheelDashboard() {
   const [showEmailPreview, setShowEmailPreview] = useState(false);
   const [showSummerBridge, setShowSummerBridge] = useState(false);
 
+  // ── CONTACT TRACKING ──
+  const [contactSearch, setContactSearch] = useState("");
+  const [contactFilterState, setContactFilterState] = useState("all");
+  const [contactFilterRep, setContactFilterRep] = useState("all");
+  const [expandedContactId, setExpandedContactId] = useState(null);
+  const [inlineActivity, setInlineActivity] = useState({ type: "email", date: new Date().toISOString().split("T")[0], notes: "" });
+
   // ── GMAIL OAUTH ──
   const [gmailToken, setGmailToken] = useState(null);
   const [gmailConnected, setGmailConnected] = useState(false);
@@ -645,6 +652,7 @@ export default function BrightwheelDashboard() {
           { id: "prospects", label: "📋 Prospects" },
           { id: "outreach", label: "📤 Outreach Planner" },
           { id: "templates", label: "✉️ Email Templates" },
+          { id: "contacts", label: "👥 Contact Tracking" },
           { id: "activity", label: "📞 Activity Log" },
           { id: "approval", label: `📤 Send Queue ${stats.queue > 0 ? `(${stats.queue})` : ""}` },
         ].map((t) => (
@@ -1010,44 +1018,329 @@ export default function BrightwheelDashboard() {
           </div>
         )}
 
-        {/* ── ACTIVITY LOG TAB ── */}
-        {activeTab === "activity" && (
-          <div className="max-w-3xl">
-            <div className="mb-4">
-              <h2 className="text-base font-bold text-gray-900">Activity Log</h2>
-              <p className="text-xs text-gray-500 mt-1">Track all calls, emails, and LinkedIn touchpoints. Open a district to log an activity.</p>
-            </div>
-            {activityLog.length === 0 ? (
-              <div className="bg-gray-50 rounded-xl border border-dashed border-gray-300 p-12 text-center text-gray-400">
-                <p className="font-medium">No activities yet.</p>
-                <p className="text-xs mt-1">Open a district from the Prospects tab and log a call, email, or note.</p>
+        {/* ── CONTACT TRACKING TAB ── */}
+        {activeTab === "contacts" && (() => {
+          const activityIcon = (type) => type === "email" ? "✉️" : type === "call" ? "📞" : type === "linkedin" ? "🔗" : type === "meeting" ? "📅" : "📝";
+          const activityBg = (type) => type === "email" ? "bg-blue-100 text-blue-600" : type === "call" ? "bg-green-100 text-green-600" : type === "linkedin" ? "bg-indigo-100 text-indigo-600" : type === "meeting" ? "bg-purple-100 text-purple-600" : "bg-gray-100 text-gray-600";
+
+          const contactDistricts = districts.filter((d) => {
+            const matchSearch = !contactSearch || d.district.toLowerCase().includes(contactSearch.toLowerCase()) || d.director.toLowerCase().includes(contactSearch.toLowerCase()) || (d.email || "").toLowerCase().includes(contactSearch.toLowerCase());
+            const matchState = contactFilterState === "all" || (d.state || "FL") === contactFilterState;
+            const matchRep = contactFilterRep === "all" || STATE_REP_EMAIL[d.state || "FL"] === contactFilterRep;
+            return matchSearch && matchState && matchRep;
+          }).slice().sort((a, b) => {
+            const aLast = a.activities?.length ? a.activities[a.activities.length - 1].date : "";
+            const bLast = b.activities?.length ? b.activities[b.activities.length - 1].date : "";
+            if (aLast && !bLast) return -1;
+            if (!aLast && bLast) return 1;
+            if (aLast && bLast) return bLast.localeCompare(aLast);
+            return b.priority - a.priority;
+          });
+
+          const totalContacted = districts.filter(d => d.activities?.length > 0).length;
+          const totalReplied = districts.filter(d => d.status === "responded" || d.status === "meeting scheduled").length;
+
+          return (
+            <div>
+              <div className="mb-4 flex flex-wrap gap-4 items-start justify-between">
+                <div>
+                  <h2 className="text-base font-bold text-gray-900">Contact Tracking</h2>
+                  <p className="text-xs text-gray-500 mt-1">Full outreach history per district. Log calls, emails, and meetings. Click a row to expand.</p>
+                </div>
+                <div className="flex gap-4 text-center">
+                  <div><div className="text-lg font-bold text-indigo-600">{totalContacted}</div><div className="text-xs text-gray-400">Contacted</div></div>
+                  <div><div className="text-lg font-bold text-green-600">{totalReplied}</div><div className="text-xs text-gray-400">Replied/Meeting</div></div>
+                  <div><div className="text-lg font-bold text-gray-500">{districts.length - totalContacted}</div><div className="text-xs text-gray-400">Not Yet Contacted</div></div>
+                </div>
               </div>
-            ) : (
+
+              {/* Filters */}
+              <div className="flex flex-wrap gap-3 mb-4">
+                <input
+                  value={contactSearch}
+                  onChange={(e) => setContactSearch(e.target.value)}
+                  placeholder="🔍 Search district, director, email..."
+                  className="border border-gray-200 rounded-lg px-3 py-2 text-sm w-64 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                />
+                <select value={contactFilterState} onChange={(e) => setContactFilterState(e.target.value)} className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200">
+                  <option value="all">All States</option>
+                  <option value="FL">🌴 Florida</option>
+                  <option value="AL">Alabama</option>
+                  <option value="ID">Idaho</option>
+                </select>
+                <select value={contactFilterRep} onChange={(e) => setContactFilterRep(e.target.value)} className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200">
+                  <option value="all">All Reps</option>
+                  {Object.values(REP_PROFILES).map(rep => (
+                    <option key={rep.email} value={rep.email}>{rep.name}</option>
+                  ))}
+                </select>
+                <span className="text-xs text-gray-400 self-center">{contactDistricts.length} districts</span>
+              </div>
+
+              {/* Contact Table */}
               <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-                {activityLog.map((a) => (
-                  <div key={a.id} className="border-b border-gray-100 last:border-b-0 px-4 py-3 flex gap-3 items-start">
-                    <div className={`mt-0.5 w-8 h-8 rounded-full flex items-center justify-center text-sm flex-shrink-0 ${
-                      a.type === "email" ? "bg-blue-100 text-blue-600" :
-                      a.type === "call" ? "bg-green-100 text-green-600" :
-                      a.type === "linkedin" ? "bg-indigo-100 text-indigo-600" :
-                      "bg-gray-100 text-gray-600"
-                    }`}>
-                      {a.type === "email" ? "✉️" : a.type === "call" ? "📞" : a.type === "linkedin" ? "🔗" : "📝"}
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex justify-between">
-                        <span className="font-medium text-gray-800">{a.district}</span>
-                        <span className="text-xs text-gray-400">{a.date}</span>
+                {/* Header */}
+                <div className="bg-gray-50 border-b border-gray-200 px-4 py-2 grid text-xs font-semibold text-gray-500 uppercase tracking-wide" style={{gridTemplateColumns:"2fr 1.5fr 1fr 80px 100px 120px 80px"}}>
+                  <span>District / Director</span>
+                  <span>Contact Info</span>
+                  <span>Assigned Rep</span>
+                  <span>Touches</span>
+                  <span>Last Contact</span>
+                  <span>Status</span>
+                  <span>Actions</span>
+                </div>
+
+                {contactDistricts.map((d) => {
+                  const rep = REP_PROFILES[STATE_REP_EMAIL[d.state || "FL"]] || DEFAULT_REP;
+                  const acts = d.activities || [];
+                  const lastAct = acts.length ? acts[acts.length - 1] : null;
+                  const isExpanded = expandedContactId === d.id;
+
+                  return (
+                    <div key={d.id} className="border-b border-gray-100 last:border-b-0">
+                      {/* Row */}
+                      <div
+                        className={`px-4 py-3 grid items-center gap-2 cursor-pointer hover:bg-indigo-50 transition-colors ${isExpanded ? "bg-indigo-50" : ""}`}
+                        style={{gridTemplateColumns:"2fr 1.5fr 1fr 80px 100px 120px 80px"}}
+                        onClick={() => setExpandedContactId(isExpanded ? null : d.id)}
+                      >
+                        <div>
+                          <div className="font-medium text-gray-900 text-sm flex items-center gap-1.5">
+                            {d.county} County
+                            {d.state && d.state !== "FL" && <span className="text-xs bg-blue-100 text-blue-700 px-1.5 rounded font-semibold">{d.state}</span>}
+                          </div>
+                          <div className="text-xs text-gray-400 truncate">{d.director}</div>
+                        </div>
+                        <div>
+                          <div className="text-xs text-gray-700 truncate">{d.email || <span className="text-gray-300">No email</span>}</div>
+                          <div className="text-xs text-gray-400">{d.phone}</div>
+                        </div>
+                        <div>
+                          <span className={`text-xs font-semibold px-2 py-0.5 rounded ${rep.color}`}>{rep.initials} {rep.name.split(" ")[0]}</span>
+                        </div>
+                        <div className="text-center">
+                          {acts.length > 0
+                            ? <span className="inline-flex items-center gap-1 text-xs font-semibold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-full">{acts.length} touch{acts.length > 1 ? "es" : ""}</span>
+                            : <span className="text-xs text-gray-300">—</span>}
+                        </div>
+                        <div>
+                          {lastAct
+                            ? <div><div className="text-xs font-medium text-gray-700">{lastAct.date}</div><div className="text-xs text-gray-400 capitalize">{activityIcon(lastAct.type)} {lastAct.type}</div></div>
+                            : <span className="text-xs text-gray-300">Never</span>}
+                        </div>
+                        <div>
+                          <select
+                            value={d.status}
+                            onChange={(e) => { e.stopPropagation(); updateDistrict(d.id, { status: e.target.value }); }}
+                            onClick={(e) => e.stopPropagation()}
+                            className={`text-xs border-0 bg-transparent focus:outline-none cursor-pointer ${statusColor(d.status)}`}
+                          >
+                            {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
+                          </select>
+                        </div>
+                        <div className="flex gap-1 items-center">
+                          <button
+                            onClick={(e) => { e.stopPropagation(); setExpandedContactId(isExpanded ? null : d.id); setInlineActivity({ type: "email", date: new Date().toISOString().split("T")[0], notes: "" }); }}
+                            className="text-xs bg-indigo-600 text-white px-2 py-1 rounded hover:bg-indigo-700"
+                          >
+                            {isExpanded ? "▲" : "+ Log"}
+                          </button>
+                        </div>
                       </div>
-                      <span className="text-xs text-gray-400 capitalize">{a.type} · {a.directorName}</span>
-                      <p className="text-xs text-gray-600 mt-1">{a.notes}</p>
+
+                      {/* Expanded: history + log form */}
+                      {isExpanded && (
+                        <div className="border-t border-indigo-100 bg-indigo-50/40 px-6 py-4">
+                          <div className="grid grid-cols-2 gap-6">
+                            {/* Left: Timeline */}
+                            <div>
+                              <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Contact History</h4>
+                              {acts.length === 0 ? (
+                                <p className="text-xs text-gray-400 italic">No contact logged yet.</p>
+                              ) : (
+                                <div className="space-y-2">
+                                  {[...acts].reverse().map((a) => (
+                                    <div key={a.id} className="flex gap-3 items-start">
+                                      <div className={`w-7 h-7 rounded-full flex items-center justify-center text-sm flex-shrink-0 ${activityBg(a.type)}`}>
+                                        {activityIcon(a.type)}
+                                      </div>
+                                      <div className="flex-1">
+                                        <div className="flex items-center gap-2">
+                                          <span className="text-xs font-semibold text-gray-700 capitalize">{a.type}</span>
+                                          <span className="text-xs text-gray-400">{a.date}</span>
+                                        </div>
+                                        <p className="text-xs text-gray-600 mt-0.5">{a.notes}</p>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+
+                            {/* Right: Log new activity */}
+                            <div>
+                              <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Log New Activity</h4>
+                              <div className="grid grid-cols-2 gap-2 mb-2">
+                                <select
+                                  value={inlineActivity.type}
+                                  onChange={(e) => setInlineActivity(p => ({ ...p, type: e.target.value }))}
+                                  className="border border-gray-200 rounded-lg px-2 py-1.5 text-xs bg-white"
+                                >
+                                  <option value="email">✉️ Email Sent</option>
+                                  <option value="call">📞 Phone Call</option>
+                                  <option value="linkedin">🔗 LinkedIn</option>
+                                  <option value="meeting">📅 Meeting</option>
+                                  <option value="note">📝 Note</option>
+                                </select>
+                                <input
+                                  type="date"
+                                  value={inlineActivity.date}
+                                  onChange={(e) => setInlineActivity(p => ({ ...p, date: e.target.value }))}
+                                  className="border border-gray-200 rounded-lg px-2 py-1.5 text-xs bg-white"
+                                />
+                              </div>
+                              <textarea
+                                value={inlineActivity.notes}
+                                onChange={(e) => setInlineActivity(p => ({ ...p, notes: e.target.value }))}
+                                placeholder="Outcome, next steps, replied, left voicemail..."
+                                className="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-xs h-16 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-200 mb-2 bg-white"
+                              />
+                              <button
+                                onClick={() => {
+                                  if (!inlineActivity.notes) return;
+                                  const act = { ...inlineActivity, id: Date.now(), district: d.district, directorName: d.director };
+                                  const updated = [...(d.activities || []), act];
+                                  updateDistrict(d.id, { activities: updated, status: inlineActivity.type === "meeting" ? "meeting scheduled" : d.status });
+                                  setActivityLog(prev => [act, ...prev]);
+                                  setInlineActivity({ type: "email", date: new Date().toISOString().split("T")[0], notes: "" });
+                                  showNotif("Activity logged ✓");
+                                }}
+                                disabled={!inlineActivity.notes}
+                                className="bg-indigo-600 text-white px-3 py-1.5 rounded-lg text-xs hover:bg-indigo-700 disabled:opacity-40"
+                              >
+                                Log Activity
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
+
+                {contactDistricts.length === 0 && (
+                  <div className="py-12 text-center text-gray-400 text-sm">No districts match your filters.</div>
+                )}
               </div>
-            )}
-          </div>
-        )}
+            </div>
+          );
+        })()}
+
+        {/* ── ACTIVITY LOG TAB ── */}
+        {activeTab === "activity" && (() => {
+          const activityIcon = (type) => type === "email" ? "✉️" : type === "call" ? "📞" : type === "linkedin" ? "🔗" : type === "meeting" ? "📅" : "📝";
+          const activityBg = (type) => type === "email" ? "bg-blue-100 text-blue-600" : type === "call" ? "bg-green-100 text-green-600" : type === "linkedin" ? "bg-indigo-100 text-indigo-600" : type === "meeting" ? "bg-purple-100 text-purple-600" : "bg-gray-100 text-gray-600";
+
+          // Build per-district contact summary from all district activities
+          const districtsWithActivity = districts
+            .filter(d => (d.activities || []).length > 0)
+            .slice()
+            .sort((a, b) => {
+              const aLast = a.activities[a.activities.length - 1].date;
+              const bLast = b.activities[b.activities.length - 1].date;
+              return bLast.localeCompare(aLast);
+            });
+
+          // Also include flat activity log entries (from send queue) that may not be in district.activities yet
+          const flatOnly = activityLog.filter(a =>
+            !districts.some(d => (d.activities || []).some(da => da.id === a.id))
+          );
+
+          const [actLogSearch, setActLogSearch] = [contactSearch, setContactSearch]; // reuse search box
+
+          return (
+            <div>
+              <div className="mb-4">
+                <h2 className="text-base font-bold text-gray-900">Activity Log</h2>
+                <p className="text-xs text-gray-500 mt-1">All contact points with each district, grouped by district. Newest activity first.</p>
+              </div>
+
+              {districtsWithActivity.length === 0 && flatOnly.length === 0 ? (
+                <div className="bg-gray-50 rounded-xl border border-dashed border-gray-300 p-12 text-center text-gray-400">
+                  <p className="font-medium">No activities yet.</p>
+                  <p className="text-xs mt-1">Log contact from the Contact Tracking tab or from a district's detail view.</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {districtsWithActivity.map((d) => {
+                    const acts = [...(d.activities || [])].reverse();
+                    const rep = REP_PROFILES[STATE_REP_EMAIL[d.state || "FL"]] || DEFAULT_REP;
+                    return (
+                      <div key={d.id} className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                        {/* District header */}
+                        <div className="bg-gray-50 border-b border-gray-100 px-4 py-2.5 flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <span className="font-semibold text-gray-800 text-sm">{d.county} County — {d.district}</span>
+                            {d.state && d.state !== "FL" && <span className="text-xs bg-blue-100 text-blue-700 px-1.5 rounded font-semibold">{d.state}</span>}
+                            <span className={`text-xs font-semibold px-1.5 py-0 rounded ${rep.color}`}>{rep.initials}</span>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <span className="text-xs text-gray-400">{acts.length} touch point{acts.length > 1 ? "s" : ""}</span>
+                            <span className={`text-xs font-medium ${statusColor(d.status)}`}>{d.status}</span>
+                          </div>
+                        </div>
+                        {/* Timeline */}
+                        <div className="divide-y divide-gray-50">
+                          {acts.map((a) => (
+                            <div key={a.id} className="px-4 py-3 flex gap-3 items-start">
+                              <div className={`mt-0.5 w-7 h-7 rounded-full flex items-center justify-center text-xs flex-shrink-0 ${activityBg(a.type)}`}>
+                                {activityIcon(a.type)}
+                              </div>
+                              <div className="flex-1">
+                                <div className="flex items-center justify-between">
+                                  <span className="text-xs font-semibold text-gray-700 capitalize">{a.type}</span>
+                                  <span className="text-xs text-gray-400">{a.date}</span>
+                                </div>
+                                {a.directorName && <div className="text-xs text-gray-400">{a.directorName}</div>}
+                                <p className="text-xs text-gray-600 mt-0.5">{a.notes}</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })}
+
+                  {/* Flat log entries not tied to a district */}
+                  {flatOnly.length > 0 && (
+                    <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                      <div className="bg-gray-50 border-b border-gray-100 px-4 py-2.5">
+                        <span className="font-semibold text-gray-500 text-sm text-xs uppercase tracking-wide">Other Activities</span>
+                      </div>
+                      <div className="divide-y divide-gray-50">
+                        {flatOnly.map((a) => (
+                          <div key={a.id} className="px-4 py-3 flex gap-3 items-start">
+                            <div className={`mt-0.5 w-7 h-7 rounded-full flex items-center justify-center text-xs flex-shrink-0 ${activityBg(a.type)}`}>
+                              {activityIcon(a.type)}
+                            </div>
+                            <div className="flex-1">
+                              <div className="flex items-center justify-between">
+                                <span className="font-medium text-gray-800 text-xs">{a.district}</span>
+                                <span className="text-xs text-gray-400">{a.date}</span>
+                              </div>
+                              <span className="text-xs text-gray-400 capitalize">{a.type} · {a.directorName}</span>
+                              <p className="text-xs text-gray-600 mt-0.5">{a.notes}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })()}
 
         {/* ── APPROVAL QUEUE TAB ── */}
         {activeTab === "approval" && (
