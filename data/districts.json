@@ -3645,14 +3645,24 @@
     "curriculumAdoptionYear": 2020,
     "priorityTier": "Tier 3",
     "newLeadership": false,
-    "buyingSignals": "Active lottery-based PreK program signals strong community demand exceeding capacity. District PreK administrators work with ADECE coaches to select supplemental curriculum \u2014 warm reception likely for aligned tools. Statewide P-3 expansion increases need for cohesive PreK-3 curriculum.",
+    "buyingSignals": [
+      "Active lottery-based PreK program signals strong community demand exceeding current capacity.",
+      "District PreK administrators work with ADECE coaches to select supplemental curriculum \u2014 warm reception likely for aligned tools.",
+      "Statewide P-3 expansion increases need for cohesive PreK-3 curriculum solutions."
+    ],
     "recentNews": [],
     "status": "not contacted",
     "priority": 0,
     "notes": "Associated schools: Huffman Academy; W. J. Christian K-8 School; Martha Gaskins Early Learning Annex; Sun Valley Elementary School; Robinson Elementary School; Barrett Elementary School; Oliver Elementary School; Hayes K-8 School; Inglenook K-8 School; Avondale Elementary School; Hudson K-8 School; Norwood Elementary School; Phillips Academy; Glen Iris Elementary School; EPIC Alternative Elementary School; Tuggle Elementary School; Washington Early Learning Center; Hemphill Elementary School; Princeton Elementary School; West End Academy; Arrington Elementary School; Minor Elementary School; South Hampton Elementary School; Central Park Elementary School; Brown Elementary School; Oxmoor Valley Elementary School; Wylam Elementary School",
     "activities": [],
     "lastUpdated": "2026-03-30",
-    "boardNotes": "2025-26 PreK applications now open at jefcoed.com/prek. Enrollment requires residency verification; random selection process for oversubscribed sites. District is one of the larger First Class PreK operators in the state.",
+    "boardNotes": [
+      {
+        "date": "2026-03-30",
+        "summary": "Applications for 2025-26 PreK now open at jefcoed.com/prek. Enrollment requires residency verification; random selection process used for oversubscribed sites.",
+        "source": "https://www.jefcoed.com/o/minorcs/article/1965623"
+      }
+    ],
     "summerBridgeContact": null,
     "programType": "public school",
     "schools": [
@@ -3684,7 +3694,14 @@
       "Oxmoor Valley Elementary School",
       "Wylam Elementary School"
     ],
-    "districtContext": "Jefferson County School District (JEFCOED) operates Alabama First Class Pre-K classrooms under the ADECE framework. PreK uses Teaching Strategies Creative Curriculum + TS GOLD assessment. Seats awarded via random lottery for eligible 4-year-olds. Applications for 2025-26 opened recently."
+    "districtContext": [
+      {
+        "type": "strategic",
+        "summary": "Jefferson County School District (JEFCOED) operates Alabama First Class Pre-K classrooms under the ADECE framework. Teaching Strategies Creative Curriculum is the statewide base curriculum. PreK seats awarded via random lottery for eligible 4-year-olds.",
+        "date": "2026-03-30",
+        "source": "https://www.jefcoed.com/prek"
+      }
+    ]
   },
   {
     "id": 73,
@@ -6579,14 +6596,24 @@
     "curriculumAdoptionYear": 2020,
     "priorityTier": "Tier 3",
     "newLeadership": false,
-    "buyingSignals": "NAESP P-3 Leadership Academy recognition signals district leadership is actively investing in PreK-3 alignment and best practices. Multi-site PreK operation with 7 locations creates large-scale curriculum adoption opportunity. Leadership is forward-thinking on early learning.",
+    "buyingSignals": [
+      "NAESP 2025 P-3 Leadership Academy recognition signals district actively investing in PreK-3 alignment and best practices.",
+      "Multi-site PreK operation across 7 school locations creates large-scale curriculum adoption opportunity.",
+      "Exclusive First Class PreK commitment signals district leadership strongly prioritizes early learning quality."
+    ],
     "recentNews": [],
     "status": "not contacted",
     "priority": 0,
     "notes": "Associated schools: Farley Elementary School; Challenger Elementary School; Mountain Gap Elementary School; Goldsmith-Schiffman Elementary School; Weatherly Elementary School; Williams P-8 School; Chaffee Elementary School; Hampton Cove Elementary School; Whitesburg P-8 School; McDonnell Elementary School; Jones Valley Elementary School; Ridgecrest Elementary School; Morris Elementary School; Blossomwood Elementary School; Monte Sano Elementary School; Sonnie Hereford Elementary School; Montview Elementary School; Highlands Elementary School; Martin Luther King Elementary School Huntsville; Providence Elementary School; Lakewood Elementary School; Dawson Elementary School; Rolling Hills Elementary School",
     "activities": [],
     "lastUpdated": "2026-03-30",
-    "boardNotes": "District was recognized in the NAESP 2025 Pre-K\u20133 Leadership Academy Cohort alongside ADECE \u2014 a national recognition for P-3 leadership excellence. First Class PreK is the district's exclusive PreK offering.",
+    "boardNotes": [
+      {
+        "date": "2026-03-30",
+        "summary": "District recognized in the NAESP 2025 Pre-K\u20133 Leadership Academy Cohort alongside ADECE \u2014 a national recognition for Pre-K\u20133 leadership excellence. District leadership actively investing in PreK-3 alignment.",
+        "source": "https://www.naesp.org/news/naesp-the-council-for-leaders-in-alabama-schools-and-the-alabama-department-of-early-childhood-education-honor-2025-pre-k-3-leadership-academy-cohort/"
+      }
+    ],
     "summerBridgeContact": null,
     "programType": "public school",
     "schools": [
@@ -6614,7 +6641,14 @@
       "Dawson Elementary School",
       "Rolling Hills Elementary School"
     ],
-    "districtContext": "Madison County Schools offers only Alabama First Class Pre-K programs (no other PreK formats). The program operates across 7 sites: Madison City Pre-K Center, Mill Creek, Columbia, Rainbow, Midtown, Madison, and Horizon Elementary Schools \u2014 indicating a significant multi-site commitment to early learning."
+    "districtContext": [
+      {
+        "type": "strategic",
+        "summary": "Madison County Schools only offers First Class PreK programs (no other PreK formats). Operates PreK across 7 sites: Madison City Pre-K Center, Mill Creek, Columbia, Rainbow, Midtown, Madison, and Horizon Elementary Schools.",
+        "date": "2026-03-30",
+        "source": "https://www.mcssk12.org/enrollment/child-page-three"
+      }
+    ]
   },
   {
     "id": 158,
@@ -7936,14 +7970,24 @@
     "curriculumAdoptionYear": 2020,
     "priorityTier": "Tier 3",
     "newLeadership": false,
-    "buyingSignals": "District is actively expanding PreK capacity with a stated goal of 70% coverage \u2014 growth-mode districts are prime targets for curriculum and program tools. MEF partnership signals philanthropic investment and readiness to invest in high-quality programs.",
+    "buyingSignals": [
+      "MEF pilot targeting 70% 4-year-old coverage \u2014 expansion-mode district is prime target for curriculum and program tools.",
+      "Philanthropic (MEF) + government (ADECE) investment signals readiness to invest in high-quality programs.",
+      "Active PreK expansion creates open procurement windows for supplemental tools."
+    ],
     "recentNews": [],
     "status": "not contacted",
     "priority": 0,
     "notes": "Associated schools: Highland Gardens Elementary School; PLA Nixon Elementary School; Highland Avenue Elementary School; Carver Elementary School ; Wares Ferry Elementary School; Martin Luther King Elementary School Montgomery; Dannelly Elementary School; Southlawn Elementary School; Halcyon Elementary School; Brewbaker Primary School; Crump Elementary School; McKee Pre-K Center; Pintlala Elementary School",
     "activities": [],
     "lastUpdated": "2026-03-30",
-    "boardNotes": "MEF piloting PreK expansion infrastructure in partnership with ADECE. Governor added 58 new First Class PreK classrooms statewide for 2025-26; expansion-minded districts like Montgomery are positioned to benefit. Montgomery Public School First Class PreK page is active (mps.k12.al.us/page/pre-k).",
+    "boardNotes": [
+      {
+        "date": "2026-03-30",
+        "summary": "Governor added 58 new First Class PreK classrooms statewide for 2025-26. Montgomery Education Foundation piloting expansion to serve 70% of all 4-year-olds \u2014 district is in active growth mode.",
+        "source": "https://governor.alabama.gov/newsroom/2025/07/governor-ivey-announces-58-new-first-class-pre-k-classrooms-for-the-2025-2026-school-year/"
+      }
+    ],
     "summerBridgeContact": null,
     "programType": "public school",
     "schools": [
@@ -7961,7 +8005,20 @@
       "McKee Pre-K Center",
       "Pintlala Elementary School"
     ],
-    "districtContext": "Montgomery Public Schools operates First Class Pre-K classrooms in partnership with ADECE. The Montgomery Education Foundation (MEF) is conducting a pilot capacity assessment to expand First Class PreK to serve 70% of all 4-year-olds in Montgomery County across school, Head Start, and community-based settings."
+    "districtContext": [
+      {
+        "type": "strategic",
+        "summary": "Montgomery Education Foundation (MEF) is conducting a pilot capacity assessment to expand First Class PreK to serve 70% of all 4-year-olds in Montgomery County across school, Head Start, and community-based settings.",
+        "date": "2026-03-30",
+        "source": "https://www.montgomeryed.org/prek-school-readiness"
+      },
+      {
+        "type": "website",
+        "summary": "Montgomery Public Schools operates First Class Pre-K classrooms in partnership with ADECE (mps.k12.al.us/page/pre-k). District is actively expanding PreK infrastructure with MEF support.",
+        "date": "2026-03-30",
+        "source": "https://www.mps.k12.al.us/page/pre-k"
+      }
+    ]
   },
   {
     "id": 198,
@@ -11258,14 +11315,24 @@
     "curriculumAdoptionYear": 2020,
     "priorityTier": "Tier 3",
     "newLeadership": false,
-    "buyingSignals": "District actively managing PreK curriculum standards and future enrollment planning. Public curriculum documentation suggests an engaged curriculum coordinator. Alabama P-3 expansion may extend to Baldwin County \u2014 good timing to connect with district leadership.",
+    "buyingSignals": [
+      "District actively managing PreK curriculum standards and future enrollment planning \u2014 engaged curriculum leadership.",
+      "Public curriculum standards documentation suggests dedicated PreK curriculum coordinator.",
+      "Alabama P-3 expansion may extend to Baldwin County \u2014 good timing to connect with district leadership."
+    ],
     "recentNews": [],
     "status": "not contacted",
     "priority": 0,
     "notes": "Associated schools: Perdido Elementary School; Pine Grove Elementary School; Bay Minette Elementary School; Elsanor Elementary School; Rosinton Elementary School; Stapleton Elementary School; Delta Elementary School; Stonebridge Elementary School; Loxley Elementary School; Robertsdale Elementary School; Elberta Elementary School; Rockwell Elementary School ; Summerdale Elementary School; Silverhill Elementary School; Spanish Fort Elementary School; Daphne East Elementary; Foley Elementary School; Daphne Elementary School; Florence B. Mathis Elementary School; Magnolia School; Fairhope East Elementary School; Fairhope West Elementary School; J. Larry Newton Elementary School; Fairhope High School; Swift School",
     "activities": [],
     "lastUpdated": "2026-03-30",
-    "boardNotes": "BCBE Pre-K is governed by Alabama First Class PreK guidelines. District curriculum team publicly maintains PreK standards documentation. 2026-27 PreK information already available, signaling forward planning.",
+    "boardNotes": [
+      {
+        "date": "2026-03-30",
+        "summary": "BCBE Pre-K is governed by Alabama First Class PreK guidelines. District curriculum team publicly maintains PreK standards documentation. 2026-27 PreK information already available, signaling forward planning.",
+        "source": "https://www.bcbe.org/curriculum"
+      }
+    ],
     "summerBridgeContact": null,
     "programType": "public school",
     "schools": [
@@ -11295,7 +11362,20 @@
       "Fairhope High School",
       "Swift School"
     ],
-    "districtContext": "Baldwin County Board of Education (BCBE) follows Alabama First Class Pre-K standards and Alabama Course of Standards framework. BCBE publishes a dedicated PreK curriculum page listing standards by domain. Registration info published for both 2025-26 and 2026-27 school years \u2014 indicating active program planning."
+    "districtContext": [
+      {
+        "type": "strategic",
+        "summary": "Baldwin County Board of Education (BCBE) follows Alabama First Class Pre-K standards and Alabama Course of Standards framework. BCBE publishes a dedicated PreK curriculum page listing standards by domain.",
+        "date": "2026-03-30",
+        "source": "https://www.bcbe.org/departments/academics/secondary-education/curriculum/pre-k-course-of-standards-state-of-alabama"
+      },
+      {
+        "type": "website",
+        "summary": "BCBE has dedicated PreK & Kindergarten page with registration info published for both 2025-26 and 2026-27 school years \u2014 indicating active program planning ahead.",
+        "date": "2026-03-30",
+        "source": "https://www.bcbe.org/departments/academics/elementary-education/prek"
+      }
+    ]
   },
   {
     "id": 298,
@@ -11413,14 +11493,29 @@
     "curriculumAdoptionYear": 2020,
     "priorityTier": "Tier 3",
     "newLeadership": false,
-    "buyingSignals": "Large, established First Class PreK partner already using Teaching Strategies \u2014 high openness to supplemental or transitioning curriculum tools. P-3 alignment initiative signals need for PreK-3 continuity solutions. Statewide expansion momentum means budget availability for early childhood investments.",
+    "buyingSignals": [
+      "Large, established First Class PreK partner already using Teaching Strategies \u2014 high openness to supplemental or transitioning curriculum tools.",
+      "P-3 alignment initiative (55 new classrooms in 2025-26) signals need for PreK-3 continuity solutions.",
+      "Statewide expansion momentum means budget availability for early childhood investments."
+    ],
     "recentNews": [],
     "status": "not contacted",
     "priority": 0,
     "notes": "Associated schools: Calcedeaver Elementary School; North Mobile County K-8 School; McDavid-Jones Elementary School; Whitley Elementary School; Robbins Elementary School; Florence Howard Elementary School; Collins-Rhodes Elementary School; Council Traditional School; Just 4 Developmental Laboratory ; Leinkauf Elementary School; Craighead Elementary School; Indian Springs Elementary School; George Hall Elementary School; Maryvale Elementary School; Spencer-Westlawn Elementary School; Eichold-Mertz Magnet School; Gilliard Elementary School; Hollinger's Island Elementary School; John Will Elementary School; Fonde Elementary School; E. R. Dickson Elementary School; J. E. Turner Elementary School; Orchard Elementary School; Mary G. Montgomery High School; Olive J. Dodge Elementary School; Wilmer Elementary School; Allentown Elementary School; O'Rourke Elementary School; Elsie Collier Elementary School; Taylor-White Elementary School; Burroughs Elementary School; Nan Gray Davis Elementary School; Meadowlake Elementary School; Hutchens Elementary School; St. Elmo Elementary School; Dixon Elementary School; Anna F. Booth Elementary School; Cora Castlen Elementary School",
     "activities": [],
     "lastUpdated": "2026-03-30",
-    "boardNotes": "Governor Ivey added 58 new First Class PreK classrooms statewide for 2025-26, bringing the total to 1,528. Alabama's P-3 (Pre-K through 3rd Grade Integrated Approach) expanded to 454 classrooms across 29 counties in 2025-26, adding 55 new P-3 classrooms \u2014 creating district-level demand for aligned PreK-3 curriculum solutions.",
+    "boardNotes": [
+      {
+        "date": "2026-03-30",
+        "summary": "Alabama's P-3 (Pre-K through 3rd Grade Integrated Approach) expanded to 454 classrooms across 29 counties in 2025-26, adding 55 new P-3 classrooms \u2014 creating district-level demand for aligned PreK-3 curriculum solutions.",
+        "source": "https://governor.alabama.gov/newsroom/2025/05/governor-ivey-adds-55-new-pre-k-3rd-grade-classrooms-to-expand-early-learning-efforts/"
+      },
+      {
+        "date": "2026-03-30",
+        "summary": "Governor Ivey added 58 new First Class PreK classrooms statewide for 2025-26, bringing the total to 1,528 classrooms serving 4-year-olds across Alabama.",
+        "source": "https://governor.alabama.gov/newsroom/2025/07/governor-ivey-announces-58-new-first-class-pre-k-classrooms-for-the-2025-2026-school-year/"
+      }
+    ],
     "summerBridgeContact": null,
     "programType": "public school",
     "schools": [
@@ -11463,7 +11558,20 @@
       "Anna F. Booth Elementary School",
       "Cora Castlen Elementary School"
     ],
-    "districtContext": "Mobile County has a 25-year commitment to PreK education through its First Class Pre-K partnership with ADECE, serving approximately 1,000 PreK students \u2014 one of the largest PreK programs in Alabama. All First Class Pre-K classrooms statewide use Teaching Strategies Creative Curriculum as the base curriculum with TS GOLD\u00ae as the designated assessment tool."
+    "districtContext": [
+      {
+        "type": "strategic",
+        "summary": "Mobile County has a 25-year commitment to PreK education through its First Class Pre-K partnership with ADECE, serving approximately 1,000 PreK students \u2014 one of the largest PreK programs in Alabama.",
+        "date": "2026-03-30",
+        "source": "https://www.alabamaschoolreadiness.org/mcpss-partners-with-first-class-pre-k-to-serve-1000-students/"
+      },
+      {
+        "type": "strategic",
+        "summary": "All Alabama First Class PreK classrooms use Teaching Strategies Creative Curriculum as the base curriculum with TS GOLD\u00ae as the designated assessment tool, per state guidelines.",
+        "date": "2026-03-30",
+        "source": "https://teachingstrategies.com/state/alabama/"
+      }
+    ]
   },
   {
     "id": 302,
@@ -11621,15 +11729,38 @@
     "curriculumAdoptionYear": 2018,
     "priorityTier": "Tier 2",
     "newLeadership": false,
-    "buyingSignals": "Idaho's largest district \u2014 scale makes it a high-priority account even if PreK is ECSE-focused. Fastest-growing county creates pressure to address kindergarten readiness. Any curriculum tool that serves ECSE and kindergarten transition could find traction at district level.",
+    "buyingSignals": [
+      "Idaho's largest district \u2014 scale makes it a high-priority account even with ECSE-focused PreK.",
+      "Fastest-growing county in Idaho creates pressure to address kindergarten readiness at scale.",
+      "Curriculum tools bridging ECSE and K-transition could find strong traction at district level."
+    ],
     "recentNews": [],
     "status": "not contacted",
     "priority": 35,
     "notes": "Largest school district in Idaho (~38,000 students). 'Early Literacy Coordinator' is the closest ECE-adjacent title found publicly. May route ECE through SpEd or Federal Programs. Email pattern firstname.lastname@westada.org confirmed from other listed staff. Recommend Apollo.io enrichment or direct phone inquiry before outreach.",
     "activities": [],
     "lastUpdated": "2026-03-30",
-    "boardNotes": "District proposed restructuring of academy programs in January 2025. Idaho's absence of state PreK funding means West Ada's early childhood program is primarily ECSE. The district is the dominant K-12 system in the fastest-growing county in Idaho.",
-    "districtContext": "West Ada School District is the largest in Idaho, serving ~39,000 students PK-12 in Meridian, Eagle, Star, and western Boise. Idaho does not fund preschool at the state level \u2014 most district PreK is limited to Early Childhood Special Education (ECSE) for students ages 3-5 qualifying for special education services under IDEA.",
+    "boardNotes": [
+      {
+        "date": "2026-03-30",
+        "summary": "Board reviewed academy program restructuring proposal January 2025. District is the largest in Idaho and continues to grow alongside Meridian/Ada County population boom.",
+        "source": "https://www.idahopress.com/news/local/west-ada-proposes-plan-to-restructure-academy-programs/article_46e2f79e-cf93-11ef-9a47-6f9b99e5a4b6.html"
+      }
+    ],
+    "districtContext": [
+      {
+        "type": "strategic",
+        "summary": "West Ada School District is the largest in Idaho, serving ~39,000 students PK-12 in Meridian, Eagle, Star, and western Boise \u2014 fastest-growing county in Idaho. Idaho does not fund preschool at state level; most district PreK is ECSE for students qualifying under IDEA.",
+        "date": "2026-03-30",
+        "source": "https://en.wikipedia.org/wiki/West_Ada_School_District"
+      },
+      {
+        "type": "website",
+        "summary": "District proposed restructuring of academy programs in January 2025. Dominant K-12 system in Ada County \u2014 any curriculum solution adopted here reaches the largest student population in Idaho.",
+        "date": "2026-03-30",
+        "source": "https://www.idahopress.com/news/local/west-ada-proposes-plan-to-restructure-academy-programs/article_46e2f79e-cf93-11ef-9a47-6f9b99e5a4b6.html"
+      }
+    ],
     "summerBridgeContact": null,
     "programType": "Public School",
     "schools": []
@@ -11652,15 +11783,38 @@
     "curriculumAdoptionYear": 2018,
     "priorityTier": "Tier 2",
     "newLeadership": false,
-    "buyingSignals": "Active expansion \u2014 brand new early childhood facility launching fall 2025 means district is actively selecting curriculum, materials, and program tools. New learning center launch is an ideal entry point. City of Boise's separate PreK funding study could further expand district-level investment.",
+    "buyingSignals": [
+      "Brand new Early Childhood Learning Center launching fall 2025 \u2014 district actively selecting curriculum and program tools RIGHT NOW.",
+      "District invested in converting an entire elementary school for ages 3-5, signaling serious long-term commitment to early childhood.",
+      "City of Boise studying municipal PreK funding \u2014 potential for additional investment and expansion."
+    ],
     "recentNews": [],
     "status": "not contacted",
     "priority": 35,
     "notes": "STRONG SIGNAL: Owyhee Elementary converting to Early Childhood Learning Center 2025-26. Fort Boise already converted 2024-25. District runs 11+ ECE sites under its proprietary 'Community Classroom' approach (confirmed on boiseschools.org). District-level ECE director not publicly listed; likely exists. Two dedicated ELCs active; third (Owyhee) opening fall 2025. Call 208-854-4000 to reach ECE leadership.",
     "activities": [],
     "lastUpdated": "2026-03-30",
-    "boardNotes": "Board approved conversion of Owyhee Elementary to Early Childhood Learning Center, outfitting the building specifically for 3-5 year olds. District stated 'they need another building for preschool only' citing growing demand. New center launches fall 2025.",
-    "districtContext": "Boise School District is converting Owyhee Elementary into a dedicated Early Childhood Learning Center for 2025-26 to address growing preschool demand. Programs include Community Classroom (ages 3-5, tuition-based) and Early Childhood Special Education. The City of Boise has separately studied a municipal PreK funding initiative.",
+    "boardNotes": [
+      {
+        "date": "2026-03-30",
+        "summary": "Board approved conversion of Owyhee Elementary to Early Childhood Learning Center, launching fall 2025. District cited growing demand for preschool as the driver. New center outfitted specifically for ages 3-5.",
+        "source": "https://www.boiseschools.org/news/archived_news/boise_school_district_expands_pre-_k_program"
+      }
+    ],
+    "districtContext": [
+      {
+        "type": "strategic",
+        "summary": "Boise School District converting Owyhee Elementary into a dedicated Early Childhood Learning Center for 2025-26 \u2014 outfitted specifically for 3-5 year olds. Programs include Community Classroom (tuition-based, ages 3-5) and ECSE.",
+        "date": "2026-03-30",
+        "source": "https://www.boiseschools.org/news/archived_news/early_childhood_program_expansion"
+      },
+      {
+        "type": "strategic",
+        "summary": "City of Boise separately conducted a study on municipal PreK funding (Boise State IPI), signaling potential for expanded public investment in early childhood beyond the school district.",
+        "date": "2026-03-30",
+        "source": "https://www.boisestate.edu/sps-ipi/projects-and-clients/local-government/city-of-boise-pre-k/"
+      }
+    ],
     "summerBridgeContact": null,
     "programType": "Public School",
     "schools": []
@@ -11683,15 +11837,38 @@
     "curriculumAdoptionYear": 2018,
     "priorityTier": "Tier 2",
     "newLeadership": false,
-    "buyingSignals": "Dedicated early childhood center with active curriculum adoption process and levy-backed funding. Levy success signals strong community and board support for early learning investment. Curriculum adoption committee creates a formal channel for outreach.",
+    "buyingSignals": [
+      "Dedicated standalone Early Childhood Center with levy-backed sustainable funding.",
+      "Active curriculum adoption committee creates formal procurement channel for outreach.",
+      "Community and board support for early childhood investment signals receptive leadership."
+    ],
     "recentNews": [],
     "status": "not contacted",
     "priority": 35,
     "notes": "Dedicated Early Childhood Learning Center (NECLC) at 1701 Discovery Pl, Nampa. No district-level ECE Director found; Kincheloe is site principal lead. Email domain confirmed: nsd131.org. Confirmed from official district staff directory.",
     "activities": [],
     "lastUpdated": "2026-03-30",
-    "boardNotes": "2025 levy passed, funding preschool teachers, aides, and supplies. District has a standalone early childhood center \u2014 unusual for Idaho given lack of state PreK funding. Curriculum adoption committees are active (nsd131.org/curriculum-adoption-committees).",
-    "districtContext": "Nampa School District operates a dedicated Nampa Early Childhood Center serving children ages 3-5. The program was preserved by a 2023 levy vote (~245 kids served) and renewed by a 2025 levy. The standalone early childhood facility signals district commitment beyond ECSE minimum.",
+    "boardNotes": [
+      {
+        "date": "2026-03-30",
+        "summary": "2025 levy passed, continuing funding for preschool teachers, aides, and supplies. Community voted to sustain the early childhood program \u2014 strong grassroots support for the program.",
+        "source": "https://nsd131.org/levy2025"
+      }
+    ],
+    "districtContext": [
+      {
+        "type": "strategic",
+        "summary": "Nampa School District operates a dedicated Nampa Early Childhood Center serving children ages 3-5. Program was preserved by 2023 levy and renewed by a 2025 levy \u2014 serving approximately 245 children. Unusual standalone facility for Idaho given lack of state PreK funding.",
+        "date": "2026-03-30",
+        "source": "https://preschool.nsd131.org/"
+      },
+      {
+        "type": "website",
+        "summary": "Nampa School District maintains active curriculum adoption committees (nsd131.org/curriculum-adoption-committees) \u2014 formal channel for curriculum review and selection.",
+        "date": "2026-03-30",
+        "source": "https://www.nsd131.org/curriculum-adoption-committees"
+      }
+    ],
     "summerBridgeContact": null,
     "programType": "Public School",
     "schools": []
@@ -11714,15 +11891,32 @@
     "curriculumAdoptionYear": 2018,
     "priorityTier": "Tier 2",
     "newLeadership": false,
-    "buyingSignals": "Active kindergarten readiness initiative signals district leadership focused on early learning outcomes. Family engagement in PreK literacy creates warm reception for supplemental curriculum tools. Proactive district investing in pre-enrollment readiness is an ideal brightwheel prospect.",
+    "buyingSignals": [
+      "Active pre-enrollment family literacy initiative signals district invested in kindergarten readiness before children even arrive.",
+      "Proactive outreach to preschool families creates warm reception for supplemental curriculum tools.",
+      "4th largest district in Idaho with a named early learning priority."
+    ],
     "recentNews": [],
     "status": "not contacted",
     "priority": 35,
     "notes": "13,600+ students; dedicated early intervention program exists. District-level ECE contact not surfaced publicly. Target: Director of Special Services or Federal Programs. Phone 208-525-4400 to route to correct contact before Apollo enrichment.",
     "activities": [],
     "lastUpdated": "2026-03-30",
-    "boardNotes": "District launched preschool family literacy newsletter program. Kindergarten readiness is an identified district priority. District is 4th largest in Idaho with 20 schools. 2024-2025 board meeting schedule published \u2014 active board.",
-    "districtContext": "Bonneville Joint School District #93 serves 13,000+ students near Idaho Falls. District launched a preschool-to-kindergarten literacy initiative \u2014 monthly book distribution program with online learning recommendations for families, aimed at improving kindergarten readiness before children enroll.",
+    "boardNotes": [
+      {
+        "date": "2026-03-30",
+        "summary": "District launched preschool family literacy newsletter program \u2014 monthly books + online resource recommendations for families of pre-enrolled children. Kindergarten readiness is a named district priority.",
+        "source": "https://www.postregister.com/news/education/district-93-launches-newsletter-to-prepare-preschool-students/article_fc00dd89-b5ed-5bdf-8bc1-3c45cb2c826f.html"
+      }
+    ],
+    "districtContext": [
+      {
+        "type": "strategic",
+        "summary": "Bonneville Joint School District #93 serves 13,000+ students near Idaho Falls (4th largest in Idaho). District launched a preschool literacy initiative \u2014 monthly book distributions and online program recommendations for families to improve kindergarten readiness before enrollment.",
+        "date": "2026-03-30",
+        "source": "https://www.postregister.com/news/education/district-93-launches-newsletter-to-prepare-preschool-students/article_fc00dd89-b5ed-5bdf-8bc1-3c45cb2c826f.html"
+      }
+    ],
     "summerBridgeContact": null,
     "programType": "Public School",
     "schools": []
@@ -11745,15 +11939,38 @@
     "curriculumAdoptionYear": 2018,
     "priorityTier": "Tier 2",
     "newLeadership": false,
-    "buyingSignals": "Data-driven district with strong early literacy outcomes and dedicated early childhood facilities. Outcome focus signals appetite for high-quality curriculum programs. Above-average proficiency rates indicate leadership that invests in proven instructional tools.",
+    "buyingSignals": [
+      "Dedicated early childhood centers (Lincoln ECE + New Horizon) signal serious district investment in PreK.",
+      "83.7% kindergarten reading proficiency with strong growth signals outcomes-driven leadership receptive to quality programs.",
+      "Data-driven district publicly tracking and reporting early literacy metrics."
+    ],
     "recentNews": [],
     "status": "not contacted",
     "priority": 35,
     "notes": "Head Start since 1965 at Lincoln Early Intervention & Head Start center. Montessori program also offered at district level. Director of Elementary Education is the likely ECE curriculum owner. Email pattern from HR: HR_email@sd25.us confirmed; individual staff emails follow firstname@sd25.us or firstname.lastname@sd25.us -- needs verification. Call (208) 232-3563 main line for ECE center.",
     "activities": [],
     "lastUpdated": "2026-03-30",
-    "boardNotes": "2025 IRI results: 83.7% kindergarten reading proficiency, outperforming state average. K-3 proficiency at 73.6%. District attributes gains to early intervention, high-quality instruction, and family engagement. Dedicated early childhood centers in operation.",
-    "districtContext": "Pocatello-Chubbuck School District 25 serves 12,500 students across 23 schools. Operates dedicated early childhood facilities: Lincoln Early Childhood Center and New Horizon Center. The district posted strong 2025 Idaho Reading Indicator results \u2014 83.7% of kindergartners reading at grade level (10.8 pt gain vs. Spring 2024).",
+    "boardNotes": [
+      {
+        "date": "2026-03-30",
+        "summary": "2025 Idaho Reading Indicator results: 83.7% kindergarten reading proficiency (10.8 pt gain from Spring 2024), 73.6% K-3 proficiency \u2014 above state average. District attributes success to early intervention and family engagement.",
+        "source": "https://www.sd25.us/departments/communications/news-details/~board/press-releases/post/school-district-25-reading-proficiency-continues-to-rise-on-2025-idaho-reading-indicator"
+      }
+    ],
+    "districtContext": [
+      {
+        "type": "strategic",
+        "summary": "Pocatello-Chubbuck School District 25 serves 12,500 students across 23 schools. Operates dedicated early childhood facilities: Lincoln Early Childhood Center and New Horizon Center.",
+        "date": "2026-03-30",
+        "source": "https://www.sd25.us/schools-programs/early-childhood-education"
+      },
+      {
+        "type": "strategic",
+        "summary": "2025 Idaho Reading Indicator: 83.7% of kindergartners reading at grade level (10.8 percentage point gain vs. Spring 2024). K-3 reading proficiency at 73.6%, above state average \u2014 attributed to early intervention and high-quality instruction.",
+        "date": "2026-03-30",
+        "source": "https://www.sd25.us/departments/communications/news-details/~board/press-releases/post/school-district-25-reading-proficiency-continues-to-rise-on-2025-idaho-reading-indicator"
+      }
+    ],
     "summerBridgeContact": null,
     "programType": "Public School",
     "schools": []
@@ -11776,15 +11993,32 @@
     "curriculumAdoptionYear": 2018,
     "priorityTier": "Tier 2",
     "newLeadership": false,
-    "buyingSignals": "District tracks kindergarten readiness as a CIP metric \u2014 early learning is on leadership's radar. ECSE PreK limits immediate scope, but kindergarten literacy focus and CIP planning create an opening for tools that bridge preschool to K. District is outcomes-focused.",
+    "buyingSignals": [
+      "District tracks kindergarten readiness in its formal Continuous Improvement Plan \u2014 early learning is on leadership's radar.",
+      "CIP literacy goal of 70% (currently at 74.1%) signals district actively measuring early childhood outcomes.",
+      "ECSE-only PreK limits immediate scope but K-literacy focus creates opening for PreK-K bridge tools."
+    ],
     "recentNews": [],
     "status": "not contacted",
     "priority": 35,
     "notes": "Named contact with confirmed email and direct phone from official district website. ECE at D91 is ECSE-only (IEP-based, for children with developmental delays ages 3-5). No general preschool curriculum program. Limited fit for Brightwheel EC curriculum unless district expands beyond ECSE.",
     "activities": [],
     "lastUpdated": "2026-03-30",
-    "boardNotes": "2025-26 Continuous Improvement Plan (CIP) available at ifschools.org. Kindergarten ELA goal: 70% proficiency \u2014 currently at 74.1%. District tracks early literacy as a formal metric in its CIP.",
-    "districtContext": "Idaho Falls School District 91 serves 10,000+ students in 19 schools. Pre-K is limited to students with disabilities qualifying for ECSE under IDEA (federally funded). Kindergarten ELA proficiency reached 74.1% in 2025, surpassing the district's 70% goal. 2025-26 Continuous Improvement Plan is published.",
+    "boardNotes": [
+      {
+        "date": "2026-03-30",
+        "summary": "2025-26 Continuous Improvement Plan (CIP) published. Kindergarten ELA goal: 70% proficiency \u2014 currently exceeding at 74.1%. District tracks early literacy as a formal CIP metric.",
+        "source": "https://resources.finalsite.net/images/v1764884902/ifschoolsorg/epowwwckawnekuplbjdt/IFSD91CIP25-26.pdf"
+      }
+    ],
+    "districtContext": [
+      {
+        "type": "strategic",
+        "summary": "Idaho Falls School District 91 serves 10,000+ students in 19 schools. Pre-K is limited to students with disabilities qualifying for ECSE under IDEA (federally funded). Kindergarten ELA proficiency reached 74.1% in 2025, surpassing the district's 70% goal.",
+        "date": "2026-03-30",
+        "source": "https://resources.finalsite.net/images/v1764884902/ifschoolsorg/epowwwckawnekuplbjdt/IFSD91CIP25-26.pdf"
+      }
+    ],
     "summerBridgeContact": null,
     "programType": "Public School",
     "schools": []
@@ -11840,15 +12074,39 @@
     "curriculumAdoptionYear": 2025,
     "priorityTier": "Tier 2",
     "newLeadership": false,
-    "buyingSignals": "Brand new early childhood program launch \u2014 district is actively building curriculum, materials, and staffing for Early Plus right now. Unanimous board support means strong administrative buy-in. Kindergarten readiness goal directly aligns with brightwheel's value proposition. Perfect timing to engage.",
+    "buyingSignals": [
+      "Brand new Early Plus program launched Feb 2025 \u2014 district actively selecting curriculum and materials RIGHT NOW.",
+      "Unanimous board vote signals strong administrative buy-in at all levels.",
+      "Kindergarten readiness is the stated primary goal \u2014 directly aligned with brightwheel's value proposition.",
+      "District-funded program (not state-funded) means district leadership owns the decisions."
+    ],
     "recentNews": [],
     "status": "not contacted",
     "priority": 35,
     "notes": "Contact confirmed on official district website (non-discrimination notice). Heather Somers oversees Elementary Education AND Federal Programs -- dual role suggests ECE budget/curriculum ownership. CDA ELC is ECSE-only (~90 students with disabilities, ages 3-5), funded federal/state/local mix. NEW SIGNAL: 'Early Plus' general preschool (55 seats) unanimously approved by school board Feb 2025 (Idaho Ed News, Feb 13 2025) -- first general preschool for district. Program under development; curriculu",
     "activities": [],
     "lastUpdated": "2026-03-30",
-    "boardNotes": "Board unanimously approved Early Plus program in February 2025 (cdapress.com coverage). Program expands from existing School Plus. District cited kindergarten readiness and teacher retention as goals. Idaho education news (idahoednews.org) covered the launch.",
-    "districtContext": "Coeur d'Alene School District launched 'Early Plus' in February 2025 \u2014 a new full-time childcare + structured learning-hour program with 55 seats, unanimously approved by the school board. The program addresses the local childcare shortage and serves as a teacher recruitment and retention benefit while ensuring kindergarten readiness.",
+    "boardNotes": [
+      {
+        "date": "2025-02-13",
+        "summary": "Board unanimously approved new Early Plus program \u2014 full-time childcare + daily learning hour with 55 total seats. Program expands from existing School Plus. Goals: kindergarten readiness and teacher retention.",
+        "source": "https://cdapress.com/news/2025/feb/13/coeur-dalene-school-district-to-address-child-care-shortage-with-preschool-program/"
+      }
+    ],
+    "districtContext": [
+      {
+        "type": "strategic",
+        "summary": "Coeur d'Alene School District launched 'Early Plus' in February 2025 \u2014 a new full-time childcare + structured learning-hour program with 55 seats, unanimously approved by the school board. Addresses local childcare shortage while ensuring kindergarten readiness.",
+        "date": "2026-03-30",
+        "source": "https://cdapress.com/news/2025/feb/13/coeur-dalene-school-district-to-address-child-care-shortage-with-preschool-program/"
+      },
+      {
+        "type": "strategic",
+        "summary": "Early Plus program also serves as a teacher recruitment and retention benefit for district staff. Idaho does not fund preschool at state level \u2014 this is a district-funded initiative, making the unanimous board support especially significant.",
+        "date": "2026-03-30",
+        "source": "https://www.idahoednews.org/news/coeur-dalene-to-address-childcare-shortage-with-preschool-program/"
+      }
+    ],
     "summerBridgeContact": null,
     "programType": "Public School",
     "schools": []
