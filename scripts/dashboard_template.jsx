@@ -33,6 +33,15 @@ const REP_PROFILES = {
     color: "bg-blue-100 text-blue-700",
     initials: "ET",
   },
+  "kevin.elston@mybrightwheel.com": {
+    name: "Kevin Elston",
+    title: "District Partnerships",
+    email: "kevin.elston@mybrightwheel.com",
+    phone: "",
+    calendly: "",
+    color: "bg-green-100 text-green-700",
+    initials: "KE",
+  },
 };
 const DEFAULT_REP = REP_PROFILES["christie.cooley@mybrightwheel.com"];
 // Map each state to its assigned rep email
@@ -42,6 +51,7 @@ const STATE_REP_EMAIL = {
   GA: "christie.cooley@mybrightwheel.com",
   MI: "christie.cooley@mybrightwheel.com",
   ID: "eric.truog@mybrightwheel.com",
+  NV: "kevin.elston@mybrightwheel.com",
 };
 
 // Parse "Subject: ..." off the first line of a generated email body
@@ -226,7 +236,7 @@ function generateEmail(district, template, rep) {
   const contact = resolveContact(district, template);
 
   const stateCode = district.state || "FL";
-  const STATE_NAMES = { FL: "Florida", AL: "Alabama", ID: "Idaho" };
+  const STATE_NAMES = { FL: "Florida", AL: "Alabama", ID: "Idaho", NV: "Nevada" };
   const stateName = STATE_NAMES[stateCode] || stateCode;
 
   const isSummerBridgeTemplate = template === "summerBridge" || template === "summerBridgeShort";
@@ -886,7 +896,7 @@ export default function BrightwheelDashboard() {
                 className="border border-gray-200 rounded-lg px-3 py-2 text-sm flex-shrink-0 w-56 focus:outline-none focus:ring-2 focus:ring-indigo-200"
               />
               {[
-                { label: "State", val: filterState, setter: setFilterState, opts: [["all","All States"],["FL","🌴 Florida"],["AL","Alabama"],["ID","Idaho"]] },
+                { label: "State", val: filterState, setter: setFilterState, opts: [["all","All States"],["FL","🌴 Florida"],["AL","Alabama"],["ID","Idaho"],["NV","Nevada"]] },
                 { label: "Priority", val: filterPriority, setter: setFilterPriority, opts: [["all","All Priorities"],["hot","🔥 Hot"],["warm","🌡️ Warm"],["cool","💧 Cool"],["cold","❄️ Cold"]] },
                 { label: "Curriculum", val: filterCurriculum, setter: setFilterCurriculum, opts: [["all","All Curricula"], ...CURRICULUM_VENDORS.map(v => [v, v])] },
                 { label: "Status", val: filterStatus, setter: setFilterStatus, opts: [["all","All Statuses"], ...STATUSES.map(s => [s, s])] },
@@ -1287,6 +1297,7 @@ export default function BrightwheelDashboard() {
                   <option value="FL">🌴 Florida</option>
                   <option value="AL">Alabama</option>
                   <option value="ID">Idaho</option>
+                  <option value="NV">Nevada</option>
                 </select>
                 <select value={contactFilterRep} onChange={(e) => setContactFilterRep(e.target.value)} className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200">
                   <option value="all">All Reps</option>

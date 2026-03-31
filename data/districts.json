@@ -15641,5 +15641,786 @@
     "summerBridgeContact": null,
     "programType": "Public School",
     "schools": []
+  },
+  {
+    "id": 423,
+    "state": "NV",
+    "county": "Clark",
+    "district": "Delilah Krasch \u2014 Clark County School District",
+    "enrollment": 308474,
+    "director": "Delilah Krasch",
+    "title": "Director, Early Childhood",
+    "callToConfirm": false,
+    "email": "krascdj@nv.ccsd.net",
+    "phone": "(702) 799-7479",
+    "address": "5100 W Sahara Ave, Las Vegas, NV 89146",
+    "linkedin": "",
+    "curriculum": "Play-based/thematic (district-developed, aligned to NV Pre-K Standards 2023); Teaching Strategies GOLD (assessment, statewide KEA 2025-26)",
+    "curriculumVendor": "Teaching Strategies",
+    "curriculumAdoptionYear": null,
+    "priorityTier": "Tier 1",
+    "newLeadership": false,
+    "buyingSignals": [
+      "PreK expansion: Added 1,300 new Pre-K seats for 2025-26 school year",
+      "Strategic plan: Facility master plan includes reimagining underutilized spaces as early childhood centers",
+      "Grant: Nevada Ready! Pre-K program participant; ongoing state funding"
+    ],
+    "recentNews": [],
+    "status": "not contacted",
+    "priority": 0,
+    "notes": "",
+    "activities": [],
+    "lastUpdated": "2026-03-31",
+    "boardNotes": [
+      {
+        "date": "2026-03-31",
+        "summary": "Oversees 600+ Pre-K programs district-wide. Curriculum & Instruction Dept also has separate ECE team (Director: Nicole Sailers, cidearlychildhood@nv.ccsd.net, 702-799-2328). ECE dept at 2625 E. St. Louis Ave, Las Vegas, NV 89104.",
+        "source": "https://ssd.ccsd.net/early-childhood-department/"
+      }
+    ],
+    "districtContext": [
+      {
+        "type": "strategic",
+        "summary": "Play-based/thematic (district-developed, aligned to NV Pre-K Standards 2023); Teaching Strategies GOLD (assessment, statewide KEA 2025-26)",
+        "date": "2026-03-31",
+        "source": "https://ssd.ccsd.net/early-childhood-department/"
+      }
+    ],
+    "summerBridgeContact": null,
+    "programType": "Nevada Ready! Pre-K",
+    "schools": []
+  },
+  {
+    "id": 424,
+    "state": "NV",
+    "county": "Carson City",
+    "district": "Tanya Scott \u2014 Carson City School District",
+    "enrollment": 7200,
+    "director": "Tanya Scott",
+    "title": "Director of EL & Pre-K Programming",
+    "callToConfirm": false,
+    "email": "tscott@carson.k12.nv.us",
+    "phone": "(775) 283-1521",
+    "address": "1402 W King St, Carson City, NV 89703",
+    "linkedin": "",
+    "curriculum": "Nevada Ready! Pre-K (state program); aligned to NV Pre-K Standards 2023",
+    "curriculumVendor": "Nevada Ready! Pre-K",
+    "curriculumAdoptionYear": null,
+    "priorityTier": "Tier 2",
+    "newLeadership": false,
+    "buyingSignals": [
+      "Grant: Nevada Ready! Pre-K program participant; PDG B-5 funded",
+      "PreK expansion: Full-day Pre-K transition requiring new facility space; partnership with Boys & Girls Club"
+    ],
+    "recentNews": [],
+    "status": "not contacted",
+    "priority": 2,
+    "notes": "",
+    "activities": [],
+    "lastUpdated": "2026-03-31",
+    "boardNotes": [
+      {
+        "date": "2026-03-31",
+        "summary": "Pre-K program at 604 W Musser, Carson City. Pre-K coordinator Alicia Smith: asmith@carson.k12.nv.us. Chief Academic Officer Tasha Fuson: tfuson@carson.k12.nv.us.",
+        "source": "https://www.carsoncityschools.com/programs-services/pre-k"
+      }
+    ],
+    "districtContext": [
+      {
+        "type": "strategic",
+        "summary": "Nevada Ready! Pre-K (state program); aligned to NV Pre-K Standards 2023",
+        "date": "2026-03-31",
+        "source": "https://www.carsoncityschools.com/programs-services/pre-k"
+      }
+    ],
+    "summerBridgeContact": null,
+    "programType": "Nevada Ready! Pre-K",
+    "schools": []
+  },
+  {
+    "id": 425,
+    "state": "NV",
+    "county": "Washoe",
+    "district": "Tina Springmeyer \u2014 Washoe County School District",
+    "enrollment": 64000,
+    "director": "Tina Springmeyer",
+    "title": "Director, Child & Family Services",
+    "callToConfirm": false,
+    "email": "tspringmeyer@washoeschools.net",
+    "phone": "(775) 327-0675",
+    "address": "425 E 9th St, Reno, NV 89512",
+    "linkedin": "",
+    "curriculum": "Nevada Ready! Pre-K (state program); aligned to NV Pre-K Standards 2023; NAEYC Accreditation Criteria",
+    "curriculumVendor": "Nevada Ready! Pre-K",
+    "curriculumAdoptionYear": null,
+    "priorityTier": "Tier 1",
+    "newLeadership": false,
+    "buyingSignals": [
+      "Grant: Pursuing competitive 'Early Childhood and Readiness' grant for FY2027 after ECILP cut from 2025 legislature",
+      "Grant: ECILP FY25 participant (PBS Reno Curiosity Classroom STEM literacy expansion across Washoe)",
+      "Grant: Nevada Ready! Pre-K program participant; PDG B-5 funded"
+    ],
+    "recentNews": [],
+    "status": "not contacted",
+    "priority": 0,
+    "notes": "",
+    "activities": [],
+    "lastUpdated": "2026-03-31",
+    "boardNotes": [
+      {
+        "date": "2026-03-31",
+        "summary": "Email inferred from district pattern (first_initial+last@washoeschools.net, 92.9% of staff). Verify before sending. Pre-K enrollment: PreKEnrollment@washoeschools.net, 775-333-3731.",
+        "source": "https://www.washoeschools.net/directory/child-family-services/department-homepage"
+      }
+    ],
+    "districtContext": [
+      {
+        "type": "strategic",
+        "summary": "Nevada Ready! Pre-K (state program); aligned to NV Pre-K Standards 2023; NAEYC Accreditation Criteria",
+        "date": "2026-03-31",
+        "source": "https://www.washoeschools.net/directory/child-family-services/department-homepage"
+      }
+    ],
+    "summerBridgeContact": null,
+    "programType": "Nevada Ready! Pre-K",
+    "schools": []
+  },
+  {
+    "id": 426,
+    "state": "NV",
+    "county": "Lyon",
+    "district": "Heather Moyle \u2014 Lyon County School District",
+    "enrollment": 9000,
+    "director": "Heather Moyle",
+    "title": "Executive Director, Elementary Education Services",
+    "callToConfirm": false,
+    "email": "",
+    "phone": "(775) 463-6800",
+    "address": "25 E Goldfield Ave, Yerington, NV 89447",
+    "linkedin": "",
+    "curriculum": "Nevada Ready! Pre-K (state program); aligned to NV Pre-K Standards 2023",
+    "curriculumVendor": "Nevada Ready! Pre-K",
+    "curriculumAdoptionYear": null,
+    "priorityTier": "Tier 2",
+    "newLeadership": false,
+    "buyingSignals": [
+      "Grant: ECILP FY25 participant (PBS Reno Curiosity Classroom STEM literacy program)",
+      "Grant: Nevada Ready! Pre-K program participant; PDG B-5 funded"
+    ],
+    "recentNews": [],
+    "status": "not contacted",
+    "priority": 2,
+    "notes": "",
+    "activities": [],
+    "lastUpdated": "2026-03-31",
+    "boardNotes": [
+      {
+        "date": "2026-03-31",
+        "summary": "No dedicated ECE director listed. Moyle oversees all elementary ed including PreK. Email not publicly listed -- flag for Apollo.io enrichment. Special Services Director: Rachel Stewart, rstewart@lyoncsd.org, (775) 463-6800.",
+        "source": "https://www.lyoncsd.org/departments/ed-services/our-team"
+      }
+    ],
+    "districtContext": [
+      {
+        "type": "strategic",
+        "summary": "Nevada Ready! Pre-K (state program); aligned to NV Pre-K Standards 2023",
+        "date": "2026-03-31",
+        "source": "https://www.lyoncsd.org/departments/ed-services/our-team"
+      }
+    ],
+    "summerBridgeContact": null,
+    "programType": "Nevada Ready! Pre-K",
+    "schools": []
+  },
+  {
+    "id": 427,
+    "state": "NV",
+    "county": "Douglas",
+    "district": "Cheryl Mayfield \u2014 Douglas County School District",
+    "enrollment": 5400,
+    "director": "Cheryl Mayfield",
+    "title": "Executive Director, Inclusive Education",
+    "callToConfirm": false,
+    "email": "cmayfiel@dcsd.k12.nv.us",
+    "phone": "(775) 265-5262",
+    "address": "1638 Mono Ave, Minden, NV 89423",
+    "linkedin": "",
+    "curriculum": "Nevada Ready! Pre-K (state program); aligned to NV Pre-K Standards 2023",
+    "curriculumVendor": "Nevada Ready! Pre-K",
+    "curriculumAdoptionYear": null,
+    "priorityTier": "Tier 2",
+    "newLeadership": false,
+    "buyingSignals": [
+      "Grant: ECILP FY25 participant (PBS Reno Curiosity Classroom STEM literacy program)",
+      "Grant: Nevada Ready! Pre-K program participant; PDG B-5 funded"
+    ],
+    "recentNews": [],
+    "status": "not contacted",
+    "priority": 2,
+    "notes": "",
+    "activities": [],
+    "lastUpdated": "2026-03-31",
+    "boardNotes": [
+      {
+        "date": "2026-03-31",
+        "summary": "No dedicated ECE director. Inclusive Ed oversees PreK/early childhood. Child Find contact: 775-392-2121. Amy Kidman-DeLaney is Asst Director of Inclusive Education.",
+        "source": "https://www.dcsd.net/connect/department-directory"
+      }
+    ],
+    "districtContext": [
+      {
+        "type": "strategic",
+        "summary": "Nevada Ready! Pre-K (state program); aligned to NV Pre-K Standards 2023",
+        "date": "2026-03-31",
+        "source": "https://www.dcsd.net/connect/department-directory"
+      }
+    ],
+    "summerBridgeContact": null,
+    "programType": "Nevada Ready! Pre-K",
+    "schools": []
+  },
+  {
+    "id": 428,
+    "state": "NV",
+    "county": "Churchill",
+    "district": "Kathryn Bervin-Mueller \u2014 Churchill County School District",
+    "enrollment": 3100,
+    "director": "Kathryn Bervin-Mueller",
+    "title": "Interim Director, Office of Inclusive Education",
+    "callToConfirm": false,
+    "email": "bervink@churchillcsd.com",
+    "phone": "(775) 423-5184",
+    "address": "690 S Maine St, Fallon, NV 89406",
+    "linkedin": "",
+    "curriculum": "Nevada Ready! Pre-K (state program); aligned to NV Pre-K Standards 2023",
+    "curriculumVendor": "Nevada Ready! Pre-K",
+    "curriculumAdoptionYear": null,
+    "priorityTier": "Tier 3",
+    "newLeadership": false,
+    "buyingSignals": [
+      "Grant: Nevada Ready! Pre-K program participant; PDG B-5 funded; Northside Early Learning Center",
+      "Leadership transition: Superintendent search underway for 2026-27; new leader may drive curriculum review"
+    ],
+    "recentNews": [],
+    "status": "not contacted",
+    "priority": 2,
+    "notes": "",
+    "activities": [],
+    "lastUpdated": "2026-03-31",
+    "boardNotes": [
+      {
+        "date": "2026-03-31",
+        "summary": "One ECE site: Northside Early Learning Center, 775-423-3463. PreK enrollment: prekenrollment@hcsdnv.com. Superintendent Derild Parsons retiring end of 2025-26 school year.",
+        "source": "https://www.churchillcsd.com/faculty-staff-directory"
+      }
+    ],
+    "districtContext": [
+      {
+        "type": "strategic",
+        "summary": "Nevada Ready! Pre-K (state program); aligned to NV Pre-K Standards 2023",
+        "date": "2026-03-31",
+        "source": "https://www.churchillcsd.com/faculty-staff-directory"
+      }
+    ],
+    "summerBridgeContact": null,
+    "programType": "Nevada Ready! Pre-K",
+    "schools": []
+  },
+  {
+    "id": 429,
+    "state": "NV",
+    "county": "Elko",
+    "district": "Ken Higbee \u2014 Elko County School District",
+    "enrollment": 9888,
+    "director": "Ken Higbee",
+    "title": "Director, Special Services",
+    "callToConfirm": false,
+    "email": "khigbee@ecsdnv.net",
+    "phone": "(775) 738-5196",
+    "address": "850 Elm St, Elko, NV 89801",
+    "linkedin": "",
+    "curriculum": "Aligned to NV Pre-K Standards 2023",
+    "curriculumVendor": "",
+    "curriculumAdoptionYear": null,
+    "priorityTier": "Tier 2",
+    "newLeadership": false,
+    "buyingSignals": [
+      "Grant: ECILP FY25 participant (PBS Reno Curiosity Classroom STEM literacy expansion)"
+    ],
+    "recentNews": [],
+    "status": "not contacted",
+    "priority": 2,
+    "notes": "",
+    "activities": [],
+    "lastUpdated": "2026-03-31",
+    "boardNotes": [
+      {
+        "date": "2026-03-31",
+        "summary": "No dedicated ECE director found on district website. Higbee listed in NV DOE admin directory as Dir. Spec Serv. Verify email and confirm ECE-specific contact via Apollo.io. District website: ecsdnv.net.",
+        "source": "https://www.ecsdnv.net/"
+      }
+    ],
+    "districtContext": [
+      {
+        "type": "strategic",
+        "summary": "Aligned to NV Pre-K Standards 2023",
+        "date": "2026-03-31",
+        "source": "https://www.ecsdnv.net/"
+      }
+    ],
+    "summerBridgeContact": null,
+    "programType": "Nevada Ready! Pre-K",
+    "schools": []
+  },
+  {
+    "id": 430,
+    "state": "NV",
+    "county": "Humboldt",
+    "district": "DeAnna Owens \u2014 Humboldt County School District",
+    "enrollment": 3500,
+    "director": "DeAnna Owens",
+    "title": "Director, Special Education Services",
+    "callToConfirm": false,
+    "email": "dowens@hcsdnv.com",
+    "phone": "(775) 623-8128",
+    "address": "310 E 4th St, Winnemucca, NV 89445",
+    "linkedin": "",
+    "curriculum": "Aligned to NV Pre-K Standards 2023",
+    "curriculumVendor": "",
+    "curriculumAdoptionYear": null,
+    "priorityTier": "Tier 3",
+    "newLeadership": false,
+    "buyingSignals": [
+      "Grant: ECILP FY25 participant (PBS Reno Curiosity Classroom STEM literacy expansion across Humboldt County)"
+    ],
+    "recentNews": [],
+    "status": "not contacted",
+    "priority": 2,
+    "notes": "",
+    "activities": [],
+    "lastUpdated": "2026-03-31",
+    "boardNotes": [
+      {
+        "date": "2026-03-31",
+        "summary": "Pre-K routes through Special Services Dept. Pre-K enrollment email: prekenrollment@hcsdnv.com. District serves 4-year-olds; 3-year-olds only with IEP. Recent school closure (Winnemucca Grammar) may affect Pre-K placement for 2026-27.",
+        "source": "https://www.hcsdnv.com/families-students/prek"
+      }
+    ],
+    "districtContext": [
+      {
+        "type": "strategic",
+        "summary": "Aligned to NV Pre-K Standards 2023",
+        "date": "2026-03-31",
+        "source": "https://www.hcsdnv.com/families-students/prek"
+      }
+    ],
+    "summerBridgeContact": null,
+    "programType": "Nevada Ready! Pre-K",
+    "schools": []
+  },
+  {
+    "id": 431,
+    "state": "NV",
+    "county": "Nye",
+    "district": "Shanda Roderick \u2014 Nye County School District",
+    "enrollment": 5933,
+    "director": "Shanda Roderick",
+    "title": "Director, Special Education & Support Services",
+    "callToConfirm": false,
+    "email": "sroderick@nyeschools.org",
+    "phone": "(775) 751-4015",
+    "address": "484 S West St, Pahrump, NV 89048",
+    "linkedin": "",
+    "curriculum": "Nevada Ready! Pre-K (state program); aligned to NV Pre-K Standards 2023",
+    "curriculumVendor": "Nevada Ready! Pre-K",
+    "curriculumAdoptionYear": null,
+    "priorityTier": "Tier 2",
+    "newLeadership": false,
+    "buyingSignals": [
+      "Grant: Nevada Ready! Pre-K program participant; PDG B-5 funded",
+      "Grant: Rural Classroom on Wheels early literacy expansion reached Tonopah (Nye County) in FY24"
+    ],
+    "recentNews": [],
+    "status": "not contacted",
+    "priority": 2,
+    "notes": "",
+    "activities": [],
+    "lastUpdated": "2026-03-31",
+    "boardNotes": [
+      {
+        "date": "2026-03-31",
+        "summary": "Largest district in contiguous US by land area. Also serves Esmeralda County HS students. Nevada Ready Pre-K offered across multiple sites. Pahrump: 775-727-7743; Tonopah: 775-482-5411.",
+        "source": "https://www.nye.k12.nv.us/"
+      }
+    ],
+    "districtContext": [
+      {
+        "type": "strategic",
+        "summary": "Nevada Ready! Pre-K (state program); aligned to NV Pre-K Standards 2023",
+        "date": "2026-03-31",
+        "source": "https://www.nye.k12.nv.us/"
+      }
+    ],
+    "summerBridgeContact": null,
+    "programType": "Nevada Ready! Pre-K",
+    "schools": []
+  },
+  {
+    "id": 432,
+    "state": "NV",
+    "county": "Lander",
+    "district": "Paul Lords \u2014 Lander County School District",
+    "enrollment": 1100,
+    "director": "Paul Lords",
+    "title": "Director, Special Education",
+    "callToConfirm": false,
+    "email": "plords@landernv.net",
+    "phone": "(775) 635-6114",
+    "address": "P.O. Box 1300, Battle Mountain, NV 89820",
+    "linkedin": "",
+    "curriculum": "Aligned to NV Pre-K Standards 2023",
+    "curriculumVendor": "",
+    "curriculumAdoptionYear": null,
+    "priorityTier": "Tier 3",
+    "newLeadership": false,
+    "buyingSignals": [],
+    "recentNews": [],
+    "status": "not contacted",
+    "priority": 2,
+    "notes": "",
+    "activities": [],
+    "lastUpdated": "2026-03-31",
+    "boardNotes": [
+      {
+        "date": "2026-03-31",
+        "summary": "Small district. Superintendent: Russell Klein. Email for Lords sourced from NV DOE admin list -- verify before sending. No buying signals surfaced.",
+        "source": "https://webapp-strapi-paas-prod-nde-001.azurewebsites.net/uploads/Administrators_List_6d1e26273e.pdf"
+      }
+    ],
+    "districtContext": [
+      {
+        "type": "strategic",
+        "summary": "Aligned to NV Pre-K Standards 2023",
+        "date": "2026-03-31",
+        "source": "https://webapp-strapi-paas-prod-nde-001.azurewebsites.net/uploads/Administrators_List_6d1e26273e.pdf"
+      }
+    ],
+    "summerBridgeContact": null,
+    "programType": "Nevada Ready! Pre-K",
+    "schools": []
+  },
+  {
+    "id": 433,
+    "state": "NV",
+    "county": "Lincoln",
+    "district": "Kathleen Keene \u2014 Lincoln County School District",
+    "enrollment": 700,
+    "director": "Kathleen Keene",
+    "title": "Director, Special Education",
+    "callToConfirm": false,
+    "email": "kkeene@lcsdnv.com",
+    "phone": "(775) 725-3351",
+    "address": "P.O. Box 118, Panaca, NV 89042",
+    "linkedin": "",
+    "curriculum": "Aligned to NV Pre-K Standards 2023",
+    "curriculumVendor": "",
+    "curriculumAdoptionYear": null,
+    "priorityTier": "Tier 3",
+    "newLeadership": false,
+    "buyingSignals": [],
+    "recentNews": [],
+    "status": "not contacted",
+    "priority": 2,
+    "notes": "",
+    "activities": [],
+    "lastUpdated": "2026-03-31",
+    "boardNotes": [
+      {
+        "date": "2026-03-31",
+        "summary": "Small rural district. Superintendent: Pam Teel, pteel@lcsdnv.com. No dedicated ECE director; Spec Ed director is best ECE contact. No buying signals surfaced.",
+        "source": "https://webapp-strapi-paas-prod-nde-001.azurewebsites.net/uploads/Administrators_List_6d1e26273e.pdf"
+      }
+    ],
+    "districtContext": [
+      {
+        "type": "strategic",
+        "summary": "Aligned to NV Pre-K Standards 2023",
+        "date": "2026-03-31",
+        "source": "https://webapp-strapi-paas-prod-nde-001.azurewebsites.net/uploads/Administrators_List_6d1e26273e.pdf"
+      }
+    ],
+    "summerBridgeContact": null,
+    "programType": "Nevada Ready! Pre-K",
+    "schools": []
+  },
+  {
+    "id": 434,
+    "state": "NV",
+    "county": "Pershing",
+    "district": "Shannon Urquhart \u2014 Pershing County School District",
+    "enrollment": 750,
+    "director": "Shannon Urquhart",
+    "title": "Director, Special Education",
+    "callToConfirm": false,
+    "email": "surquhart@pcsdnv.com",
+    "phone": "(775) 273-5099",
+    "address": "P.O. Box 389, Lovelock, NV 89419",
+    "linkedin": "",
+    "curriculum": "Aligned to NV Pre-K Standards 2023",
+    "curriculumVendor": "",
+    "curriculumAdoptionYear": null,
+    "priorityTier": "Tier 3",
+    "newLeadership": false,
+    "buyingSignals": [],
+    "recentNews": [],
+    "status": "not contacted",
+    "priority": 2,
+    "notes": "",
+    "activities": [],
+    "lastUpdated": "2026-03-31",
+    "boardNotes": [
+      {
+        "date": "2026-03-31",
+        "summary": "Small district. Superintendent: Dennis Holmes. Urquhart is confirmed Special Ed Director from NV DOE admin list. No buying signals surfaced.",
+        "source": "https://webapp-strapi-paas-prod-nde-001.azurewebsites.net/uploads/Administrators_List_6d1e26273e.pdf"
+      }
+    ],
+    "districtContext": [
+      {
+        "type": "strategic",
+        "summary": "Aligned to NV Pre-K Standards 2023",
+        "date": "2026-03-31",
+        "source": "https://webapp-strapi-paas-prod-nde-001.azurewebsites.net/uploads/Administrators_List_6d1e26273e.pdf"
+      }
+    ],
+    "summerBridgeContact": null,
+    "programType": "Nevada Ready! Pre-K",
+    "schools": []
+  },
+  {
+    "id": 435,
+    "state": "NV",
+    "county": "White Pine",
+    "district": "Brigette Saltarelli \u2014 White Pine County School District",
+    "enrollment": 1282,
+    "director": "Brigette Saltarelli",
+    "title": "Director, Special Projects & Programs",
+    "callToConfirm": false,
+    "email": "brigette.saltarelli@wpcnvadmin.com",
+    "phone": "(775) 289-4851",
+    "address": "1135 Avenue C, Ely, NV 89301",
+    "linkedin": "",
+    "curriculum": "Aligned to NV Pre-K Standards 2023",
+    "curriculumVendor": "",
+    "curriculumAdoptionYear": null,
+    "priorityTier": "Tier 3",
+    "newLeadership": false,
+    "buyingSignals": [
+      "Grant: ECILP FY25 participant (PBS Reno Curiosity Classroom STEM literacy expansion across White Pine County)"
+    ],
+    "recentNews": [],
+    "status": "not contacted",
+    "priority": 2,
+    "notes": "",
+    "activities": [],
+    "lastUpdated": "2026-03-31",
+    "boardNotes": [
+      {
+        "date": "2026-03-31",
+        "summary": "Superintendent: Adam Young, adam.young@wpcnvadmin.com. Saltarelli is Director of Special Projects & Programs; closest to ECE oversight given district size.",
+        "source": "https://webapp-strapi-paas-prod-nde-001.azurewebsites.net/uploads/Administrators_List_6d1e26273e.pdf"
+      }
+    ],
+    "districtContext": [
+      {
+        "type": "strategic",
+        "summary": "Aligned to NV Pre-K Standards 2023",
+        "date": "2026-03-31",
+        "source": "https://webapp-strapi-paas-prod-nde-001.azurewebsites.net/uploads/Administrators_List_6d1e26273e.pdf"
+      }
+    ],
+    "summerBridgeContact": null,
+    "programType": "Nevada Ready! Pre-K",
+    "schools": []
+  },
+  {
+    "id": 436,
+    "state": "NV",
+    "county": "Storey",
+    "district": "Crystal Pickett \u2014 Storey County School District",
+    "enrollment": 500,
+    "director": "Crystal Pickett",
+    "title": "Special Programs Coordinator",
+    "callToConfirm": false,
+    "email": "cpickett@storeynv.com",
+    "phone": "(775) 847-0983",
+    "address": "PO Box C, Virginia City, NV 89440",
+    "linkedin": "",
+    "curriculum": "Aligned to NV Pre-K Standards 2023",
+    "curriculumVendor": "",
+    "curriculumAdoptionYear": null,
+    "priorityTier": "Tier 3",
+    "newLeadership": false,
+    "buyingSignals": [
+      "Grant: ECILP FY25 participant (PBS Reno Curiosity Classroom STEM literacy program)"
+    ],
+    "recentNews": [],
+    "status": "not contacted",
+    "priority": 2,
+    "notes": "",
+    "activities": [],
+    "lastUpdated": "2026-03-31",
+    "boardNotes": [
+      {
+        "date": "2026-03-31",
+        "summary": "Very small district (~500 students). Superintendent: Joe Girdner, jgirdner@storeynv.com. Pickett is Special Programs Coordinator -- best ECE contact given district size.",
+        "source": "https://webapp-strapi-paas-prod-nde-001.azurewebsites.net/uploads/Administrators_List_6d1e26273e.pdf"
+      }
+    ],
+    "districtContext": [
+      {
+        "type": "strategic",
+        "summary": "Aligned to NV Pre-K Standards 2023",
+        "date": "2026-03-31",
+        "source": "https://webapp-strapi-paas-prod-nde-001.azurewebsites.net/uploads/Administrators_List_6d1e26273e.pdf"
+      }
+    ],
+    "summerBridgeContact": null,
+    "programType": "Nevada Ready! Pre-K",
+    "schools": []
+  },
+  {
+    "id": 437,
+    "state": "NV",
+    "county": "Mineral",
+    "district": "Stacie King \u2014 Mineral County School District",
+    "enrollment": 600,
+    "director": "Stacie King",
+    "title": "Coordinator, Special Education",
+    "callToConfirm": false,
+    "email": "King.Stacie@nvmcsd.org",
+    "phone": "(775) 945-2403",
+    "address": "P.O. Box 1540, Hawthorne, NV 89415",
+    "linkedin": "",
+    "curriculum": "Aligned to NV Pre-K Standards 2023",
+    "curriculumVendor": "",
+    "curriculumAdoptionYear": null,
+    "priorityTier": "Tier 3",
+    "newLeadership": false,
+    "buyingSignals": [
+      "Grant: Rural Classroom on Wheels early literacy expansion reached Hawthorne (Mineral County) in FY24"
+    ],
+    "recentNews": [],
+    "status": "not contacted",
+    "priority": 2,
+    "notes": "",
+    "activities": [],
+    "lastUpdated": "2026-03-31",
+    "boardNotes": [
+      {
+        "date": "2026-03-31",
+        "summary": "Small district. Superintendent: Stephanie Keuhey. Paul McDonald also listed as Spec Ed Coord: mcdonald.paul@nvmcsd.org. Rural COW bus literacy program signals active ECE investment.",
+        "source": "https://webapp-strapi-paas-prod-nde-001.azurewebsites.net/uploads/Administrators_List_6d1e26273e.pdf"
+      }
+    ],
+    "districtContext": [
+      {
+        "type": "strategic",
+        "summary": "Aligned to NV Pre-K Standards 2023",
+        "date": "2026-03-31",
+        "source": "https://webapp-strapi-paas-prod-nde-001.azurewebsites.net/uploads/Administrators_List_6d1e26273e.pdf"
+      }
+    ],
+    "summerBridgeContact": null,
+    "programType": "Nevada Ready! Pre-K",
+    "schools": []
+  },
+  {
+    "id": 438,
+    "state": "NV",
+    "county": "Eureka",
+    "district": "Amy Damele \u2014 Eureka County School District",
+    "enrollment": 300,
+    "director": "Amy Damele",
+    "title": "Coordinator, Special Education",
+    "callToConfirm": false,
+    "email": "adamele@eureka.k12.nv.us",
+    "phone": "(775) 237-5700",
+    "address": "P.O. Box 249, Eureka, NV 89316",
+    "linkedin": "",
+    "curriculum": "Aligned to NV Pre-K Standards 2023",
+    "curriculumVendor": "",
+    "curriculumAdoptionYear": null,
+    "priorityTier": "Tier 3",
+    "newLeadership": false,
+    "buyingSignals": [],
+    "recentNews": [],
+    "status": "not contacted",
+    "priority": 2,
+    "notes": "",
+    "activities": [],
+    "lastUpdated": "2026-03-31",
+    "boardNotes": [
+      {
+        "date": "2026-03-31",
+        "summary": "Very small district (~300 students). Superintendent: Tate Else. Damele is Spec Ed coordinator. Consider deprioritizing -- enrollment may be too small for standalone EC curriculum program.",
+        "source": "https://webapp-strapi-paas-prod-nde-001.azurewebsites.net/uploads/Administrators_List_6d1e26273e.pdf"
+      }
+    ],
+    "districtContext": [
+      {
+        "type": "strategic",
+        "summary": "Aligned to NV Pre-K Standards 2023",
+        "date": "2026-03-31",
+        "source": "https://webapp-strapi-paas-prod-nde-001.azurewebsites.net/uploads/Administrators_List_6d1e26273e.pdf"
+      }
+    ],
+    "summerBridgeContact": null,
+    "programType": "Nevada Ready! Pre-K",
+    "schools": []
+  },
+  {
+    "id": 439,
+    "state": "NV",
+    "county": "Esmeralda",
+    "district": "Vanessa Manning \u2014 Esmeralda County School District",
+    "enrollment": 150,
+    "director": "Vanessa Manning",
+    "title": "Special Services Coordinator",
+    "callToConfirm": false,
+    "email": "vmanning@ecsdnv.org",
+    "phone": "(775) 485-3215",
+    "address": "P.O. Box 560, Goldfield, NV 89013",
+    "linkedin": "",
+    "curriculum": "Aligned to NV Pre-K Standards 2023",
+    "curriculumVendor": "",
+    "curriculumAdoptionYear": null,
+    "priorityTier": "Tier 3",
+    "newLeadership": false,
+    "buyingSignals": [],
+    "recentNews": [],
+    "status": "not contacted",
+    "priority": 2,
+    "notes": "",
+    "activities": [],
+    "lastUpdated": "2026-03-31",
+    "boardNotes": [
+      {
+        "date": "2026-03-31",
+        "summary": "Smallest district in Nevada (~150 students). HS students attend Nye County. Manning is Special Services Coordinator. Deprioritize for EC outreach -- enrollment too small for standalone ECE program.",
+        "source": "https://webapp-strapi-paas-prod-nde-001.azurewebsites.net/uploads/Administrators_List_6d1e26273e.pdf"
+      }
+    ],
+    "districtContext": [
+      {
+        "type": "strategic",
+        "summary": "Aligned to NV Pre-K Standards 2023",
+        "date": "2026-03-31",
+        "source": "https://webapp-strapi-paas-prod-nde-001.azurewebsites.net/uploads/Administrators_List_6d1e26273e.pdf"
+      }
+    ],
+    "summerBridgeContact": null,
+    "programType": "Nevada Ready! Pre-K",
+    "schools": []
   }
 ]
