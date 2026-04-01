@@ -529,6 +529,32 @@ export default function BrightwheelDashboard() {
     }
   };
 
+  const draftEmail = async (item, token) => {
+    const useToken = token || gmailToken;
+    if (!useToken) { connectGmail((t) => draftEmail(item, t)); return; }
+    const { subject, body } = parseEmailParts(item.body);
+    const raw = buildRawEmail(item.to, subject, body);
+    try {
+      const res = await fetch("https://gmail.googleapis.com/gmail/v1/users/me/drafts", {
+        method: "POST",
+        headers: { Authorization: "Bearer " + useToken, "Content-Type": "application/json" },
+        body: JSON.stringify({ message: { raw } }),
+      });
+      if (res.ok) {
+        rejectEmail(item.id);
+        showNotif("📋 Draft saved — " + item.directorName);
+      } else if (res.status === 401) {
+        setGmailToken(null); setGmailConnected(false);
+        showNotif("Gmail session expired — reconnecting...", "red");
+        connectGmail((t) => draftEmail(item, t));
+      } else {
+        showNotif("Gmail draft error " + res.status, "red");
+      }
+    } catch (e) {
+      showNotif("Draft failed: " + e.message, "red");
+    }
+  };
+
   const sendAllEmails = async () => {
     if (!gmailToken && GOOGLE_CLIENT_ID) { connectGmail((t) => { /* sends will fire from pending */ }); }
     for (const item of [...approvalQueue]) {
@@ -1633,6 +1659,12 @@ export default function BrightwheelDashboard() {
                         </div>
                         <div className="flex gap-2 flex-shrink-0 flex-wrap">
                           <button
+                            onClick={() => draftEmail(item)}
+                            className="bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-xs px-3 py-1.5 rounded-lg font-semibold"
+                          >
+                            📋 Draft
+                          </button>
+                          <button
                             onClick={() => sendEmail(item)}
                             className="bg-green-600 hover:bg-green-700 text-white text-xs px-3 py-1.5 rounded-lg font-semibold"
                           >
@@ -1646,9 +1678,15 @@ export default function BrightwheelDashboard() {
                           </button>
                         </div>
                       </div>
-                      <pre className="text-xs text-gray-700 whitespace-pre-wrap p-4 leading-relaxed font-sans bg-white max-h-52 overflow-y-auto">
-                        {item.body}
-                      </pre>
+                      <div className="bg-white max-h-64 overflow-y-auto border-t border-gray-100">
+                        <iframe
+                          srcDoc={parseEmailParts(item.body).body}
+                          title="Email preview"
+                          className="w-full border-0"
+                          style={{ minHeight: "220px" }}
+                          sandbox="allow-same-origin"
+                        />
+                      </div>
                       <div className="px-4 py-2 bg-gray-50 border-t border-gray-100 text-xs text-gray-400">
                         Queued: {item.createdAt}
                       </div>
@@ -2017,15 +2055,23 @@ export default function BrightwheelDashboard() {
       {/* Email Preview Modal */}
       {showEmailPreview && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" onClick={() => setShowEmailPreview(false)}>
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[80vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-            <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-3 flex justify-between items-center">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl flex flex-col" style={{ maxHeight: "85vh" }} onClick={(e) => e.stopPropagation()}>
+            <div className="bg-white border-b border-gray-200 px-6 py-3 flex justify-between items-center rounded-t-2xl flex-shrink-0">
               <h3 className="font-semibold text-gray-900">Email Preview</h3>
               <div className="flex gap-2">
-                <button onClick={() => { navigator.clipboard?.writeText(emailPreview); showNotif("Copied!"); }} className="text-xs border border-gray-200 px-3 py-1.5 rounded hover:bg-gray-50">Copy</button>
+                <button onClick={() => { navigator.clipboard?.writeText(stripHtml(emailPreview)); showNotif("Copied!"); }} className="text-xs border border-gray-200 px-3 py-1.5 rounded hover:bg-gray-50">Copy text</button>
                 <button onClick={() => setShowEmailPreview(false)} className="text-gray-400 hover:text-gray-700 text-xl font-light">✕</button>
               </div>
             </div>
-            <pre className="text-sm text-gray-700 whitespace-pre-wrap p-6 font-sans leading-relaxed">{emailPreview}</pre>
+            <div className="flex-1 overflow-hidden rounded-b-2xl">
+              <iframe
+                srcDoc={emailPreview}
+                title="Email Preview"
+                className="w-full h-full border-0"
+                style={{ minHeight: "500px" }}
+                sandbox="allow-same-origin"
+              />
+            </div>
           </div>
         </div>
       )}
