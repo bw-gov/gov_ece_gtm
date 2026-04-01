@@ -104,9 +104,12 @@ function ep(text) { return `<p style="${S.p}">${text}</p>`; }
 function ea(href, label) { return `<a href="${href}" style="${S.a}">${label}</a>`; }
 
 function emailSignature(rep) {
-  const r = rep || DEFAULT_REP;
-  const phoneStr = r.phone ? ` | ${r.phone}` : "";
-  return `<div style="${S.sig}"><table cellpadding="0" cellspacing="0" border="0"><tr><td style="vertical-align:middle;padding-right:12px;"><img src="${BW_LOGO_URL}" alt="brightwheel" width="36" height="36" style="display:block;border-radius:6px;" /></td><td style="vertical-align:middle;font-size:13px;color:#555555;">Best,<br><strong style="color:#222;">${r.name}</strong><br>${r.title} | brightwheel<br>${ea("mailto:"+r.email,r.email)}${phoneStr}</td></tr></table></div>`;
+  if (!rep) {
+    // No one logged in — generic brightwheel signature
+    return `<div style="${S.sig}"><table cellpadding="0" cellspacing="0" border="0"><tr><td style="vertical-align:middle;padding-right:12px;"><img src="${BW_LOGO_URL}" alt="brightwheel" width="36" height="36" style="display:block;border-radius:6px;" /></td><td style="vertical-align:middle;font-size:13px;color:#555555;">Best,<br><strong style="color:#222;">brightwheel</strong><br>District Partnerships Team<br>${ea("mailto:partnerships@mybrightwheel.com","partnerships@mybrightwheel.com")}</td></tr></table></div>`;
+  }
+  const phoneStr = rep.phone ? ` | ${rep.phone}` : "";
+  return `<div style="${S.sig}"><table cellpadding="0" cellspacing="0" border="0"><tr><td style="vertical-align:middle;padding-right:12px;"><img src="${BW_LOGO_URL}" alt="brightwheel" width="36" height="36" style="display:block;border-radius:6px;" /></td><td style="vertical-align:middle;font-size:13px;color:#555555;">Best,<br><strong style="color:#222;">${rep.name}</strong><br>${rep.title} | brightwheel<br>${ea("mailto:"+rep.email,rep.email)}${phoneStr}</td></tr></table></div>`;
 }
 
 function buildUnsubUrl(name, email, district) {
@@ -232,7 +235,8 @@ function resolveContact(district, template) {
 }
 
 function generateEmail(district, template, rep) {
-  const r = rep || REP_PROFILES[STATE_REP_EMAIL[district.state || "FL"]] || DEFAULT_REP;
+  // Use the explicitly passed rep (may be null = not logged in → generic signature)
+  const r = rep !== undefined ? rep : null;
   const contact = resolveContact(district, template);
 
   const stateCode = district.state || "FL";
@@ -402,8 +406,8 @@ export default function BrightwheelDashboard() {
   const [gisReady, setGisReady] = useState(false);
   const pendingDraftRef = useRef(null);
 
-  // Rep profile for the currently logged-in user (falls back to Christie if unrecognized)
-  const currentRep = REP_PROFILES[gmailUser] || DEFAULT_REP;
+  // Rep profile for the currently logged-in user — null if not signed in or unrecognized
+  const currentRep = (gmailUser && REP_PROFILES[gmailUser]) || null;
 
   const [emailPickerId, setEmailPickerId] = useState(null); // must be declared before the useEffect below
 
@@ -895,12 +899,12 @@ export default function BrightwheelDashboard() {
           </div>
           {/* Logged-in rep indicator */}
           <div className="flex items-center gap-2 pl-4 border-l border-gray-200">
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${currentRep.color}`}>
-              {currentRep.initials}
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${currentRep ? currentRep.color : "bg-gray-100 text-gray-400"}`}>
+              {currentRep ? currentRep.initials : "?"}
             </div>
             <div>
-              <div className="text-xs font-semibold text-gray-700">{gmailConnected ? currentRep.name : "Not connected"}</div>
-              <div className="text-xs text-gray-400">{gmailConnected ? currentRep.title : "Connect Gmail to send"}</div>
+              <div className="text-xs font-semibold text-gray-700">{currentRep ? currentRep.name : "Not signed in"}</div>
+              <div className="text-xs text-gray-400">{currentRep ? currentRep.title : "Connect Gmail to identify yourself"}</div>
             </div>
           </div>
         </div>
