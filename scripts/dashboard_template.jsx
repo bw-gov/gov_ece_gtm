@@ -4,6 +4,13 @@
 const GOOGLE_CLIENT_ID = "642445271504-vr3au2pic0ma5aekadpq4icrv9t9eekj.apps.googleusercontent.com";
 const SLACK_WEBHOOK_URL = ""; // e.g. "https://hooks.slack.com/services/T.../B.../xxx"
 
+// ─── SHARED ACTIVITY LOG ──────────────────────────────────────────────────────
+// One Google Sheet shared across all reps — persists all logged activities.
+// Setup: create a Google Sheet, share it with all reps (Editor access),
+// then paste the Sheet ID from the URL (/spreadsheets/d/SHEET_ID/edit) below.
+const ACTIVITY_SHEET_ID = ""; // e.g. "1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms"
+const SHEET_COLS = ["activity_id","district_id","district_name","type","date","notes","full_notes","source","rep_email","director_name","dedup_id","logged_at"];
+
 // ─── EMAIL HELPERS ────────────────────────────────────────────────────────────
 // Unsubscribe landing page + Google Form logger
 const UNSUB_PAGE = "https://bw-gov.github.io/gov_ece_gtm/unsubscribe.html";
@@ -526,6 +533,10 @@ export default function BrightwheelDashboard() {
   // ── GMAIL SYNC ──
   const [syncedMsgIds, setSyncedMsgIds] = useState(new Set()); // dedup Gmail message IDs
 
+  // ── SHARED SHEET SYNC ──
+  const [sheetConnected, setSheetConnected] = useState(false);
+  const [sheetSyncing, setSheetSyncing] = useState(false);
+
   // ── GRANOLA SYNC ──
   const [granolaToken, setGranolaToken] = useState(null);
   const [granolaConnected, setGranolaConnected] = useState(false);
@@ -606,7 +617,7 @@ export default function BrightwheelDashboard() {
     if (afterConnect) pendingDraftRef.current = afterConnect;
     window.google.accounts.oauth2.initTokenClient({
       client_id: GOOGLE_CLIENT_ID,
-      scope: "https://www.googleapis.com/auth/gmail.send",
+      scope: "https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/spreadsheets",
       callback: (resp) => {
         if (resp.access_token) {
           setGmailToken(resp.access_token);
@@ -620,6 +631,12 @@ export default function BrightwheelDashboard() {
           }).catch(() => {});
           // Auto-sync Gmail activity on connect
           setTimeout(() => syncGmailActivity(resp.access_token), 800);
+          // Load shared activity sheet (init headers if first use, then fetch all rows)
+          if (ACTIVITY_SHEET_ID) {
+            setTimeout(() => {
+              initSheet(resp.access_token).then(() => loadSheetActivities(resp.access_token));
+            }, 400);
+          }
           if (pendingDraftRef.current) {
             pendingDraftRef.current(resp.access_token);
             pendingDraftRef.current = null;
@@ -660,6 +677,7 @@ export default function BrightwheelDashboard() {
           return { ...d, activities: [...(d.activities || []), sentActivity], status: d.status === "not contacted" ? "reached out" : d.status };
         }));
         setActivityLog((prev) => [sentActivity, ...prev]);
+        writeToSheet([activityToRow(item.districtId, item.district, { ...sentActivity, repEmail: gmailUser || "" })]);
       } else if (res.status === 401) {
         setGmailToken(null); setGmailConnected(false);
         showNotif("Gmail session expired — reconnecting...", "red");
@@ -856,6 +874,14 @@ export default function BrightwheelDashboard() {
       ? "Gmail sync complete — no new activity found"
       : `Gmail sync: ${sentCount} sent email${sentCount !== 1 ? "s" : ""} + ${replyCount} repl${replyCount !== 1 ? "ies" : "y"} logged ✓`
     );
+    // Persist new activities to shared sheet
+    if (newActivities.length > 0) {
+      const rows = newActivities.map(({ districtId, activity }) => {
+        const dist = districts.find(d => d.id === districtId);
+        return activityToRow(districtId, dist?.district || "", { ...activity, repEmail: gmailUser || "" });
+      });
+      writeToSheet(rows);
+    }
   };
 
   // ── GRANOLA ACTIVITY SYNC ─────────────────────────────────────────────────
@@ -978,6 +1004,14 @@ export default function BrightwheelDashboard() {
           ? "Granola sync — no new matched meetings found"
           : `Granola: ${newActivities.length} meeting${newActivities.length !== 1 ? "s" : ""} matched ✓`
       );
+      // Persist new activities to shared sheet
+      if (newActivities.length > 0) {
+        const rows = newActivities.map(({ districtId, activity }) => {
+          const dist = districts.find(d => d.id === districtId);
+          return activityToRow(districtId, dist?.district || "", { ...activity, repEmail: gmailUser || "" });
+        });
+        writeToSheet(rows);
+      }
     } catch (e) {
       const isCors = e.message.toLowerCase().includes("fetch") || e.message.toLowerCase().includes("network");
       showNotif(
@@ -988,6 +1022,129 @@ export default function BrightwheelDashboard() {
       );
       setGranolaSyncing(false);
     }
+  };
+
+  // ── SHARED GOOGLE SHEET HELPERS ──────────────────────────────────────────────
+  // Low-level fetch wrapper for the Sheets v4 API
+  const sheetFetch = async (path, opts = {}) => {
+    const useToken = opts.token || gmailToken;
+    if (!useToken) throw new Error("no_token");
+    const res = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${ACTIVITY_SHEET_ID}/${path}`, {
+      method: opts.method || "GET",
+      headers: { Authorization: "Bearer " + useToken, "Content-Type": "application/json" },
+      ...(opts.body ? { body: opts.body } : {}),
+    });
+    if (res.status === 401 || res.status === 403) { const e = new Error("auth"); e.status = res.status; throw e; }
+    if (!res.ok) throw new Error(`Sheets ${res.status}`);
+    return res.json();
+  };
+
+  // Write header row on first use
+  const initSheet = async (token) => {
+    if (!ACTIVITY_SHEET_ID) return;
+    try {
+      const data = await sheetFetch("values/Sheet1!A1:L1", { token });
+      if (!data.values?.[0] || data.values[0][0] !== "activity_id") {
+        await sheetFetch(`values/Sheet1!A1:L1?valueInputOption=RAW`, {
+          method: "PUT", token,
+          body: JSON.stringify({ values: [SHEET_COLS] }),
+        });
+      }
+      setSheetConnected(true);
+    } catch (e) { console.warn("Sheet init:", e.message); }
+  };
+
+  // Read all rows → merge into district state (deduped by activity id)
+  const loadSheetActivities = async (token) => {
+    if (!ACTIVITY_SHEET_ID) return;
+    setSheetSyncing(true);
+    try {
+      const data = await sheetFetch("values/Sheet1", { token });
+      const rows = data.values || [];
+      if (rows.length < 2) { setSheetConnected(true); setSheetSyncing(false); return; }
+      const hdrs = rows[0];
+      const col = (row, name) => row[hdrs.indexOf(name)] || "";
+
+      const byDistrict = {};
+      const sheetMsgIds = new Set();
+      const sheetGranolaIds = new Set();
+
+      for (const row of rows.slice(1)) {
+        const distId = parseInt(col(row, "district_id"));
+        if (!distId) continue;
+        const src = col(row, "source");
+        const dedupId = col(row, "dedup_id");
+        if (dedupId) {
+          if (src === "granola") sheetGranolaIds.add(dedupId);
+          else if (src.includes("gmail") || src === "dashboard") sheetMsgIds.add(dedupId);
+        }
+        const act = {
+          id: col(row, "activity_id") || String(Date.now() + Math.random()),
+          type: col(row, "type") || "note",
+          date: col(row, "date"),
+          notes: col(row, "notes"),
+          source: src || "sheet",
+          repEmail: col(row, "rep_email"),
+          directorName: col(row, "director_name"),
+          ...(src.includes("gmail") && dedupId ? { gmailMsgId: dedupId } : {}),
+          ...(src === "granola" && dedupId ? { granolaDocId: dedupId, granolaTitle: col(row, "notes").replace(/^📓 Granola: "|"$/g, ""), granolaNotesText: col(row, "full_notes") } : {}),
+        };
+        if (!byDistrict[distId]) byDistrict[distId] = [];
+        byDistrict[distId].push(act);
+      }
+
+      setDistricts(prev => prev.map(d => {
+        const incoming = byDistrict[d.id] || [];
+        if (!incoming.length) return d;
+        const existingIds = new Set((d.activities || []).map(a => String(a.id)));
+        const fresh = incoming.filter(a => !existingIds.has(String(a.id)));
+        if (!fresh.length) return d;
+        const all = [...(d.activities || []), ...fresh];
+        const newStatus = d.status === "not contacted"
+          ? (all.some(a => a.source === "gmail_reply") ? "responded" : "reached out")
+          : d.status;
+        return { ...d, activities: all, status: newStatus };
+      }));
+
+      // Pre-populate dedup sets so re-syncing skips already-persisted items
+      setSyncedMsgIds(prev => new Set([...prev, ...sheetMsgIds]));
+      setSyncedGranolaIds(prev => new Set([...prev, ...sheetGranolaIds]));
+      setSheetConnected(true);
+      setSheetSyncing(false);
+      const total = Object.values(byDistrict).reduce((s, a) => s + a.length, 0);
+      showNotif(`Shared log loaded — ${total} activit${total !== 1 ? "ies" : "y"} across team ✓`);
+    } catch (e) {
+      setSheetSyncing(false);
+      if (e.status === 403) showNotif("Sheets access needed — reconnect Gmail to grant permission", "red");
+      else console.warn("Sheet load:", e.message);
+    }
+  };
+
+  // Convert a single activity to a sheet row array
+  const activityToRow = (districtId, districtName, activity) => [
+    String(activity.id || Date.now()),
+    String(districtId),
+    districtName || "",
+    activity.type || "note",
+    activity.date || new Date().toISOString().split("T")[0],
+    activity.notes || "",
+    activity.granolaNotesText || "",
+    activity.source || "manual",
+    activity.repEmail || gmailUser || "",
+    activity.directorName || "",
+    activity.gmailMsgId || activity.granolaDocId || "",
+    new Date().toISOString(),
+  ];
+
+  // Append one or more rows to the sheet (fire-and-forget, errors are non-blocking)
+  const writeToSheet = async (rows) => {
+    if (!ACTIVITY_SHEET_ID || !gmailToken || !rows.length) return;
+    try {
+      await sheetFetch(`values/Sheet1!A:L:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`, {
+        method: "POST",
+        body: JSON.stringify({ values: rows }),
+      });
+    } catch (e) { console.warn("Sheet write:", e.message); }
   };
 
   // ── BULK SELECTION ──
@@ -1074,12 +1231,13 @@ export default function BrightwheelDashboard() {
 
   const addActivity = (district) => {
     if (!newActivity.notes) return;
-    const act = { ...newActivity, id: Date.now(), district: district.district, directorName: district.director };
+    const act = { ...newActivity, id: Date.now(), district: district.district, directorName: district.director, repEmail: gmailUser || "", source: "manual" };
     const updatedActivities = [...(district.activities || []), act];
     updateDistrict(district.id, { activities: updatedActivities, status: newActivity.type === "meeting" ? "meeting scheduled" : district.status });
     setActivityLog((prev) => [act, ...prev]);
     setNewActivity({ type: "email", date: new Date().toISOString().split("T")[0], notes: "" });
     showNotif("Activity logged ✓");
+    writeToSheet([activityToRow(district.id, district.district, act)]);
   };
 
   const queueEmail = (district, template, silent = false) => {
@@ -1921,12 +2079,13 @@ export default function BrightwheelDashboard() {
                               <button
                                 onClick={() => {
                                   if (!inlineActivity.notes) return;
-                                  const act = { ...inlineActivity, id: Date.now(), district: d.district, directorName: d.director };
+                                  const act = { ...inlineActivity, id: Date.now(), district: d.district, directorName: d.director, repEmail: gmailUser || "", source: "manual" };
                                   const updated = [...(d.activities || []), act];
                                   updateDistrict(d.id, { activities: updated, status: inlineActivity.type === "meeting" ? "meeting scheduled" : d.status });
                                   setActivityLog(prev => [act, ...prev]);
                                   setInlineActivity({ type: "email", date: new Date().toISOString().split("T")[0], notes: "" });
                                   showNotif("Activity logged ✓");
+                                  writeToSheet([activityToRow(d.id, d.district, act)]);
                                 }}
                                 disabled={!inlineActivity.notes}
                                 className="bg-indigo-600 text-white px-3 py-1.5 rounded-lg text-xs hover:bg-indigo-700 disabled:opacity-40"
