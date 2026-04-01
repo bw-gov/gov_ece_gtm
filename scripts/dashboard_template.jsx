@@ -360,6 +360,87 @@ function generateEmail(district, template, rep) {
   return templates[template] || "";
 }
 
+// ─── PERSONALIZED EMAIL GENERATION ───────────────────────────────────────────
+
+// Returns true if the district has enough intel to generate a personalized draft
+function hasPersonalizedEmail(district) {
+  return (
+    (Array.isArray(district.districtContext) && district.districtContext.length > 0) ||
+    (Array.isArray(district.boardNotes) && district.boardNotes.length > 0) ||
+    (Array.isArray(district.buyingSignals) && district.buyingSignals.length > 0)
+  );
+}
+
+// Builds a personalized outreach email from the district's most recent intel
+function generatePersonalizedEmail(district, rep) {
+  const r = rep !== undefined ? rep : null;
+  if (!district.email) return "";
+
+  const greetingName = district.director.split(" ")[0];
+  const hiGreeting = ep(`Hi ${greetingName},`);
+  const calendlyLink = r && r.calendly
+    ? ep(ea(r.calendly, "Schedule time with me →"))
+    : ep(`Happy to find a time — just reply and I'll send over a few options.`);
+  const unsubUrl = buildUnsubUrl(district.director, district.email, district.district);
+
+  // Gather all intel (context + board notes) sorted newest first
+  const allIntel = [
+    ...(district.districtContext || []).map(c => ({ ...c, _kind: "context" })),
+    ...(district.boardNotes || []).map(n => ({ ...n, _kind: "board" })),
+  ].sort((a, b) => (b.date || "").localeCompare(a.date || ""));
+
+  const signals = district.buyingSignals || [];
+  const topIntel = allIntel[0];
+  const shortName = district.district.includes(" — ")
+    ? district.district.split(" — ").slice(1).join(" — ")
+    : district.district;
+
+  let subject, openingPara, bridgePara;
+
+  if (topIntel && topIntel._kind === "board") {
+    const snippet = topIntel.summary.length > 150
+      ? topIntel.summary.slice(0, 150) + "…"
+      : topIntel.summary;
+    subject = `Reaching out — ${shortName} early childhood programs`;
+    openingPara = ep(`I came across a recent update from ${shortName}'s board meeting (${topIntel.date}): <em style="color:#555;">"${snippet}"</em> — and wanted to connect around what support might be available for your early childhood programs.`);
+    bridgePara = ep(`brightwheel's Experience Preschool is a flexible, play-based curriculum built for PreK-to-Kindergarten transitions. Lessons are pre-packaged and organized by the day, so teachers can run effective programs with minimal prep.`);
+  } else if (topIntel && topIntel._kind === "context") {
+    const typeLabel = topIntel.type === "strategic"
+      ? "strategic plan"
+      : topIntel.type === "funding"
+      ? "recent funding update"
+      : "early childhood programs";
+    const subjectSuffix = topIntel.type === "strategic"
+      ? "early childhood alignment"
+      : topIntel.type === "funding"
+      ? "making the most of new funding"
+      : "PreK readiness support";
+    const snippet = topIntel.summary.length > 150
+      ? topIntel.summary.slice(0, 150) + "…"
+      : topIntel.summary;
+    subject = `${shortName} + brightwheel — ${subjectSuffix}`;
+    openingPara = ep(`I came across ${shortName}'s ${typeLabel} and noted: <em style="color:#555;">"${snippet}"</em> — it sounds like early childhood outcomes are a genuine focus right now.`);
+    bridgePara = ep(`brightwheel's Experience Preschool is a flexible, play-based curriculum built for PreK-to-Kindergarten transitions. Because lessons are pre-packaged and organized by the day, it's easy for teachers to implement and helps districts hit readiness targets without a heavy lift.`);
+  } else if (signals.length > 0) {
+    subject = `Reaching out: ${shortName} PreK readiness`;
+    openingPara = ep(`I noticed a timely signal for ${shortName} — ${signals[0]} — and wanted to follow up about what support might be available for your early childhood programs.`);
+    bridgePara = ep(`brightwheel's Experience Preschool is a flexible, play-based curriculum built for PreK-to-Kindergarten transitions, with lessons pre-packaged and organized by the day.`);
+  } else {
+    return "";
+  }
+
+  return buildHtmlEmail(
+    subject,
+    hiGreeting +
+    openingPara +
+    bridgePara +
+    ep(`I'd be happy to share a quick overview or send sample materials. Use the link below to schedule a quick connect.`) +
+    calendlyLink,
+    unsubUrl,
+    r,
+  );
+}
+
 // ─── MAIN COMPONENT ───────────────────────────────────────────────────────────
 export default function BrightwheelDashboard() {
   const [districts, setDistricts] = useState(() =>
@@ -388,6 +469,13 @@ export default function BrightwheelDashboard() {
   const [emailPreview, setEmailPreview] = useState("");
   const [showEmailPreview, setShowEmailPreview] = useState(false);
   const [showSummerBridge, setShowSummerBridge] = useState(false);
+
+  // ── DISTRICT INFO TAB ──
+  const [diInfoState, setDiInfoState] = useState("all");
+  const [diInfoSearch, setDiInfoSearch] = useState("");
+  const [diInfoSelectedId, setDiInfoSelectedId] = useState(null);
+  const [diInfoEmailTemplate, setDiInfoEmailTemplate] = useState("original");
+  const [diInfoShowResults, setDiInfoShowResults] = useState(false);
 
   // ── CONTACT TRACKING ──
   const [contactSearch, setContactSearch] = useState("");
@@ -819,7 +907,13 @@ export default function BrightwheelDashboard() {
       showNotif(`⚠️ No email on file for ${district.director || district.district} — skipped`, "red");
       return;
     }
-    const body = generateEmail(district, template, currentRep);
+    const body = template === "personalized"
+      ? generatePersonalizedEmail(district, currentRep)
+      : generateEmail(district, template, currentRep);
+    if (!body) {
+      showNotif(`⚠️ Not enough intel to personalize email for ${district.district}`, "red");
+      return;
+    }
     const item = {
       id: Date.now() + Math.random(), // unique even when called rapidly in bulk
       district: district.district,
@@ -922,6 +1016,7 @@ export default function BrightwheelDashboard() {
           { id: "contacts", label: "👥 Contact Tracking" },
           { id: "activity", label: "📞 Activity Log" },
           { id: "approval", label: `📤 Send Queue ${stats.queue > 0 ? `(${stats.queue})` : ""}` },
+          { id: "districtinfo", label: "🏫 District Info" },
         ].map((t) => (
           <button
             key={t.id}
@@ -1266,6 +1361,9 @@ export default function BrightwheelDashboard() {
                             {d.districtContext && d.districtContext.length > 0 && (
                               <span className="bg-purple-50 text-purple-700 border border-purple-200 px-2 py-0.5 rounded text-xs">🔍 {d.districtContext.length} intel</span>
                             )}
+                            {hasPersonalizedEmail(d) && (
+                              <span className="bg-yellow-50 text-yellow-700 border border-yellow-300 px-2 py-0.5 rounded text-xs font-medium">✨ Personalized</span>
+                            )}
                             {d.buyingSignals.length === 0 && (!d.boardNotes || d.boardNotes.length === 0) && (!d.districtContext || d.districtContext.length === 0) && <span className="text-gray-300">—</span>}
                           </div>
                         </td>
@@ -1304,6 +1402,9 @@ export default function BrightwheelDashboard() {
                                     ...((d.state || "FL") === "FL" ? [
                                       { label: "🌴 FL Summer Bridge (Long)", key: "summerBridge" },
                                       { label: "🌴 FL Summer Bridge (Short)", key: "summerBridgeShort" },
+                                    ] : []),
+                                    ...(hasPersonalizedEmail(d) ? [
+                                      { label: "✨ Personalized Outreach", key: "personalized" },
                                     ] : []),
                                   ].map((t) => (
                                     <button
@@ -1905,6 +2006,7 @@ export default function BrightwheelDashboard() {
                     item.template === "summerBridgeShort" ? "🌴 FL Summer Bridge (Short)" :
                     item.template === "summerLong" ? "☀️ Summer Long" :
                     item.template === "summerShort" ? "☀️ Summer Short" :
+                    item.template === "personalized" ? "✨ Personalized Outreach" :
                     item.template.replace(/(\d)/, " #$1");
                   return (
                     <div key={item.id} className="bg-white rounded-xl border border-gray-200 overflow-hidden">
@@ -1957,6 +2059,312 @@ export default function BrightwheelDashboard() {
           </div>
         )}
       </div>
+
+        {/* ── DISTRICT INFO TAB ── */}
+        {activeTab === "districtinfo" && (() => {
+          const diDistricts = districts.filter(d => {
+            const matchState = diInfoState === "all" || (d.state || "FL") === diInfoState;
+            const matchSearch = !diInfoSearch ||
+              d.district.toLowerCase().includes(diInfoSearch.toLowerCase()) ||
+              d.director.toLowerCase().includes(diInfoSearch.toLowerCase()) ||
+              (d.county || "").toLowerCase().includes(diInfoSearch.toLowerCase());
+            return matchState && matchSearch;
+          });
+
+          const selectedDi = diInfoSelectedId ? districts.find(d => d.id === diInfoSelectedId) : null;
+
+          const diTemplateOptions = selectedDi ? [
+            { label: "📧 Original Email", key: "original" },
+            { label: "☀️ Summer Long", key: "summerLong" },
+            { label: "☀️ Summer Short", key: "summerShort" },
+            ...((selectedDi.state || "FL") === "FL" ? [
+              { label: "🌴 FL Summer Bridge (Long)", key: "summerBridge" },
+              { label: "🌴 FL Summer Bridge (Short)", key: "summerBridgeShort" },
+            ] : []),
+            ...(hasPersonalizedEmail(selectedDi) ? [
+              { label: "✨ Personalized Outreach", key: "personalized" },
+            ] : []),
+          ] : [];
+
+          const repForDi = selectedDi ? REP_PROFILES[STATE_REP_EMAIL[selectedDi.state || "FL"]] : null;
+          const STATE_NAMES_DI = { FL: "Florida", AL: "Alabama", ID: "Idaho", NV: "Nevada" };
+
+          return (
+            <div>
+              <div className="mb-4">
+                <h2 className="text-base font-bold text-gray-900">District Info</h2>
+                <p className="text-xs text-gray-500 mt-1">Search any district to see its full profile, intel, and available email drafts.</p>
+              </div>
+
+              {/* Search controls */}
+              <div className="flex gap-3 mb-5 items-start flex-wrap">
+                <select
+                  value={diInfoState}
+                  onChange={e => { setDiInfoState(e.target.value); setDiInfoSelectedId(null); setDiInfoSearch(""); }}
+                  className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                >
+                  <option value="all">All States</option>
+                  <option value="FL">🌴 Florida</option>
+                  <option value="AL">Alabama</option>
+                  <option value="ID">Idaho</option>
+                  <option value="NV">Nevada</option>
+                </select>
+
+                <div className="relative" style={{ width: "380px" }}>
+                  <input
+                    value={diInfoSearch}
+                    onChange={e => { setDiInfoSearch(e.target.value); setDiInfoShowResults(true); setDiInfoSelectedId(null); }}
+                    onFocus={() => setDiInfoShowResults(true)}
+                    onBlur={() => setTimeout(() => setDiInfoShowResults(false), 180)}
+                    placeholder="🔍 Type to search district, director, or county..."
+                    className="border border-gray-200 rounded-lg px-3 py-2 text-sm w-full focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                  />
+                  {diInfoShowResults && diInfoSearch && !selectedDi && diDistricts.length > 0 && (
+                    <div className="absolute top-full left-0 right-0 z-50 bg-white border border-gray-200 rounded-xl shadow-xl mt-1 max-h-64 overflow-y-auto">
+                      {diDistricts.slice(0, 25).map(d => {
+                        const shortN = d.district.includes(" — ") ? d.district.split(" — ").slice(1).join(" — ") : d.district;
+                        const repP = REP_PROFILES[STATE_REP_EMAIL[d.state || "FL"]];
+                        return (
+                          <div
+                            key={d.id}
+                            className="px-3 py-2.5 hover:bg-indigo-50 cursor-pointer border-b border-gray-50 last:border-b-0"
+                            onMouseDown={() => { setDiInfoSelectedId(d.id); setDiInfoSearch(shortN); setDiInfoShowResults(false); setDiInfoEmailTemplate("original"); }}
+                          >
+                            <div className="flex items-center justify-between gap-2">
+                              <div className="min-w-0">
+                                <div className="text-xs font-semibold text-gray-800 truncate">{shortN}</div>
+                                <div className="text-xs text-gray-400">{d.director} · {d.county} County</div>
+                              </div>
+                              <div className="flex items-center gap-1.5 flex-shrink-0">
+                                {d.state && d.state !== "FL" && <span className="text-xs bg-blue-100 text-blue-700 px-1 rounded font-semibold">{d.state}</span>}
+                                {repP && <span className={`text-xs px-1.5 py-0 rounded-full font-semibold ${repP.color}`}>{repP.initials}</span>}
+                                {hasPersonalizedEmail(d) && <span className="text-yellow-500 text-xs" title="Personalized email available">✨</span>}
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                      {diDistricts.length > 25 && (
+                        <div className="px-3 py-2 text-xs text-gray-400 text-center bg-gray-50">Showing 25 of {diDistricts.length} — type more to narrow</div>
+                      )}
+                    </div>
+                  )}
+                  {diInfoSearch && !selectedDi && (
+                    <div className="text-xs text-gray-400 mt-1">{diDistricts.length} match{diDistricts.length !== 1 ? "es" : ""}</div>
+                  )}
+                </div>
+
+                {selectedDi && (
+                  <button
+                    onClick={() => { setDiInfoSelectedId(null); setDiInfoSearch(""); }}
+                    className="text-xs text-gray-500 hover:text-gray-700 border border-gray-200 px-3 py-2 rounded-lg"
+                  >✕ Clear</button>
+                )}
+              </div>
+
+              {/* District profile */}
+              {selectedDi ? (() => {
+                const age = 2026 - selectedDi.curriculumAdoptionYear;
+                const pLabel = getPriorityLabel(selectedDi.priority);
+
+                return (
+                  <div className="space-y-4">
+                    {/* Header card */}
+                    <div className="bg-white rounded-xl border border-gray-200 p-5">
+                      <div className="flex items-start justify-between gap-4 mb-4 flex-wrap">
+                        <div>
+                          <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+                            <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${pLabel.color}`}>{pLabel.label} · {selectedDi.priority}/100</span>
+                            {selectedDi.priorityTier && <span className="bg-indigo-50 text-indigo-700 text-xs px-2 py-0.5 rounded-full font-medium">{selectedDi.priorityTier}</span>}
+                            {selectedDi.newLeadership && <span className="bg-purple-100 text-purple-700 text-xs px-2 py-0.5 rounded-full">🆕 New Leadership</span>}
+                            {hasPersonalizedEmail(selectedDi) && (
+                              <span className="bg-yellow-50 text-yellow-700 border border-yellow-200 text-xs px-2 py-0.5 rounded-full font-medium">✨ Personalized email available</span>
+                            )}
+                          </div>
+                          <h3 className="text-lg font-bold text-gray-900">{selectedDi.district}</h3>
+                          <p className="text-sm text-gray-400 mt-0.5">{selectedDi.county} County · {STATE_NAMES_DI[selectedDi.state || "FL"] || selectedDi.state || "Florida"}</p>
+                          {selectedDi.lastUpdated && <span className="inline-block mt-1 text-xs bg-green-50 text-green-700 border border-green-200 px-2 py-0.5 rounded-full">🔄 Updated {selectedDi.lastUpdated}</span>}
+                        </div>
+                        {repForDi && (
+                          <div className={`flex items-center gap-2 px-3 py-2 rounded-lg ${repForDi.color}`}>
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${repForDi.color}`}>{repForDi.initials}</div>
+                            <div>
+                              <div className="text-xs font-semibold">{repForDi.name}</div>
+                              <div className="text-xs opacity-70">Assigned rep</div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-6">
+                        <div>
+                          <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Director Contact</h4>
+                          <div className="space-y-1.5 text-sm">
+                            <div><span className="text-gray-500">Name:</span> <span className="font-medium">{selectedDi.director}</span></div>
+                            {selectedDi.title && <div><span className="text-gray-500">Title:</span> {selectedDi.title}</div>}
+                            <div><span className="text-gray-500">Email:</span> {selectedDi.email ? <a href={`mailto:${selectedDi.email}`} className="text-indigo-600 hover:underline">{selectedDi.email}</a> : <span className="text-gray-300">—</span>}</div>
+                            <div><span className="text-gray-500">Phone:</span> {selectedDi.phone || <span className="text-gray-300">—</span>}</div>
+                            {selectedDi.linkedin && <div><span className="text-gray-500">LinkedIn:</span> <a href={`https://${selectedDi.linkedin}`} target="_blank" rel="noreferrer" className="text-blue-500 hover:underline text-xs">View Profile ↗</a></div>}
+                          </div>
+                          {selectedDi.summerBridgeContact && (
+                            <div className="mt-3 pt-2 border-t border-dashed border-green-200">
+                              <h5 className="text-xs font-semibold text-green-700 mb-1">🌴 Summer Bridge Contact</h5>
+                              <div className="space-y-1 text-xs">
+                                <div><span className="text-gray-500">Name:</span> <span className="font-medium">{selectedDi.summerBridgeContact.fullName}</span></div>
+                                <div><span className="text-gray-500">Email:</span> <a href={`mailto:${selectedDi.summerBridgeContact.email}`} className="text-green-600 hover:underline">{selectedDi.summerBridgeContact.email}</a></div>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                        <div>
+                          <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Curriculum Profile</h4>
+                          <div className="space-y-1.5 text-sm">
+                            <div><span className="text-gray-500">Curriculum:</span> <span className="font-medium text-indigo-700">{selectedDi.curriculum}</span></div>
+                            <div><span className="text-gray-500">Vendor:</span> {selectedDi.curriculumVendor}</div>
+                            <div><span className="text-gray-500">Adopted:</span> {selectedDi.curriculumAdoptionYear} <span className={`font-medium ${age >= 6 ? "text-red-500" : age >= 4 ? "text-orange-500" : "text-gray-500"}`}>({age} yrs ago)</span></div>
+                            <div><span className="text-gray-500">Enrollment:</span> {selectedDi.enrollment?.toLocaleString()}</div>
+                            <div><span className="text-gray-500">Status:</span> <span className={`ml-1 font-medium ${statusColor(selectedDi.status)}`}>{selectedDi.status}</span></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Buying Signals */}
+                    {selectedDi.buyingSignals && selectedDi.buyingSignals.length > 0 && (
+                      <div className="bg-white rounded-xl border border-gray-200 p-4">
+                        <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">⚡ Buying Signals</h4>
+                        <div className="flex flex-wrap gap-2">
+                          {selectedDi.buyingSignals.map((s, i) => (
+                            <span key={i} className="bg-amber-50 border border-amber-200 text-amber-700 px-3 py-1 rounded-lg text-xs font-medium">{s}</span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Board Notes */}
+                    {selectedDi.boardNotes && selectedDi.boardNotes.length > 0 && (
+                      <div className="bg-white rounded-xl border border-gray-200 p-4">
+                        <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">📋 Board Notes <span className="text-gray-300 font-normal normal-case ml-1">({selectedDi.boardNotes.length})</span></h4>
+                        <div className="space-y-2 max-h-52 overflow-y-auto">
+                          {[...selectedDi.boardNotes].sort((a, b) => b.date.localeCompare(a.date)).map((n, i) => (
+                            <div key={i} className="flex items-start justify-between gap-2 bg-blue-50/50 rounded-lg px-3 py-2">
+                              <div className="flex-1">
+                                <span className="text-xs font-semibold text-gray-600">{n.date}</span>
+                                <p className="text-xs text-gray-700 mt-0.5">{n.summary}</p>
+                              </div>
+                              {n.source && <a href={n.source} target="_blank" rel="noreferrer" className="text-xs text-indigo-500 hover:underline flex-shrink-0 mt-0.5">↗</a>}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* District Intel */}
+                    {selectedDi.districtContext && selectedDi.districtContext.length > 0 && (
+                      <div className="bg-white rounded-xl border border-gray-200 p-4">
+                        <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">🔍 District Intel <span className="text-gray-300 font-normal normal-case ml-1">({selectedDi.districtContext.length})</span></h4>
+                        <div className="space-y-2 max-h-52 overflow-y-auto">
+                          {[...selectedDi.districtContext].sort((a, b) => (b.date || "").localeCompare(a.date || "")).map((ctx, i) => {
+                            const typeColor = {
+                              strategic: "bg-purple-50 text-purple-700",
+                              funding: "bg-green-50 text-green-700",
+                              website: "bg-blue-50 text-blue-700",
+                            }[ctx.type] || "bg-gray-100 text-gray-600";
+                            const typeLabel = { strategic: "📋 Strategic", funding: "💰 Funding", website: "🌐 Website" }[ctx.type] || ctx.type;
+                            return (
+                              <div key={i} className="bg-gray-50 rounded-lg px-3 py-2">
+                                <div className="flex items-center justify-between mb-1">
+                                  <span className={`text-xs font-semibold px-2 py-0.5 rounded ${typeColor}`}>{typeLabel}</span>
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-xs text-gray-400">{ctx.date}</span>
+                                    {ctx.source && <a href={ctx.source} target="_blank" rel="noreferrer" className="text-xs text-indigo-500 hover:underline">↗</a>}
+                                  </div>
+                                </div>
+                                <p className="text-xs text-gray-700 leading-relaxed">{ctx.summary}</p>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Contact History */}
+                    {selectedDi.activities && selectedDi.activities.length > 0 && (
+                      <div className="bg-white rounded-xl border border-gray-200 p-4">
+                        <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">📞 Contact History <span className="text-gray-300 font-normal normal-case ml-1">({selectedDi.activities.length} touch{selectedDi.activities.length !== 1 ? "es" : ""})</span></h4>
+                        <div className="space-y-2">
+                          {[...selectedDi.activities].reverse().slice(0, 5).map((a, i) => (
+                            <div key={i} className="flex items-start gap-2 text-xs bg-gray-50 rounded px-3 py-2">
+                              <span className="text-gray-400 flex-shrink-0 mt-0.5 w-20">{a.date}</span>
+                              <span className="font-medium capitalize text-indigo-600 flex-shrink-0 w-14">{a.type}</span>
+                              <span className="text-gray-600">{a.notes}</span>
+                            </div>
+                          ))}
+                          {selectedDi.activities.length > 5 && (
+                            <div className="text-xs text-gray-400 pl-3">+ {selectedDi.activities.length - 5} more — see Contact Tracking tab</div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Email Drafts */}
+                    <div className="bg-white rounded-xl border border-gray-200 p-4">
+                      <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">✉️ Email Drafts</h4>
+                      {!selectedDi.email ? (
+                        <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg p-3">⚠️ No email address on file for this district — cannot draft or queue.</p>
+                      ) : (
+                        <div>
+                          <div className="flex items-center gap-3 mb-3 flex-wrap">
+                            <select
+                              value={diInfoEmailTemplate}
+                              onChange={e => setDiInfoEmailTemplate(e.target.value)}
+                              className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                            >
+                              {diTemplateOptions.map(t => (
+                                <option key={t.key} value={t.key}>{t.label}</option>
+                              ))}
+                            </select>
+                            <button
+                              onClick={() => {
+                                const body = diInfoEmailTemplate === "personalized"
+                                  ? generatePersonalizedEmail(selectedDi, currentRep)
+                                  : generateEmail(selectedDi, diInfoEmailTemplate, currentRep);
+                                if (!body) { showNotif("⚠️ No email body generated", "red"); return; }
+                                setEmailPreview(body);
+                                setShowEmailPreview(true);
+                              }}
+                              className="text-xs border border-gray-200 px-3 py-2 rounded-lg hover:bg-gray-50 font-medium"
+                            >Preview</button>
+                            <button
+                              onClick={() => queueEmail(selectedDi, diInfoEmailTemplate)}
+                              className="text-xs bg-indigo-600 text-white px-3 py-2 rounded-lg hover:bg-indigo-700 font-medium"
+                            >Add to Send Queue →</button>
+                          </div>
+                          {diInfoEmailTemplate === "personalized" && hasPersonalizedEmail(selectedDi) && (
+                            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-xs text-yellow-800 leading-relaxed">
+                              ✨ This email is customized based on the most recent intel for {selectedDi.district.includes(" — ") ? selectedDi.district.split(" — ").slice(1).join(" — ") : selectedDi.district} — referencing board notes, district context, or buying signals in the opening paragraph and subject line.
+                            </div>
+                          )}
+                          {!hasPersonalizedEmail(selectedDi) && (
+                            <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 text-xs text-gray-500">
+                              No intel on file yet for personalized outreach. Once board notes, district context, or buying signals are added, a ✨ Personalized option will appear here.
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })() : (
+                <div className="bg-gray-50 border border-dashed border-gray-300 rounded-xl p-16 text-center text-gray-400">
+                  <div className="text-4xl mb-3">🏫</div>
+                  <p className="font-medium text-sm">Search for a district above to see its full profile</p>
+                  <p className="text-xs mt-1">{districts.length} districts in the database · type to search</p>
+                </div>
+              )}
+            </div>
+          );
+        })()}
 
       {/* ── DISTRICT DETAIL MODAL ── */}
       {selectedDistrict && (
