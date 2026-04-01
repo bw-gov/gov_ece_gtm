@@ -141,6 +141,26 @@ function buildHtmlEmail(subject, bodyHtml, unsubUrl, rep) {
   return `Subject: ${subject}\n\n${html}`;
 }
 
+// ─── GRANOLA HELPERS ─────────────────────────────────────────────────────────
+// Recursively extract plain text from a ProseMirror JSON document node
+function pmToText(node) {
+  if (!node) return "";
+  if (node.text) return node.text;
+  if (Array.isArray(node.content)) {
+    const sep = node.type === "paragraph" || node.type === "heading" ? "\n" : " ";
+    return node.content.map(pmToText).join(sep);
+  }
+  return "";
+}
+
+// Strip common district name suffixes for fuzzy matching
+function normalizeDistName(name) {
+  return name.toLowerCase()
+    .replace(/\b(school district|county school district|county schools|public schools|city schools|independent school district|unified school district|community school district|community schools|schools|district|isd|usd)\b/gi, "")
+    .replace(/[^a-z0-9 ]/g, " ")
+    .replace(/\s+/g, " ").trim();
+}
+
 // ─── PRIORITY SCORING ALGORITHM ──────────────────────────────────────────────
 function calculatePriorityScore(d) {
   let score = 0;
@@ -505,6 +525,15 @@ export default function BrightwheelDashboard() {
 
   // ── GMAIL SYNC ──
   const [syncedMsgIds, setSyncedMsgIds] = useState(new Set()); // dedup Gmail message IDs
+
+  // ── GRANOLA SYNC ──
+  const [granolaToken, setGranolaToken] = useState(null);
+  const [granolaConnected, setGranolaConnected] = useState(false);
+  const [granolaSyncing, setGranolaSyncing] = useState(false);
+  const [granolaLastSync, setGranolaLastSync] = useState(null);
+  const [granolaModalOpen, setGranolaModalOpen] = useState(false);
+  const [granolaTokenInput, setGranolaTokenInput] = useState("");
+  const [syncedGranolaIds, setSyncedGranolaIds] = useState(new Set());
   const [gmailSyncing, setGmailSyncing] = useState(false);
   const [lastSyncTime, setLastSyncTime] = useState(null);
 
@@ -829,6 +858,138 @@ export default function BrightwheelDashboard() {
     );
   };
 
+  // ── GRANOLA ACTIVITY SYNC ─────────────────────────────────────────────────
+  // Fetches all documents from the Granola API and matches them to districts
+  // by scanning meeting titles and notes for district/director names.
+  const syncGranolaActivity = async (token) => {
+    const useToken = token || granolaToken;
+    if (!useToken) { setGranolaModalOpen(true); return; }
+    setGranolaSyncing(true);
+
+    // Build lookup maps for matching
+    const normNameToDistrict = {};
+    const emailDomainToDistrict = {};
+    districts.forEach((d) => {
+      const norm = normalizeDistName(d.district);
+      if (norm.length >= 4) normNameToDistrict[norm] = d;
+      if (d.email) {
+        const domain = d.email.split("@")[1];
+        if (domain) emailDomainToDistrict[domain.toLowerCase()] = d;
+      }
+    });
+
+    // Sort normalized names longest-first so "Gwinnett County" matches before "Gwinnett"
+    const normNames = Object.keys(normNameToDistrict).sort((a, b) => b.length - a.length);
+
+    const matchDoc = (title, notesText) => {
+      const haystack = (title + " " + notesText).toLowerCase();
+
+      // 1. Normalized district name anywhere in title+notes
+      for (const norm of normNames) {
+        if (norm.length >= 6 && haystack.includes(norm)) return normNameToDistrict[norm];
+      }
+      // 2. Email domain in notes
+      for (const [domain, dist] of Object.entries(emailDomainToDistrict)) {
+        if (haystack.includes("@" + domain) || haystack.includes(domain)) return dist;
+      }
+      // 3. Director last name in meeting title (only if title looks call-like)
+      const titleLower = title.toLowerCase();
+      const callKeywords = ["meeting", "call", "sync", "connect", "chat", "intro", "demo"];
+      if (callKeywords.some((k) => titleLower.includes(k))) {
+        for (const d of districts) {
+          const lastName = d.director.split(" ").pop();
+          if (lastName.length >= 4 && titleLower.includes(lastName.toLowerCase())) return d;
+        }
+      }
+      return null;
+    };
+
+    try {
+      const res = await fetch("https://api.granola.ai/v2/get-documents", {
+        method: "POST",
+        headers: { Authorization: "Bearer " + useToken, "Content-Type": "application/json" },
+        body: JSON.stringify({}),
+      });
+
+      if (res.status === 401) {
+        setGranolaToken(null); setGranolaConnected(false);
+        showNotif("Granola token expired — reconnect", "red");
+        setGranolaModalOpen(true);
+        setGranolaSyncing(false);
+        return;
+      }
+      if (!res.ok) throw new Error(`Granola API ${res.status}`);
+
+      const payload = await res.json();
+      const documents = Array.isArray(payload) ? payload : (payload.documents || payload.data || []);
+
+      let newActivities = [];
+      const newSyncedIds = new Set(syncedGranolaIds);
+
+      for (const doc of documents) {
+        if (newSyncedIds.has(doc.id)) continue;
+        newSyncedIds.add(doc.id);
+
+        const title = (doc.title || "").trim();
+        const notesText = pmToText(doc.last_viewed_panel || doc.notes || doc.content || null).trim();
+        const dateStr = (doc.created_at || doc.createdAt || "").split("T")[0] || new Date().toISOString().split("T")[0];
+
+        const matched = matchDoc(title, notesText);
+        if (!matched) continue;
+
+        const activity = {
+          id: doc.id,
+          type: "call",
+          date: dateStr,
+          notes: `📓 Granola: "${title}"`,
+          district: matched.district,
+          directorName: matched.director,
+          source: "granola",
+          granolaDocId: doc.id,
+          granolaTitle: title,
+          granolaNotesText: notesText.slice(0, 2000),
+        };
+        newActivities.push({ districtId: matched.id, activity });
+      }
+
+      if (newActivities.length > 0) {
+        setDistricts((prev) => {
+          const updated = [...prev];
+          newActivities.forEach(({ districtId, activity }) => {
+            const idx = updated.findIndex((d) => d.id === districtId);
+            if (idx === -1) return;
+            const d = updated[idx];
+            if ((d.activities || []).some((a) => a.granolaDocId === activity.granolaDocId)) return;
+            updated[idx] = {
+              ...d,
+              activities: [...(d.activities || []), activity],
+              status: d.status === "not contacted" ? "reached out" : d.status,
+            };
+          });
+          return updated;
+        });
+      }
+
+      setSyncedGranolaIds(newSyncedIds);
+      setGranolaLastSync(new Date().toLocaleTimeString());
+      setGranolaSyncing(false);
+      showNotif(
+        newActivities.length === 0
+          ? "Granola sync — no new matched meetings found"
+          : `Granola: ${newActivities.length} meeting${newActivities.length !== 1 ? "s" : ""} matched ✓`
+      );
+    } catch (e) {
+      const isCors = e.message.toLowerCase().includes("fetch") || e.message.toLowerCase().includes("network");
+      showNotif(
+        isCors
+          ? "Granola API blocked — check CORS or use the local sync script"
+          : "Granola sync error: " + e.message,
+        "red"
+      );
+      setGranolaSyncing(false);
+    }
+  };
+
   // ── BULK SELECTION ──
   const [selectedIds, setSelectedIds] = useState(new Set());
   const [bulkTemplate, setBulkTemplate] = useState("summerLong");
@@ -1038,6 +1199,25 @@ export default function BrightwheelDashboard() {
               </div>
             </button>
           )}
+
+          {/* Granola connect */}
+          <button
+            onClick={() => granolaConnected ? syncGranolaActivity() : setGranolaModalOpen(true)}
+            disabled={granolaSyncing}
+            className={`flex items-center gap-2 pl-4 border-l border-gray-200 hover:opacity-80 transition-opacity cursor-pointer group ${granolaSyncing ? "opacity-50 cursor-not-allowed" : ""}`}
+          >
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${granolaConnected ? "bg-violet-100 text-violet-700 border-2 border-violet-300" : "bg-gray-100 border-2 border-dashed border-gray-300 text-gray-400 group-hover:border-violet-400 group-hover:text-violet-500"}`}>
+              {granolaSyncing ? "…" : "GR"}
+            </div>
+            <div className="text-left">
+              <div className={`text-xs font-semibold ${granolaConnected ? "text-violet-700" : "text-violet-600"}`}>
+                {granolaSyncing ? "Syncing…" : granolaConnected ? "Sync Granola" : "Connect Granola"}
+              </div>
+              <div className="text-xs text-gray-400">
+                {granolaLastSync ? `Last sync ${granolaLastSync}` : "call notes & meetings"}
+              </div>
+            </div>
+          </button>
         </div>
       </div>
 
@@ -1554,15 +1734,28 @@ export default function BrightwheelDashboard() {
                     <div><div className="text-lg font-bold text-green-600">{totalReplied}</div><div className="text-xs text-gray-400">Replied/Meeting</div></div>
                     <div><div className="text-lg font-bold text-gray-500">{districts.length - totalContacted}</div><div className="text-xs text-gray-400">Not Yet Contacted</div></div>
                   </div>
-                  <div className="flex flex-col items-end gap-1">
-                    <button
-                      onClick={() => gmailConnected ? syncGmailActivity() : connectGmail((t) => syncGmailActivity(t))}
-                      disabled={gmailSyncing}
-                      className={`text-xs px-3 py-1.5 rounded-lg font-medium flex items-center gap-1.5 border transition-colors ${gmailSyncing ? "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed" : "bg-white text-indigo-600 border-indigo-200 hover:bg-indigo-50 cursor-pointer"}`}
-                    >
-                      {gmailSyncing ? "⏳ Syncing Gmail..." : "🔄 Sync Gmail Activity"}
-                    </button>
-                    {lastSyncTime && <span className="text-xs text-gray-400">Last synced {lastSyncTime}</span>}
+                  <div className="flex flex-col items-end gap-1.5">
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => gmailConnected ? syncGmailActivity() : connectGmail((t) => syncGmailActivity(t))}
+                        disabled={gmailSyncing}
+                        className={`text-xs px-3 py-1.5 rounded-lg font-medium flex items-center gap-1.5 border transition-colors ${gmailSyncing ? "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed" : "bg-white text-indigo-600 border-indigo-200 hover:bg-indigo-50 cursor-pointer"}`}
+                      >
+                        {gmailSyncing ? "⏳ Syncing Gmail..." : "🔄 Sync Gmail"}
+                      </button>
+                      <button
+                        onClick={() => granolaConnected ? syncGranolaActivity() : setGranolaModalOpen(true)}
+                        disabled={granolaSyncing}
+                        className={`text-xs px-3 py-1.5 rounded-lg font-medium flex items-center gap-1.5 border transition-colors ${granolaSyncing ? "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed" : granolaConnected ? "bg-white text-violet-600 border-violet-200 hover:bg-violet-50 cursor-pointer" : "bg-white text-gray-500 border-gray-200 hover:bg-gray-50 cursor-pointer"}`}
+                      >
+                        {granolaSyncing ? "⏳ Syncing Granola..." : granolaConnected ? "📓 Sync Granola" : "📓 Connect Granola"}
+                      </button>
+                    </div>
+                    {(lastSyncTime || granolaLastSync) && (
+                      <span className="text-xs text-gray-400">
+                        {lastSyncTime && `Gmail ${lastSyncTime}`}{lastSyncTime && granolaLastSync && " · "}{granolaLastSync && `Granola ${granolaLastSync}`}
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -2122,6 +2315,37 @@ export default function BrightwheelDashboard() {
                       </div>
                     )}
 
+                    {/* Granola Call Notes */}
+                    {(() => {
+                      const granolaMeetings = (selectedDi.activities || []).filter(a => a.source === "granola");
+                      return granolaMeetings.length > 0 ? (
+                        <div className="bg-white rounded-xl border border-gray-200 p-4">
+                          <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">📓 Granola Call Notes <span className="text-gray-300 font-normal normal-case ml-1">({granolaMeetings.length})</span></h4>
+                          <div className="space-y-3 max-h-72 overflow-y-auto">
+                            {[...granolaMeetings].sort((a, b) => b.date.localeCompare(a.date)).map((a, i) => (
+                              <div key={i} className="rounded-lg border border-violet-100 bg-violet-50/30 px-3 py-2.5">
+                                <div className="flex items-center justify-between gap-2 mb-1">
+                                  <span className="text-xs font-semibold text-violet-700 truncate">{a.granolaTitle || a.notes}</span>
+                                  <span className="text-xs text-gray-400 flex-shrink-0">{a.date}</span>
+                                </div>
+                                {a.granolaNotesText && (
+                                  <p className="text-xs text-gray-600 leading-relaxed whitespace-pre-wrap">{a.granolaNotesText}</p>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ) : !granolaConnected ? (
+                        <div className="bg-white rounded-xl border border-dashed border-gray-200 p-4 flex items-center gap-3">
+                          <span className="text-lg">📓</span>
+                          <div className="flex-1">
+                            <p className="text-xs text-gray-500">Connect Granola to pull call notes and meeting summaries into this view.</p>
+                          </div>
+                          <button onClick={() => setGranolaModalOpen(true)} className="text-xs px-3 py-1.5 rounded-lg border border-violet-200 text-violet-600 hover:bg-violet-50 font-medium flex-shrink-0">Connect</button>
+                        </div>
+                      ) : null;
+                    })()}
+
                     {/* Email Drafts */}
                     <div className="bg-white rounded-xl border border-gray-200 p-4">
                       <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">✉️ Email Drafts</h4>
@@ -2529,6 +2753,67 @@ export default function BrightwheelDashboard() {
                   </button>
                 </div>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── GRANOLA TOKEN MODAL ── */}
+      {granolaModalOpen && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={(e) => { if (e.target === e.currentTarget) setGranolaModalOpen(false); }}>
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-violet-100 flex items-center justify-center text-violet-700 font-bold text-sm">GR</div>
+              <div>
+                <h2 className="text-base font-bold text-gray-900">Connect Granola</h2>
+                <p className="text-xs text-gray-400">Sync call notes &amp; meetings to contact tracking</p>
+              </div>
+            </div>
+
+            <div className="bg-violet-50 border border-violet-200 rounded-lg p-3 mb-4 text-xs text-violet-800 leading-relaxed">
+              <strong>How to get your API key:</strong>
+              <ol className="mt-1 ml-3 list-decimal space-y-0.5 text-violet-700">
+                <li>Open Granola on your Mac</li>
+                <li>Go to <strong>Settings → API</strong></li>
+                <li>Generate or copy your personal API key</li>
+              </ol>
+              <p className="mt-2 text-violet-500">Requires a Granola Enterprise plan. Once connected, Granola meetings will be matched to districts by name and added to contact tracking.</p>
+            </div>
+
+            <input
+              type="password"
+              value={granolaTokenInput}
+              onChange={(e) => setGranolaTokenInput(e.target.value)}
+              placeholder="Paste Granola API key here..."
+              className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm mb-4 focus:outline-none focus:ring-2 focus:ring-violet-300"
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && granolaTokenInput.trim()) {
+                  const t = granolaTokenInput.trim();
+                  setGranolaToken(t); setGranolaConnected(true);
+                  setGranolaModalOpen(false); setGranolaTokenInput("");
+                  syncGranolaActivity(t);
+                }
+              }}
+              autoFocus
+            />
+
+            <div className="flex gap-2 justify-end">
+              <button onClick={() => { setGranolaModalOpen(false); setGranolaTokenInput(""); }} className="px-4 py-2 text-sm text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50">
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  const t = granolaTokenInput.trim();
+                  if (!t) return;
+                  setGranolaToken(t); setGranolaConnected(true);
+                  setGranolaModalOpen(false); setGranolaTokenInput("");
+                  syncGranolaActivity(t);
+                }}
+                disabled={!granolaTokenInput.trim()}
+                className="px-4 py-2 text-sm font-medium text-white bg-violet-600 rounded-lg hover:bg-violet-700 disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                Connect &amp; Sync
+              </button>
             </div>
           </div>
         </div>
