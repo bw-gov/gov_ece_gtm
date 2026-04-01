@@ -253,7 +253,9 @@ function generateEmail(district, template, rep) {
   const helloGreeting = ep(`Hello ${greetingName},`);
   const hiGreeting    = ep(`Hi ${greetingName},`);
 
-  const calendlyLink = ep(ea(r.calendly, "Schedule time with me →"));
+  const calendlyLink = r && r.calendly
+    ? ep(ea(r.calendly, "Schedule time with me →"))
+    : ep(`Happy to find a time — just reply and we can schedule a quick connect.`);
 
   // Build a per-recipient unsubscribe URL so clicks are logged against the right contact
   const unsubRecipientName = (isSummerBridgeTemplate && district.summerBridgeContact)
