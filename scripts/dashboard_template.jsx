@@ -8,7 +8,7 @@ const SLACK_WEBHOOK_URL = ""; // e.g. "https://hooks.slack.com/services/T.../B..
 // One Google Sheet shared across all reps — persists all logged activities.
 // Setup: create a Google Sheet, share it with all reps (Editor access),
 // then paste the Sheet ID from the URL (/spreadsheets/d/SHEET_ID/edit) below.
-const ACTIVITY_SHEET_ID = ""; // e.g. "1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms"
+const ACTIVITY_SHEET_ID = "1PasvZHeHTbAaiM1oI0Xe9pxyx-MgwDTF64Y-yuQACwM";
 const SHEET_COLS = ["activity_id","district_id","district_name","type","date","notes","full_notes","source","rep_email","director_name","dedup_id","logged_at"];
 
 // ─── EMAIL HELPERS ────────────────────────────────────────────────────────────
