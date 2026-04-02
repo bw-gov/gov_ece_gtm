@@ -617,7 +617,7 @@ export default function BrightwheelDashboard() {
     if (afterConnect) pendingDraftRef.current = afterConnect;
     window.google.accounts.oauth2.initTokenClient({
       client_id: GOOGLE_CLIENT_ID,
-      scope: "https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/spreadsheets",
+      scope: "https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/gmail.compose https://www.googleapis.com/auth/spreadsheets",
       callback: (resp) => {
         if (resp.access_token) {
           setGmailToken(resp.access_token);
@@ -1115,8 +1115,7 @@ export default function BrightwheelDashboard() {
       showNotif(`Shared log loaded — ${total} activit${total !== 1 ? "ies" : "y"} across team ✓`);
     } catch (e) {
       setSheetSyncing(false);
-      if (e.status === 403) showNotif("Sheets access needed — reconnect Gmail to grant permission", "red");
-      else console.warn("Sheet load:", e.message);
+      console.warn("Sheet load:", e.status, e.message);
     }
   };
 
