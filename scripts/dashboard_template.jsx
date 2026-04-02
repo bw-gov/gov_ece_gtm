@@ -732,9 +732,10 @@ export default function BrightwheelDashboard() {
     if (!useToken) { connectGmail((t) => syncGmailActivity(t)); return; }
     setGmailSyncing(true);
 
-    // Build a fast lookup: email address → district
+    // Build a fast lookup: email address → district (skip test entries)
     const emailToDistrict = {};
     districts.forEach((d) => {
+      if (d.isTest) return;
       if (d.email) emailToDistrict[d.email.toLowerCase().trim()] = d;
       if (d.summerBridgeContact?.email) emailToDistrict[d.summerBridgeContact.email.toLowerCase().trim()] = d;
     });

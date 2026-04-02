@@ -29128,5 +29128,34 @@
     "summerBridgeContact": null,
     "state": "WA",
     "districtContext": []
+  },
+  {
+    "id": 9999,
+    "county": "Test",
+    "district": "brightwheel (TEST)",
+    "enrollment": 500,
+    "director": "Eric Truog",
+    "title": "Director, Business Operations",
+    "callToConfirm": false,
+    "email": "eric.truog@mybrightwheel.com",
+    "phone": "(555) 000-0001",
+    "address": "548 Market St, San Francisco, CA 94104",
+    "linkedin": "linkedin.com/in/eric-truog",
+    "curriculum": "EC",
+    "curriculumVendor": "Internal",
+    "priorityTier": "Test",
+    "newLeadership": false,
+    "buyingSignals": [
+      "Test prospect \u2014 used to validate outreach email workflow"
+    ],
+    "recentNews": [],
+    "status": "not contacted",
+    "priority": 0,
+    "notes": "TEST PROSPECT \u2014 for workflow validation only.",
+    "activities": [],
+    "lastUpdated": null,
+    "boardNotes": [],
+    "state": "FL",
+    "isTest": true
   }
 ]
