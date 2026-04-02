@@ -880,7 +880,7 @@ export default function BrightwheelDashboard() {
         const dist = districts.find(d => d.id === districtId);
         return activityToRow(districtId, dist?.district || "", { ...activity, repEmail: gmailUser || "" });
       });
-      writeToSheet(rows);
+      writeToSheet(rows, useToken);
     }
   };
 
@@ -1136,12 +1136,14 @@ export default function BrightwheelDashboard() {
   ];
 
   // Append one or more rows to the sheet (fire-and-forget, errors are non-blocking)
-  const writeToSheet = async (rows) => {
-    if (!ACTIVITY_SHEET_ID || !gmailToken || !rows.length) return;
+  const writeToSheet = async (rows, token) => {
+    const useToken = token || gmailToken;
+    if (!ACTIVITY_SHEET_ID || !useToken || !rows.length) return;
     try {
       await sheetFetch(`values/Sheet1!A:L:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`, {
         method: "POST",
         body: JSON.stringify({ values: rows }),
+        token: useToken,
       });
     } catch (e) { console.warn("Sheet write:", e.message); }
   };
