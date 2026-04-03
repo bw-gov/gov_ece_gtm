@@ -1400,20 +1400,6 @@ export default function BrightwheelDashboard() {
             </button>
           )}
 
-          {/* Help link */}
-          <a
-            href="help.html"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1.5 pl-4 border-l border-gray-200 hover:opacity-80 transition-opacity"
-          >
-            <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-sm font-bold text-gray-500">?</div>
-            <div className="text-left">
-              <div className="text-xs font-semibold text-gray-600">How to use</div>
-              <div className="text-xs text-gray-400">dashboard guide</div>
-            </div>
-          </a>
-
           {/* Granola connect */}
           <button
             onClick={() => granolaConnected ? syncGranolaActivity() : setGranolaModalOpen(true)}
@@ -1436,22 +1422,32 @@ export default function BrightwheelDashboard() {
       </div>
 
       {/* TABS */}
-      <div className="bg-white border-b border-gray-200 px-6 flex gap-1">
-        {[
-          { id: "overview", label: "🏠 Overview" },
-          { id: "prospects", label: "📋 Prospects" },
-          { id: "contacts", label: "👥 Contact Tracking" },
-          { id: "districtinfo", label: "🏫 District Info" },
-          { id: "approval", label: `📤 Send Queue ${stats.queue > 0 ? `(${stats.queue})` : ""}` },
-        ].map((t) => (
-          <button
-            key={t.id}
-            onClick={() => setActiveTab(t.id)}
-            className={`px-4 py-3 text-xs font-medium border-b-2 transition-colors ${activeTab === t.id ? "border-indigo-600 text-indigo-600" : "border-transparent text-gray-500 hover:text-gray-700"}`}
-          >
-            {t.label}
-          </button>
-        ))}
+      <div className="bg-white border-b border-gray-200 px-6 flex items-center">
+        <div className="flex gap-1 flex-1">
+          {[
+            { id: "overview", label: "🏠 Overview" },
+            { id: "prospects", label: "📋 Prospects" },
+            { id: "contacts", label: "👥 Contact Tracking" },
+            { id: "districtinfo", label: "🏫 District Info" },
+            { id: "approval", label: `📤 Send Queue ${stats.queue > 0 ? `(${stats.queue})` : ""}` },
+          ].map((t) => (
+            <button
+              key={t.id}
+              onClick={() => setActiveTab(t.id)}
+              className={`px-4 py-3 text-xs font-medium border-b-2 transition-colors ${activeTab === t.id ? "border-indigo-600 text-indigo-600" : "border-transparent text-gray-500 hover:text-gray-700"}`}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+        <a
+          href="help.html"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="ml-auto text-xs text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 border border-transparent hover:border-indigo-200 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5"
+        >
+          <span className="font-bold">?</span> How to use
+        </a>
       </div>
 
       <div className="px-6 py-4">
