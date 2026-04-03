@@ -11,6 +11,40 @@ const SLACK_WEBHOOK_URL = ""; // e.g. "https://hooks.slack.com/services/T.../B..
 const ACTIVITY_SHEET_ID = "1PasvZHeHTbAaiM1oI0Xe9pxyx-MgwDTF64Y-yuQACwM";
 const SHEET_COLS = ["activity_id","district_id","district_name","type","date","notes","full_notes","source","rep_email","director_name","dedup_id","logged_at"];
 
+// ─── SEQUENCE STAGES ─────────────────────────────────────────────────────────
+const SEQUENCE_STAGES = {
+  not_started:    { label: "Not Started",    color: "bg-gray-100 text-gray-500",     dot: "bg-gray-400"    },
+  email_sent:     { label: "Email Sent",     color: "bg-blue-100 text-blue-700",     dot: "bg-blue-500"    },
+  mailer_queued:  { label: "Mailer Queued",  color: "bg-orange-100 text-orange-700", dot: "bg-orange-500"  },
+  vm_left:        { label: "VM Left",        color: "bg-purple-100 text-purple-700", dot: "bg-purple-500"  },
+  follow_up_sent: { label: "Follow-up Sent", color: "bg-indigo-100 text-indigo-700", dot: "bg-indigo-500"  },
+  closing_sent:   { label: "Closing Sent",   color: "bg-teal-100 text-teal-700",     dot: "bg-teal-500"    },
+  responded:      { label: "Responded ✓",    color: "bg-green-100 text-green-700",   dot: "bg-green-500"   },
+  nurture:        { label: "Nurture",        color: "bg-slate-100 text-slate-500",   dot: "bg-slate-400"   },
+};
+
+// Map old status strings → new stage keys (for localStorage / sheet migration)
+const LEGACY_STAGE_MAP = {
+  "not contacted": "not_started",
+  "reached out": "email_sent",
+  "responded": "responded",
+  "meeting scheduled": "responded",
+  "proposal sent": "closing_sent",
+  "closed won": "responded",
+  "closed lost": "nurture",
+  "unsubscribed": "nurture",
+};
+
+// Returns true when Day 5+ has elapsed since first outbound email and stage hasn't progressed past calling
+function callWindowOpen(d) {
+  if (!["email_sent", "mailer_queued"].includes(d.status || "not_started")) return false;
+  const sentActs = (d.activities || []).filter(a => a.type === "email" && a.source !== "gmail_reply");
+  if (!sentActs.length) return false;
+  const earliest = sentActs.reduce((min, a) => a.date < min ? a.date : min, sentActs[0].date);
+  const days = Math.floor((Date.now() - new Date(earliest).getTime()) / 86400000);
+  return days >= 5;
+}
+
 // ─── EMAIL HELPERS ────────────────────────────────────────────────────────────
 // Unsubscribe landing page + Google Form logger
 const UNSUB_PAGE = "https://bw-gov.github.io/gov_ece_gtm/unsubscribe.html";
@@ -569,11 +603,11 @@ export default function BrightwheelDashboard() {
       const actMap = JSON.parse(saved);
       setDistricts(prev => prev.map(d => {
         const entry = actMap[String(d.id)];
-        if (!entry || !entry.activities?.length) return d;
+        if (!entry) return d;
         const existingIds = new Set((d.activities || []).map(a => String(a.id)));
-        const fresh = entry.activities.filter(a => !existingIds.has(String(a.id)));
-        if (!fresh.length) return d;
-        return { ...d, activities: [...(d.activities || []), ...fresh], status: entry.status || d.status };
+        const fresh = (entry.activities || []).filter(a => !existingIds.has(String(a.id)));
+        const status = entry.status ? (LEGACY_STAGE_MAP[entry.status] || entry.status) : d.status;
+        return { ...d, activities: fresh.length ? [...(d.activities || []), ...fresh] : d.activities, status, mailerSent: entry.mailerSent || d.mailerSent || false };
       }));
     } catch(e) { console.warn('localStorage load:', e); }
   }, []);
@@ -583,8 +617,8 @@ export default function BrightwheelDashboard() {
     try {
       const actMap = {};
       districts.forEach(d => {
-        if ((d.activities || []).length > 0 || d.status !== 'not contacted') {
-          actMap[String(d.id)] = { activities: d.activities || [], status: d.status };
+        if ((d.activities || []).length > 0 || (d.status && d.status !== 'not_started') || d.mailerSent) {
+          actMap[String(d.id)] = { activities: d.activities || [], status: d.status, mailerSent: d.mailerSent || false };
         }
       });
       if (Object.keys(actMap).length > 0) {
@@ -592,6 +626,14 @@ export default function BrightwheelDashboard() {
       }
     } catch(e) {}
   }, [districts]);
+
+  // Migrate any legacy status values to sequence stage keys
+  useEffect(() => {
+    setDistricts(prev => prev.map(d => {
+      const migrated = LEGACY_STAGE_MAP[d.status];
+      return migrated ? { ...d, status: migrated } : d;
+    }));
+  }, []); // runs once on mount, after localStorage load
 
   // ── LOAD PERSISTED ACTIVITY LOG ON STARTUP ──────────────────────────────────
   // The daily scheduled task writes data/activity_log.json. Fetch it here so
@@ -614,8 +656,8 @@ export default function BrightwheelDashboard() {
             const d = updated[idx];
             if ((d.activities || []).some((a) => a.gmailMsgId && a.gmailMsgId === activity.gmailMsgId)) return;
             const newStatus = activity.source === "gmail_reply"
-              ? (d.status === "reached out" || d.status === "not contacted" ? "responded" : d.status)
-              : (d.status === "not contacted" ? "reached out" : d.status);
+              ? (["email_sent","mailer_queued","vm_left","not_started"].includes(d.status) ? "responded" : d.status)
+              : ((d.status === "not_started" || !d.status) ? "email_sent" : d.status);
             updated[idx] = { ...d, activities: [...(d.activities || []), activity], status: newStatus };
           });
           return updated;
@@ -710,7 +752,7 @@ export default function BrightwheelDashboard() {
           if (d.id !== item.districtId) return d;
           const already = (d.activities || []).some((a) => a.source === "dashboard" && a.notes === sentActivity.notes && a.date === sentActivity.date);
           if (already) return d;
-          return { ...d, activities: [...(d.activities || []), sentActivity], status: d.status === "not contacted" ? "reached out" : d.status };
+          return { ...d, activities: [...(d.activities || []), sentActivity], status: (d.status === "not_started" || !d.status) ? "email_sent" : d.status };
         }));
         setActivityLog((prev) => [sentActivity, ...prev]);
         writeToSheet([activityToRow(item.districtId, item.district, { ...sentActivity, repEmail: gmailUser || "" })]);
@@ -892,8 +934,8 @@ export default function BrightwheelDashboard() {
           // Skip if this gmailMsgId already logged
           if ((d.activities || []).some(a => a.gmailMsgId === activity.gmailMsgId)) return;
           const newStatus = isReply
-            ? (d.status === "reached out" || d.status === "not contacted" ? "responded" : d.status)
-            : (d.status === "not contacted" ? "reached out" : d.status);
+            ? (["email_sent","mailer_queued","vm_left","not_started"].includes(d.status) ? "responded" : d.status)
+            : ((d.status === "not_started" || !d.status) ? "email_sent" : d.status);
           updated[idx] = { ...d, activities: [...(d.activities || []), activity], status: newStatus };
         });
         return updated;
@@ -1104,19 +1146,34 @@ export default function BrightwheelDashboard() {
       const byDistrict = {};
       const sheetMsgIds = new Set();
       const sheetGranolaIds = new Set();
+      // Track latest stage and mailer status from sheet rows
+      const latestStage = {};
+      const mailerSentMap = {};
 
       for (const row of rows.slice(1)) {
         const distId = parseInt(col(row, "district_id"));
         if (!distId) continue;
         const src = col(row, "source");
+        const type = col(row, "type");
         const dedupId = col(row, "dedup_id");
+
+        // Stage update rows — track the latest stage per district
+        if (type === "stage_update") {
+          const stageLabel = col(row, "notes").replace("Stage → ", "");
+          const stageKey = Object.keys(SEQUENCE_STAGES).find(k => SEQUENCE_STAGES[k].label === stageLabel);
+          if (stageKey) latestStage[distId] = stageKey;
+          continue;
+        }
+        // Mailer sent rows
+        if (type === "mailer_sent") { mailerSentMap[distId] = true; continue; }
+
         if (dedupId) {
           if (src === "granola") sheetGranolaIds.add(dedupId);
           else if (src.includes("gmail") || src === "dashboard") sheetMsgIds.add(dedupId);
         }
         const act = {
           id: col(row, "activity_id") || String(Date.now() + Math.random()),
-          type: col(row, "type") || "note",
+          type: type || "note",
           date: col(row, "date"),
           notes: col(row, "notes"),
           source: src || "sheet",
@@ -1131,15 +1188,18 @@ export default function BrightwheelDashboard() {
 
       setDistricts(prev => prev.map(d => {
         const incoming = byDistrict[d.id] || [];
-        if (!incoming.length) return d;
         const existingIds = new Set((d.activities || []).map(a => String(a.id)));
         const fresh = incoming.filter(a => !existingIds.has(String(a.id)));
-        if (!fresh.length) return d;
-        const all = [...(d.activities || []), ...fresh];
-        const newStatus = d.status === "not contacted"
-          ? (all.some(a => a.source === "gmail_reply") ? "responded" : "reached out")
-          : d.status;
-        return { ...d, activities: all, status: newStatus };
+        const all = fresh.length ? [...(d.activities || []), ...fresh] : (d.activities || []);
+        // Determine stage: explicit stage_update > inferred from activities > current
+        let newStatus = latestStage[d.id] || d.status || "not_started";
+        // migrate legacy values that slipped through
+        if (LEGACY_STAGE_MAP[newStatus]) newStatus = LEGACY_STAGE_MAP[newStatus];
+        if (!latestStage[d.id] && all.some(a => a.source === "gmail_reply")) newStatus = "responded";
+        else if (!latestStage[d.id] && all.some(a => a.type === "email" && a.source !== "gmail_reply") && newStatus === "not_started") newStatus = "email_sent";
+        const mailerSent = mailerSentMap[d.id] || d.mailerSent || false;
+        if (!fresh.length && newStatus === d.status && mailerSent === d.mailerSent) return d;
+        return { ...d, activities: all, status: newStatus, mailerSent };
       }));
 
       // Pre-populate dedup sets so re-syncing skips already-persisted items
@@ -1262,7 +1322,8 @@ export default function BrightwheelDashboard() {
     total: districts.length,
     hot: districts.filter((d) => d.priority >= 75).length,
     warm: districts.filter((d) => d.priority >= 55 && d.priority < 75).length,
-    contacted: districts.filter((d) => d.status !== "not contacted").length,
+    contacted: districts.filter((d) => d.status && d.status !== "not_started").length,
+    callQueue: districts.filter((d) => callWindowOpen(d)).length,
     queue: approvalQueue.length,
   }), [districts, approvalQueue]);
 
@@ -1271,11 +1332,50 @@ export default function BrightwheelDashboard() {
     if (selectedDistrict?.id === id) setSelectedDistrict((prev) => ({ ...prev, ...updates }));
   };
 
+  // Update a district's sequence stage and write to shared sheet
+  const updateStage = (districtId, newStage) => {
+    const d = districts.find(x => x.id === districtId);
+    if (!d) return;
+    updateDistrict(districtId, { status: newStage });
+    const act = {
+      id: Date.now(),
+      type: "stage_update",
+      date: new Date().toISOString().split("T")[0],
+      notes: `Stage → ${SEQUENCE_STAGES[newStage]?.label || newStage}`,
+      source: "manual",
+      repEmail: gmailUser || "",
+      directorName: d.director,
+    };
+    writeToSheet([activityToRow(districtId, d.district, act)]);
+  };
+
+  // Toggle the physical mailer sent flag
+  const toggleMailer = (districtId) => {
+    const d = districts.find(x => x.id === districtId);
+    if (!d) return;
+    const newVal = !d.mailerSent;
+    const updates = { mailerSent: newVal };
+    if (newVal && d.status === "email_sent") updates.status = "mailer_queued";
+    updateDistrict(districtId, updates);
+    if (newVal) {
+      const act = {
+        id: Date.now(),
+        type: "mailer_sent",
+        date: new Date().toISOString().split("T")[0],
+        notes: "Physical mailer sent (flyer + highlighter)",
+        source: "manual",
+        repEmail: gmailUser || "",
+        directorName: d.director,
+      };
+      writeToSheet([activityToRow(districtId, d.district, act)]);
+    }
+  };
+
   const addActivity = (district) => {
     if (!newActivity.notes) return;
     const act = { ...newActivity, id: Date.now(), district: district.district, directorName: district.director, repEmail: gmailUser || "", source: "manual" };
     const updatedActivities = [...(district.activities || []), act];
-    updateDistrict(district.id, { activities: updatedActivities, status: newActivity.type === "meeting" ? "meeting scheduled" : district.status });
+    updateDistrict(district.id, { activities: updatedActivities });
     setActivityLog((prev) => [act, ...prev]);
     setNewActivity({ type: "email", date: new Date().toISOString().split("T")[0], notes: "" });
     showNotif("Activity logged ✓");
@@ -1312,7 +1412,6 @@ export default function BrightwheelDashboard() {
       if (prev.find((x) => x.districtId === district.id && x.template === template)) return prev;
       return [item, ...prev];
     });
-    updateDistrict(district.id, { status: "reached out" });
     if (!silent) showNotif(`📧 Queued — ${district.director}`);
   };
 
@@ -1327,18 +1426,11 @@ export default function BrightwheelDashboard() {
   };
 
   const CURRICULUM_VENDORS = [...new Set(INITIAL_DISTRICTS.map((d) => d.curriculumVendor))];
-  const STATUSES = ["not contacted", "reached out", "responded", "meeting scheduled", "proposal sent", "closed won", "closed lost", "unsubscribed"];
 
-  const statusColor = (s) => {
-    if (s === "closed won") return "text-green-600 font-semibold";
-    if (s === "closed lost") return "text-red-500";
-    if (s === "unsubscribed") return "text-gray-400 line-through";
-    if (s === "meeting scheduled") return "text-purple-600 font-semibold";
-    if (s === "proposal sent") return "text-blue-600";
-    if (s === "responded") return "text-teal-600";
-    if (s === "reached out") return "text-orange-600";
-    return "text-gray-400";
-  };
+  const stageColor = (s) => (SEQUENCE_STAGES[s] || SEQUENCE_STAGES.not_started).color;
+  // kept for any legacy callsites
+  const statusColor = (s) => stageColor(LEGACY_STAGE_MAP[s] || s);
+
 
   // ─── RENDER ───────────────────────────────────────────────────────────────
   return (
@@ -1414,6 +1506,7 @@ export default function BrightwheelDashboard() {
             { id: "overview", label: "🏠 Overview" },
             { id: "prospects", label: "📋 Prospects" },
             { id: "contacts", label: "👥 Outreach Tracking" },
+            { id: "callqueue", label: `📞 Call Queue${stats.callQueue > 0 ? ` (${stats.callQueue})` : ""}` },
             { id: "districtinfo", label: "🏫 District Info" },
             { id: "approval", label: `📤 Send Queue ${stats.queue > 0 ? `(${stats.queue})` : ""}` },
           ].map((t) => (
@@ -1663,7 +1756,7 @@ export default function BrightwheelDashboard() {
                 { label: "State", val: filterState, setter: setFilterState, opts: [["all","All States"],["FL","Florida"],["AL","Alabama"],["ID","Idaho"],["NV","Nevada"],["CA","California"],["OR","Oregon"],["NM","New Mexico"],["GA","Georgia"],["MI","Michigan"],["WA","Washington"]] },
                 { label: "Priority", val: filterPriority, setter: setFilterPriority, opts: [["all","All Priorities"],["hot","🔥 Hot"],["warm","🌡️ Warm"],["cool","💧 Cool"],["cold","❄️ Cold"]] },
                 { label: "Curriculum", val: filterCurriculum, setter: setFilterCurriculum, opts: [["all","All Curricula"], ...CURRICULUM_VENDORS.map(v => [v, v])] },
-                { label: "Status", val: filterStatus, setter: setFilterStatus, opts: [["all","All Statuses"], ...STATUSES.map(s => [s, s])] },
+                { label: "Stage", val: filterStatus, setter: setFilterStatus, opts: [["all","All Stages"], ...Object.entries(SEQUENCE_STAGES).map(([k,v]) => [k, v.label])] },
                 { label: "Rep", val: globalRepFilter, setter: setGlobalRepFilter, opts: [["all","All Reps"], ...Object.values(REP_PROFILES).map(r => [r.email, r.name])] },
               ].map((f) => (
                 <select
@@ -1714,7 +1807,7 @@ export default function BrightwheelDashboard() {
                       { h: "Priority" }, { h: "District" }, { h: "Director" }, { h: "Curriculum" },
                       { h: "Adopted" }, { h: "Age" }, { h: "Enrollment" },
                       { h: "Signals", style: { minWidth: "220px" } },
-                      { h: "Status" }, { h: "Actions" },
+                      { h: "Stage" }, { h: "Mailer" }, { h: "Actions" },
                     ].map(({ h, style }) => (
                       <th key={h} className="px-3 py-3 text-left font-medium" style={style}>{h}</th>
                     ))}
@@ -1781,13 +1874,34 @@ export default function BrightwheelDashboard() {
                           </div>
                         </td>
                         <td className="px-3 py-2.5">
-                          <select
-                            value={d.status}
-                            onChange={(e) => updateDistrict(d.id, { status: e.target.value })}
-                            className={`text-xs border-0 bg-transparent focus:outline-none cursor-pointer ${statusColor(d.status)}`}
-                          >
-                            {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
-                          </select>
+                          {/* Stage badge + dropdown */}
+                          <div className="flex flex-col gap-1">
+                            {callWindowOpen(d) && (
+                              <span className="text-xs bg-yellow-100 text-yellow-700 border border-yellow-300 px-1.5 py-0.5 rounded font-semibold w-fit">📞 Call due</span>
+                            )}
+                            <select
+                              value={d.status || "not_started"}
+                              onChange={(e) => updateStage(d.id, e.target.value)}
+                              onClick={(e) => e.stopPropagation()}
+                              className={`text-xs px-2 py-0.5 rounded-full font-medium border-0 cursor-pointer focus:outline-none focus:ring-1 focus:ring-indigo-300 ${stageColor(d.status || "not_started")}`}
+                            >
+                              {Object.entries(SEQUENCE_STAGES).map(([k, v]) => (
+                                <option key={k} value={k}>{v.label}</option>
+                              ))}
+                            </select>
+                          </div>
+                        </td>
+                        <td className="px-3 py-2.5 text-center">
+                          <label className="flex flex-col items-center gap-0.5 cursor-pointer" title={d.mailerSent ? "Mailer sent" : "Mark mailer as sent"}>
+                            <input
+                              type="checkbox"
+                              checked={!!d.mailerSent}
+                              onChange={() => toggleMailer(d.id)}
+                              onClick={(e) => e.stopPropagation()}
+                              className="rounded border-gray-300 text-orange-500 cursor-pointer"
+                            />
+                            <span className="text-xs text-gray-400">{d.mailerSent ? "✓ sent" : "—"}</span>
+                          </label>
                         </td>
                         <td className="px-3 py-2.5">
                           <div className="flex gap-1 items-center relative">
@@ -2141,6 +2255,150 @@ export default function BrightwheelDashboard() {
                 {contactDistricts.length === 0 && (
                   <div className="py-12 text-center text-gray-400 text-sm">No districts match your filters.</div>
                 )}
+              </div>
+            </div>
+          );
+        })()}
+
+        {/* ── CALL QUEUE TAB ── */}
+        {activeTab === "callqueue" && (() => {
+          const callDue = districts
+            .filter(d => callWindowOpen(d) && (globalRepFilter === "all" || STATE_REP_EMAIL[d.state || "FL"] === globalRepFilter))
+            .sort((a, b) => {
+              const daysFor = (d) => {
+                const acts = (d.activities || []).filter(a => a.type === "email" && a.source !== "gmail_reply");
+                if (!acts.length) return 0;
+                const earliest = acts.reduce((min, a) => a.date < min ? a.date : min, acts[0].date);
+                return Math.floor((Date.now() - new Date(earliest).getTime()) / 86400000);
+              };
+              return daysFor(b) - daysFor(a); // most overdue first
+            });
+
+          const daysSinceEmail = (d) => {
+            const acts = (d.activities || []).filter(a => a.type === "email" && a.source !== "gmail_reply");
+            if (!acts.length) return null;
+            const earliest = acts.reduce((min, a) => a.date < min ? a.date : min, acts[0].date);
+            return Math.floor((Date.now() - new Date(earliest).getTime()) / 86400000);
+          };
+
+          return (
+            <div>
+              <div className="mb-5 flex items-start justify-between gap-4 flex-wrap">
+                <div>
+                  <h2 className="text-base font-bold text-gray-900">📞 Call Queue</h2>
+                  <p className="text-xs text-gray-500 mt-1">Districts where Day 5+ has passed since the initial email — call window is open. Update the stage after each attempt.</p>
+                </div>
+                <div className="flex gap-3 text-center">
+                  <div><div className="text-xl font-bold text-yellow-600">{callDue.length}</div><div className="text-xs text-gray-400">Due for a call</div></div>
+                  <div><div className="text-xl font-bold text-orange-600">{callDue.filter(d => !d.mailerSent).length}</div><div className="text-xs text-gray-400">Mailer not sent</div></div>
+                  <div><div className="text-xl font-bold text-purple-600">{callDue.filter(d => d.status === "vm_left").length}</div><div className="text-xs text-gray-400">VM left</div></div>
+                </div>
+              </div>
+
+              {callDue.length === 0 ? (
+                <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
+                  <div className="text-3xl mb-3">✅</div>
+                  <div className="font-semibold text-gray-700">No calls due right now</div>
+                  <p className="text-xs text-gray-400 mt-1">Districts enter this queue on Day 5 after the initial email is sent.</p>
+                </div>
+              ) : (
+                <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                  <div className="bg-gray-50 border-b border-gray-200 px-4 py-2 grid text-xs font-semibold text-gray-500 uppercase tracking-wide" style={{gridTemplateColumns:"2fr 1.5fr 80px 90px 90px 160px 120px"}}>
+                    <span>District / Director</span>
+                    <span>Phone / Email</span>
+                    <span>Days out</span>
+                    <span>Mailer sent</span>
+                    <span>Stage</span>
+                    <span>Update stage</span>
+                    <span>Actions</span>
+                  </div>
+                  {callDue.map(d => {
+                    const days = daysSinceEmail(d);
+                    const rep = REP_PROFILES[STATE_REP_EMAIL[d.state || "FL"]];
+                    return (
+                      <div key={d.id} className="border-b border-gray-100 px-4 py-3 grid items-center gap-3 hover:bg-yellow-50 transition-colors" style={{gridTemplateColumns:"2fr 1.5fr 80px 90px 90px 160px 120px"}}>
+                        {/* District */}
+                        <div>
+                          <div className="font-medium text-gray-900 text-xs">{d.district}</div>
+                          <div className="text-gray-500 text-xs">{d.director}</div>
+                          {rep && <span className={`text-xs px-1.5 py-0 rounded font-semibold mt-0.5 inline-block ${rep.color}`}>{rep.initials}</span>}
+                        </div>
+                        {/* Contact */}
+                        <div>
+                          <div className="text-xs font-medium text-gray-700">{d.phone || <span className="text-gray-300">No phone</span>}</div>
+                          <div className="text-xs text-gray-400 truncate max-w-40">{d.email}</div>
+                        </div>
+                        {/* Days since email */}
+                        <div className={`text-sm font-bold text-center ${days >= 14 ? "text-red-600" : days >= 7 ? "text-orange-500" : "text-yellow-600"}`}>
+                          {days}d
+                        </div>
+                        {/* Mailer checkbox */}
+                        <div className="flex justify-center">
+                          <label className="flex flex-col items-center gap-0.5 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={!!d.mailerSent}
+                              onChange={() => toggleMailer(d.id)}
+                              className="rounded border-gray-300 text-orange-500 cursor-pointer"
+                            />
+                            <span className="text-xs text-gray-400">{d.mailerSent ? "✓ sent" : "—"}</span>
+                          </label>
+                        </div>
+                        {/* Current stage badge */}
+                        <div>
+                          <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${stageColor(d.status || "not_started")}`}>
+                            {(SEQUENCE_STAGES[d.status] || SEQUENCE_STAGES.not_started).label}
+                          </span>
+                        </div>
+                        {/* Stage update dropdown */}
+                        <div>
+                          <select
+                            value={d.status || "not_started"}
+                            onChange={(e) => updateStage(d.id, e.target.value)}
+                            className="text-xs border border-gray-200 rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-indigo-300 bg-white w-full"
+                          >
+                            {Object.entries(SEQUENCE_STAGES).map(([k, v]) => (
+                              <option key={k} value={k}>{v.label}</option>
+                            ))}
+                          </select>
+                        </div>
+                        {/* Actions */}
+                        <div className="flex gap-1.5">
+                          <button
+                            onClick={() => { setSelectedDistrict(d); setActiveTab("districtinfo"); setModalTab("overview"); }}
+                            className="text-xs bg-indigo-600 text-white px-2 py-1 rounded hover:bg-indigo-700"
+                          >View</button>
+                          <button
+                            onClick={() => updateStage(d.id, "vm_left")}
+                            className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded hover:bg-purple-200 font-medium"
+                            title="Mark as VM left"
+                          >VM</button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* Sequence reference */}
+              <div className="mt-6 bg-white rounded-xl border border-gray-200 p-4">
+                <div className="text-xs font-semibold text-gray-600 mb-3 uppercase tracking-wide">Sequence reference</div>
+                <div className="flex flex-wrap gap-3">
+                  {[
+                    { day: "Day 0",    label: "Initial email",         stage: "email_sent"     },
+                    { day: "Week 2",   label: "Physical mailer",        stage: "mailer_queued"  },
+                    { day: "Day 5–7",  label: "Call + voicemail",       stage: "vm_left"        },
+                    { day: "Day 7",    label: "Post-call follow-up",    stage: "follow_up_sent" },
+                    { day: "Day 14",   label: "Final closing email",    stage: "closing_sent"   },
+                    { day: "Day 14+",  label: "Move to nurture",        stage: "nurture"        },
+                  ].map(s => (
+                    <div key={s.stage} className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2">
+                      <span className="text-xs font-bold text-gray-400 w-14 shrink-0">{s.day}</span>
+                      <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${stageColor(s.stage)}`}>{(SEQUENCE_STAGES[s.stage] || {}).label}</span>
+                      <span className="text-xs text-gray-500">{s.label}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           );
