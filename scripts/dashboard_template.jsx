@@ -23,6 +23,24 @@ const SEQUENCE_STAGES = {
   nurture:        { label: "Nurture",        color: "bg-slate-100 text-slate-500",   dot: "bg-slate-400"   },
 };
 
+// ─── CAMPAIGNS ────────────────────────────────────────────────────────────────
+// Each campaign defines a named 14-day outreach sequence with steps + trigger days.
+const CAMPAIGNS = {
+  summer_outreach: {
+    label: "☀️ Summer Outreach",
+    description: "14-day sequence to drive adoption of Experience Preschool for summer programs",
+    steps: [
+      { key: "email_sent",     day: 0,  label: "Initial Email",        icon: "📧", action: "Send initial outreach email",       color: "bg-blue-100 text-blue-700"    },
+      { key: "mailer_queued",  day: 3,  label: "Physical Mailer",      icon: "📮", action: "Queue physical mailer",             color: "bg-orange-100 text-orange-700" },
+      { key: "vm_left",        day: 5,  label: "Call + VM",            icon: "📞", action: "Call and leave voicemail",          color: "bg-purple-100 text-purple-700" },
+      { key: "follow_up_sent", day: 7,  label: "Post-Call Follow-up",  icon: "✉️", action: "Send post-call follow-up email",    color: "bg-indigo-100 text-indigo-700" },
+      { key: "closing_sent",   day: 12, label: "Closing Email",        icon: "🔒", action: "Send final closing email",          color: "bg-teal-100 text-teal-700"    },
+      { key: "responded",      day: 14, label: "Responded ✓",          icon: "✅", action: "Schedule discovery call",           color: "bg-green-100 text-green-700"  },
+      { key: "nurture",        day: 14, label: "Nurture",              icon: "🌱", action: "Move to nurture list",              color: "bg-slate-100 text-slate-500"  },
+    ],
+  },
+};
+
 // Map old status strings → new stage keys (for localStorage / sheet migration)
 const LEGACY_STAGE_MAP = {
   "not contacted": "not_started",
@@ -549,6 +567,7 @@ export default function BrightwheelDashboard() {
   const [emailPreview, setEmailPreview] = useState("");
   const [showEmailPreview, setShowEmailPreview] = useState(false);
   const [showSummerBridge, setShowSummerBridge] = useState(false);
+  const [campaignFilter, setCampaignFilter] = useState("summer_outreach");
 
   // ── DISTRICT INFO TAB ──
   const [diInfoState, setDiInfoState] = useState("all");
@@ -1506,7 +1525,7 @@ export default function BrightwheelDashboard() {
             { id: "overview", label: "🏠 Overview" },
             { id: "prospects", label: "📋 Prospects" },
             { id: "contacts", label: "👥 Outreach Tracking" },
-            { id: "callqueue", label: `📞 Call Queue${stats.callQueue > 0 ? ` (${stats.callQueue})` : ""}` },
+            { id: "callqueue", label: `🔁 Sequence` },
             { id: "districtinfo", label: "🏫 District Info" },
             { id: "approval", label: `📤 Send Queue ${stats.queue > 0 ? `(${stats.queue})` : ""}` },
           ].map((t) => (
@@ -2221,143 +2240,249 @@ export default function BrightwheelDashboard() {
 
         {/* ── CALL QUEUE TAB ── */}
         {activeTab === "callqueue" && (() => {
-          const callDue = districts
-            .filter(d => callWindowOpen(d) && (globalRepFilter === "all" || STATE_REP_EMAIL[d.state || "FL"] === globalRepFilter))
-            .sort((a, b) => {
-              const daysFor = (d) => {
-                const acts = (d.activities || []).filter(a => a.type === "email" && a.source !== "gmail_reply");
-                if (!acts.length) return 0;
-                const earliest = acts.reduce((min, a) => a.date < min ? a.date : min, acts[0].date);
-                return Math.floor((Date.now() - new Date(earliest).getTime()) / 86400000);
-              };
-              return daysFor(b) - daysFor(a); // most overdue first
-            });
+          const campaign = CAMPAIGNS[campaignFilter];
+          const terminalStages = ["responded", "nurture"];
 
-          const daysSinceEmail = (d) => {
-            const acts = (d.activities || []).filter(a => a.type === "email" && a.source !== "gmail_reply");
-            if (!acts.length) return null;
-            const earliest = acts.reduce((min, a) => a.date < min ? a.date : min, acts[0].date);
-            return Math.floor((Date.now() - new Date(earliest).getTime()) / 86400000);
-          };
+          // All non-test districts filtered by rep
+          const seqDistricts = districts.filter(d => {
+            if (d.isTest) return false;
+            return globalRepFilter === "all" || STATE_REP_EMAIL[d.state || "FL"] === globalRepFilter;
+          });
+
+          // Enrolled = districts that have been started in the sequence
+          const enrolled = seqDistricts.filter(d => d.status && d.status !== "not_started");
+
+          // Enrich each district with sequence progress
+          const enriched = enrolled.map(d => {
+            const outbound = (d.activities || []).filter(a => a.type === "email" && a.source !== "gmail_reply");
+            const firstDate = outbound.length
+              ? outbound.reduce((min, a) => a.date < min ? a.date : min, outbound[0].date)
+              : null;
+            const daysSinceStart = firstDate
+              ? Math.floor((Date.now() - new Date(firstDate).getTime()) / 86400000)
+              : 0;
+            const currentStepIdx = campaign.steps.findIndex(s => s.key === d.status);
+            const currentStep = campaign.steps[currentStepIdx] || null;
+            const nextStep = !terminalStages.includes(d.status) && currentStepIdx >= 0 && currentStepIdx < campaign.steps.length - 1
+              ? campaign.steps[currentStepIdx + 1]
+              : null;
+            const nextActionDue = !!(nextStep && daysSinceStart >= nextStep.day);
+            const daysOverdue = nextActionDue ? daysSinceStart - nextStep.day : 0;
+            return { ...d, daysSinceStart, currentStepIdx, currentStep, nextStep, nextActionDue, daysOverdue };
+          });
+
+          const actionDue = enriched.filter(d => d.nextActionDue).sort((a, b) => b.daysOverdue - a.daysOverdue);
+          const onTrack   = enriched.filter(d => !d.nextActionDue && !terminalStages.includes(d.status));
+          const responded = enriched.filter(d => d.status === "responded");
+
+          // Sorted full list: action-due first, then by days in sequence
+          const sortedAll = [...enriched].sort((a, b) => {
+            if (a.nextActionDue && !b.nextActionDue) return -1;
+            if (!a.nextActionDue && b.nextActionDue) return 1;
+            return b.daysSinceStart - a.daysSinceStart;
+          });
 
           return (
             <div>
-              <div className="mb-5 flex items-start justify-between gap-4 flex-wrap">
-                <div>
-                  <h2 className="text-base font-bold text-gray-900">📞 Call Queue</h2>
-                  <p className="text-xs text-gray-500 mt-1">Districts where Day 5+ has passed since the initial email — call window is open. Update the stage after each attempt.</p>
+              {/* ── Header + Campaign filter ── */}
+              <div className="flex flex-wrap gap-3 items-start mb-5">
+                <div className="flex-1 min-w-0">
+                  <h2 className="text-base font-bold text-gray-900">🔁 Sequence Tracker</h2>
+                  <p className="text-xs text-gray-500 mt-0.5">{campaign.description}</p>
                 </div>
-                <div className="flex gap-3 text-center">
-                  <div><div className="text-xl font-bold text-yellow-600">{callDue.length}</div><div className="text-xs text-gray-400">Due for a call</div></div>
-                  <div><div className="text-xl font-bold text-orange-600">{callDue.filter(d => !d.mailerSent).length}</div><div className="text-xs text-gray-400">Mailer not sent</div></div>
-                  <div><div className="text-xl font-bold text-purple-600">{callDue.filter(d => d.status === "vm_left").length}</div><div className="text-xs text-gray-400">VM left</div></div>
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <span className="text-xs font-medium text-gray-500">Campaign</span>
+                  <select
+                    value={campaignFilter}
+                    onChange={e => setCampaignFilter(e.target.value)}
+                    className="border border-gray-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                  >
+                    {Object.entries(CAMPAIGNS).map(([k, v]) => (
+                      <option key={k} value={k}>{v.label}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
 
-              {callDue.length === 0 ? (
-                <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
-                  <div className="text-3xl mb-3">✅</div>
-                  <div className="font-semibold text-gray-700">No calls due right now</div>
-                  <p className="text-xs text-gray-400 mt-1">Districts enter this queue on Day 5 after the initial email is sent.</p>
-                </div>
-              ) : (
-                <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-                  <div className="bg-gray-50 border-b border-gray-200 px-4 py-2 grid text-xs font-semibold text-gray-500 uppercase tracking-wide" style={{gridTemplateColumns:"2fr 1.5fr 80px 90px 90px 160px 120px"}}>
-                    <span>District / Director</span>
-                    <span>Phone / Email</span>
-                    <span>Days out</span>
-                    <span>Mailer sent</span>
-                    <span>Stage</span>
-                    <span>Update stage</span>
-                    <span>Actions</span>
+              {/* ── Summary stat cards ── */}
+              <div className="grid grid-cols-4 gap-3 mb-5">
+                {[
+                  { label: "In Sequence",  val: enrolled.length,    color: "text-indigo-700", bg: "bg-indigo-50" },
+                  { label: "Action Due",   val: actionDue.length,   color: "text-red-600",    bg: "bg-red-50"    },
+                  { label: "On Track",     val: onTrack.length,     color: "text-blue-600",   bg: "bg-blue-50"   },
+                  { label: "Responded",    val: responded.length,   color: "text-green-600",  bg: "bg-green-50"  },
+                ].map(s => (
+                  <div key={s.label} className={`${s.bg} rounded-xl p-4 border border-gray-100`}>
+                    <div className={`text-2xl font-bold ${s.color}`}>{s.val}</div>
+                    <div className="text-xs text-gray-500 mt-0.5">{s.label}</div>
                   </div>
-                  {callDue.map(d => {
-                    const days = daysSinceEmail(d);
-                    const rep = REP_PROFILES[STATE_REP_EMAIL[d.state || "FL"]];
+                ))}
+              </div>
+
+              {/* ── Sequence pipeline swimlane ── */}
+              <div className="bg-white rounded-xl border border-gray-200 p-4 mb-5">
+                <div className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-3">Sequence Pipeline</div>
+                <div className="flex gap-2 overflow-x-auto pb-1 items-start">
+                  {campaign.steps.map((step, i) => {
+                    const atStep = enriched.filter(d => d.status === step.key);
+                    const dueToThis = actionDue.filter(d => d.nextStep && d.nextStep.key === step.key);
                     return (
-                      <div key={d.id} className="border-b border-gray-100 px-4 py-3 grid items-center gap-3 hover:bg-yellow-50 transition-colors" style={{gridTemplateColumns:"2fr 1.5fr 80px 90px 90px 160px 120px"}}>
-                        {/* District */}
-                        <div>
-                          <div className="font-medium text-gray-900 text-xs">{d.district}</div>
-                          <div className="text-gray-500 text-xs">{d.director}</div>
-                          {rep && <span className={`text-xs px-1.5 py-0 rounded font-semibold mt-0.5 inline-block ${rep.color}`}>{rep.initials}</span>}
+                      <React.Fragment key={step.key}>
+                        <div className="flex-1 min-w-20 text-center">
+                          <div className={`rounded-lg border px-2 py-3 ${atStep.length > 0 ? "border-gray-200 bg-gray-50" : "border-dashed border-gray-200 bg-white"}`}>
+                            <div className="text-xl mb-1">{step.icon}</div>
+                            <div className={`text-2xl font-bold ${atStep.length > 0 ? "text-gray-800" : "text-gray-300"}`}>{atStep.length}</div>
+                            <div className="text-xs text-gray-600 font-medium leading-tight mt-0.5">{step.label}</div>
+                            <div className="text-xs text-gray-400 mt-0.5">Day {step.day}</div>
+                            {dueToThis.length > 0 && (
+                              <div className="mt-1.5 bg-red-100 text-red-600 text-xs rounded-full px-2 py-0.5 font-medium">
+                                {dueToThis.length} due
+                              </div>
+                            )}
+                          </div>
                         </div>
-                        {/* Contact */}
-                        <div>
-                          <div className="text-xs font-medium text-gray-700">{d.phone || <span className="text-gray-300">No phone</span>}</div>
-                          <div className="text-xs text-gray-400 truncate max-w-40">{d.email}</div>
-                        </div>
-                        {/* Days since email */}
-                        <div className={`text-sm font-bold text-center ${days >= 14 ? "text-red-600" : days >= 7 ? "text-orange-500" : "text-yellow-600"}`}>
-                          {days}d
-                        </div>
-                        {/* Mailer checkbox */}
-                        <div className="flex justify-center">
-                          <label className="flex flex-col items-center gap-0.5 cursor-pointer">
-                            <input
-                              type="checkbox"
-                              checked={!!d.mailerSent}
-                              onChange={() => toggleMailer(d.id)}
-                              className="rounded border-gray-300 text-orange-500 cursor-pointer"
-                            />
-                            <span className="text-xs text-gray-400">{d.mailerSent ? "✓ sent" : "—"}</span>
-                          </label>
-                        </div>
-                        {/* Current stage badge */}
-                        <div>
-                          <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${stageColor(d.status || "not_started")}`}>
-                            {(SEQUENCE_STAGES[d.status] || SEQUENCE_STAGES.not_started).label}
-                          </span>
-                        </div>
-                        {/* Stage update dropdown */}
-                        <div>
-                          <select
-                            value={d.status || "not_started"}
-                            onChange={(e) => updateStage(d.id, e.target.value)}
-                            className="text-xs border border-gray-200 rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-indigo-300 bg-white w-full"
-                          >
-                            {Object.entries(SEQUENCE_STAGES).map(([k, v]) => (
-                              <option key={k} value={k}>{v.label}</option>
-                            ))}
-                          </select>
-                        </div>
-                        {/* Actions */}
-                        <div className="flex gap-1.5">
-                          <button
-                            onClick={() => { setSelectedDistrict(d); setActiveTab("districtinfo"); setModalTab("overview"); }}
-                            className="text-xs bg-indigo-600 text-white px-2 py-1 rounded hover:bg-indigo-700"
-                          >View</button>
-                          <button
-                            onClick={() => updateStage(d.id, "vm_left")}
-                            className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded hover:bg-purple-200 font-medium"
-                            title="Mark as VM left"
-                          >VM</button>
-                        </div>
-                      </div>
+                        {i < campaign.steps.length - 1 && (
+                          <div className="text-gray-300 text-sm self-center mt-2 flex-shrink-0">→</div>
+                        )}
+                      </React.Fragment>
                     );
                   })}
                 </div>
+              </div>
+
+              {/* ── Action Needed Now ── */}
+              {actionDue.length > 0 && (
+                <div className="mb-5">
+                  <div className="flex items-center gap-2 mb-3">
+                    <h3 className="text-sm font-semibold text-red-700">🔴 Action Needed Now</h3>
+                    <span className="bg-red-100 text-red-600 text-xs px-2 py-0.5 rounded-full font-medium">{actionDue.length}</span>
+                  </div>
+                  <div className="bg-white rounded-xl border border-red-200 overflow-hidden">
+                    <div className="bg-red-50 border-b border-red-100 px-4 py-2 grid text-xs font-semibold text-gray-500 uppercase tracking-wide"
+                      style={{gridTemplateColumns:"2fr 1.5fr 100px 180px 150px 80px"}}>
+                      <span>District / Director</span>
+                      <span>Contact</span>
+                      <span>Days in Seq</span>
+                      <span>Next Action</span>
+                      <span>Update Stage</span>
+                      <span></span>
+                    </div>
+                    {actionDue.map(d => {
+                      const rep = REP_PROFILES[STATE_REP_EMAIL[d.state || "FL"]];
+                      const distName = d.district.includes(" — ") ? d.district.split(" — ").slice(1).join(" — ") : d.district;
+                      return (
+                        <div key={d.id} className="border-b border-gray-100 px-4 py-3 grid items-center gap-3 hover:bg-red-50 transition-colors"
+                          style={{gridTemplateColumns:"2fr 1.5fr 100px 180px 150px 80px"}}>
+                          <div>
+                            <div className="font-medium text-gray-900 text-xs">{distName}</div>
+                            <div className="text-gray-400 text-xs">{d.director}</div>
+                            {rep && <span className={`text-xs px-1.5 py-0 rounded font-semibold mt-0.5 inline-block ${rep.color}`}>{rep.initials}</span>}
+                          </div>
+                          <div>
+                            <div className="text-xs font-medium text-gray-700">{d.phone || <span className="text-gray-300">No phone</span>}</div>
+                            <div className="text-xs text-gray-400 truncate">{d.email}</div>
+                          </div>
+                          <div className="text-center">
+                            <span className={`text-sm font-bold ${d.daysSinceStart >= 14 ? "text-red-600" : d.daysSinceStart >= 7 ? "text-orange-500" : "text-yellow-600"}`}>
+                              {d.daysSinceStart}d
+                            </span>
+                            {d.daysOverdue > 0 && <div className="text-xs text-red-500">{d.daysOverdue}d overdue</div>}
+                          </div>
+                          <div>
+                            {d.nextStep && (
+                              <span className={`text-xs px-2 py-1 rounded-full font-medium ${d.nextStep.color}`}>
+                                {d.nextStep.icon} {d.nextStep.action}
+                              </span>
+                            )}
+                          </div>
+                          <div>
+                            <select
+                              value={d.status || "not_started"}
+                              onChange={(e) => updateStage(d.id, e.target.value)}
+                              className="text-xs border border-gray-200 rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-indigo-300 bg-white w-full"
+                            >
+                              {Object.entries(SEQUENCE_STAGES).map(([k, v]) => (
+                                <option key={k} value={k}>{v.label}</option>
+                              ))}
+                            </select>
+                          </div>
+                          <div>
+                            <button onClick={() => { setSelectedDistrict(d); setModalTab("overview"); }}
+                              className="text-xs bg-indigo-600 text-white px-2 py-1 rounded hover:bg-indigo-700">View</button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
               )}
 
-              {/* Sequence reference */}
-              <div className="mt-6 bg-white rounded-xl border border-gray-200 p-4">
-                <div className="text-xs font-semibold text-gray-600 mb-3 uppercase tracking-wide">Sequence reference</div>
-                <div className="flex flex-wrap gap-3">
-                  {[
-                    { day: "Day 0",    label: "Initial email",         stage: "email_sent"     },
-                    { day: "Week 2",   label: "Physical mailer",        stage: "mailer_queued"  },
-                    { day: "Day 5–7",  label: "Call + voicemail",       stage: "vm_left"        },
-                    { day: "Day 7",    label: "Post-call follow-up",    stage: "follow_up_sent" },
-                    { day: "Day 14",   label: "Final closing email",    stage: "closing_sent"   },
-                    { day: "Day 14+",  label: "Move to nurture",        stage: "nurture"        },
-                  ].map(s => (
-                    <div key={s.stage} className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2">
-                      <span className="text-xs font-bold text-gray-400 w-14 shrink-0">{s.day}</span>
-                      <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${stageColor(s.stage)}`}>{(SEQUENCE_STAGES[s.stage] || {}).label}</span>
-                      <span className="text-xs text-gray-500">{s.label}</span>
-                    </div>
-                  ))}
+              {/* ── All Districts in Sequence ── */}
+              <div>
+                <div className="flex items-center gap-2 mb-3">
+                  <h3 className="text-sm font-semibold text-gray-700">All Districts in Sequence</h3>
+                  <span className="bg-gray-100 text-gray-500 text-xs px-2 py-0.5 rounded-full font-medium">{enriched.length}</span>
                 </div>
+                {enriched.length === 0 ? (
+                  <div className="bg-white rounded-xl border border-gray-200 p-12 text-center text-gray-400 text-sm">
+                    No districts in this sequence yet. Start reaching out from the Prospects tab.
+                  </div>
+                ) : (
+                  <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                    <div className="bg-gray-50 border-b border-gray-200 px-4 py-2 grid text-xs font-semibold text-gray-500 uppercase tracking-wide"
+                      style={{gridTemplateColumns:"2fr 1.5fr 140px 100px 200px 80px"}}>
+                      <span>District / Director</span>
+                      <span>Contact</span>
+                      <span>Current Step</span>
+                      <span>Days in Seq</span>
+                      <span>Next Action</span>
+                      <span></span>
+                    </div>
+                    {sortedAll.map(d => {
+                      const rep = REP_PROFILES[STATE_REP_EMAIL[d.state || "FL"]];
+                      const distName = d.district.includes(" — ") ? d.district.split(" — ").slice(1).join(" — ") : d.district;
+                      return (
+                        <div key={d.id} className={`border-b border-gray-100 px-4 py-3 grid items-center gap-3 transition-colors hover:bg-indigo-50 ${d.nextActionDue ? "bg-red-50/40" : ""}`}
+                          style={{gridTemplateColumns:"2fr 1.5fr 140px 100px 200px 80px"}}>
+                          <div>
+                            <div className="font-medium text-gray-900 text-xs">{distName}</div>
+                            <div className="text-gray-400 text-xs">{d.director}</div>
+                            {rep && <span className={`text-xs px-1.5 py-0 rounded font-semibold mt-0.5 inline-block ${rep.color}`}>{rep.initials}</span>}
+                          </div>
+                          <div>
+                            <div className="text-xs font-medium text-gray-700">{d.phone || <span className="text-gray-300">No phone</span>}</div>
+                            <div className="text-xs text-gray-400 truncate">{d.email}</div>
+                          </div>
+                          <div>
+                            {d.currentStep && (
+                              <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${d.currentStep.color}`}>
+                                {d.currentStep.icon} {d.currentStep.label}
+                              </span>
+                            )}
+                          </div>
+                          <div className="text-center">
+                            <span className={`text-sm font-bold ${d.daysSinceStart >= 14 ? "text-red-600" : d.daysSinceStart >= 7 ? "text-orange-500" : "text-gray-500"}`}>
+                              {d.daysSinceStart}d
+                            </span>
+                          </div>
+                          <div>
+                            {d.nextStep ? (
+                              <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${d.nextActionDue ? d.nextStep.color : "bg-gray-100 text-gray-400"}`}>
+                                {d.nextActionDue ? "🔴 " : ""}{d.nextStep.icon} {d.nextStep.action}
+                              </span>
+                            ) : (
+                              <span className="text-xs text-gray-300">Sequence complete</span>
+                            )}
+                          </div>
+                          <div className="flex gap-1">
+                            <button onClick={() => { setSelectedDistrict(d); setModalTab("overview"); }}
+                              className="text-xs bg-indigo-600 text-white px-2 py-1 rounded hover:bg-indigo-700">View</button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             </div>
           );
