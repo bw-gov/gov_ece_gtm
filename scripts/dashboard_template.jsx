@@ -1546,18 +1546,12 @@ export default function BrightwheelDashboard() {
           const total = ovDistricts.length;
           const tier1 = ovDistricts.filter(d => d.priorityTier === "Tier 1").length;
           const tier2 = ovDistricts.filter(d => d.priorityTier === "Tier 2").length;
-          const contacted = ovDistricts.filter(d => d.status !== "not contacted").length;
-          const notContacted = ovDistricts.filter(d => d.status === "not contacted").length;
+          const notContacted = ovDistricts.filter(d => !d.status || d.status === "not_started").length;
+          const contacted = ovDistricts.filter(d => d.status && d.status !== "not_started").length;
           const hot = ovDistricts.filter(d => d.priority >= 75).length;
           const warm = ovDistricts.filter(d => d.priority >= 55 && d.priority < 75).length;
-          const inProgress = ovDistricts.filter(d => ["responded","meeting scheduled","proposal sent"].includes(d.status)).length;
-          const won = ovDistricts.filter(d => d.status === "closed won").length;
-
-          // ── Pending contacts (not contacted, ordered by priority) ──
-          const pending = ovDistricts
-            .filter(d => d.status === "not contacted" && d.email)
-            .sort((a, b) => (b.priority || 0) - (a.priority || 0))
-            .slice(0, 20);
+          const inProgress = ovDistricts.filter(d => ["email_sent","mailer_queued","vm_left","follow_up_sent","closing_sent","responded"].includes(d.status)).length;
+          const won = ovDistricts.filter(d => d.status === "responded").length;
 
           // ── Weekly intel news (districtContext + boardNotes updated in last 7 days) ──
           const sevenDaysAgo = new Date(); sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
@@ -1657,9 +1651,9 @@ export default function BrightwheelDashboard() {
                               </td>
                               <td className="px-4 py-2.5 text-right text-gray-600">{sd.length}</td>
                               <td className="px-4 py-2.5 text-right text-indigo-600">{sd.filter(d => d.priorityTier === "Tier 1" || d.priorityTier === "Tier 2").length}</td>
-                              <td className="px-4 py-2.5 text-right text-gray-500">{sd.filter(d => d.status === "not contacted").length}</td>
-                              <td className="px-4 py-2.5 text-right text-purple-600">{sd.filter(d => ["responded","meeting scheduled","proposal sent"].includes(d.status)).length}</td>
-                              <td className="px-4 py-2.5 text-right text-green-600 font-semibold">{sd.filter(d => d.status === "closed won").length}</td>
+                              <td className="px-4 py-2.5 text-right text-gray-500">{sd.filter(d => !d.status || d.status === "not_started").length}</td>
+                              <td className="px-4 py-2.5 text-right text-purple-600">{sd.filter(d => ["email_sent","mailer_queued","vm_left","follow_up_sent","closing_sent","responded"].includes(d.status)).length}</td>
+                              <td className="px-4 py-2.5 text-right text-green-600 font-semibold">{sd.filter(d => d.status === "responded").length}</td>
                             </tr>
                           );
                         })}
@@ -1668,73 +1662,38 @@ export default function BrightwheelDashboard() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-6">
-                {/* ── Pending to Contact ── */}
-                <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <h3 className="text-sm font-semibold text-gray-700">⏳ Pending to Contact</h3>
-                    <span className="text-xs text-gray-400">Top {pending.length} by priority · has email</span>
-                  </div>
-                  <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-                    {pending.length === 0 ? (
-                      <div className="p-8 text-center text-gray-400 text-sm">All districts have been contacted! 🎉</div>
-                    ) : (
-                      <div className="divide-y divide-gray-100">
-                        {pending.map(d => {
-                          const name = d.district.includes(" — ") ? d.district.split(" — ").slice(1).join(" — ") : d.district;
-                          const repProf = REP_PROFILES[STATE_REP_EMAIL[d.state || "FL"]];
-                          const tierColor = d.priorityTier === "Tier 1" ? "bg-red-50 text-red-600" : d.priorityTier === "Tier 2" ? "bg-orange-50 text-orange-600" : "bg-gray-50 text-gray-500";
-                          return (
-                            <div key={d.id} className="px-4 py-2.5 flex items-center gap-3 hover:bg-gray-50 cursor-pointer" onClick={() => { setSelectedDistrict(d); setModalTab("overview"); }}>
-                              <div className="flex-1 min-w-0">
-                                <div className="text-xs font-semibold text-gray-800 truncate">{name}</div>
-                                <div className="text-xs text-gray-400 truncate">{d.director} · {STATE_NAMES_OV[d.state || "FL"]}</div>
-                              </div>
-                              <div className="flex items-center gap-1.5 flex-shrink-0">
-                                <span className={`text-xs px-1.5 py-0.5 rounded font-medium ${tierColor}`}>{d.priorityTier}</span>
-                                {repProf && <span className={`text-xs px-1.5 py-0.5 rounded-full font-medium ${repProf.color}`}>{repProf.initials}</span>}
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </div>
+              {/* ── Weekly Intel News ── */}
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-sm font-semibold text-gray-700">📰 Intel This Week</h3>
+                  <span className="text-xs text-gray-400">Last 7 days · {newsItems.length} update{newsItems.length !== 1 ? "s" : ""}</span>
                 </div>
-
-                {/* ── Weekly Intel News ── */}
-                <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <h3 className="text-sm font-semibold text-gray-700">📰 Intel This Week</h3>
-                    <span className="text-xs text-gray-400">Last 7 days · {newsItems.length} update{newsItems.length !== 1 ? "s" : ""}</span>
-                  </div>
-                  <div className="bg-white rounded-xl border border-gray-200 overflow-hidden max-h-[520px] overflow-y-auto">
-                    {newsItems.length === 0 ? (
-                      <div className="p-8 text-center text-gray-400 text-sm">No intel updates in the past 7 days.</div>
-                    ) : (
-                      <div className="divide-y divide-gray-100">
-                        {newsItems.map((item, i) => (
-                          <div key={i} className="px-4 py-3 hover:bg-gray-50 cursor-pointer" onClick={() => { const d = districts.find(x => x.id === item.districtId); if (d) { setSelectedDistrict(d); setModalTab(item.type === "board" ? "board notes" : "district intel"); } }}>
-                            <div className="flex items-start justify-between gap-2 mb-1">
-                              <div className="flex items-center gap-1.5 flex-wrap">
-                                <span className={`text-xs px-1.5 py-0.5 rounded font-medium ${item.type === "board" ? "bg-blue-50 text-blue-600" : "bg-purple-50 text-purple-600"}`}>
-                                  {item.type === "board" ? "📋 Board" : "🔍 Intel"}
-                                </span>
-                                <span className="text-xs font-semibold text-gray-800">{item.distName}</span>
-                                <span className="text-xs text-gray-400">{item.stateLabel}</span>
-                              </div>
-                              <div className="flex items-center gap-1.5 flex-shrink-0">
-                                {item.repInfo && <span className={`text-xs px-1.5 py-0.5 rounded-full font-medium ${item.repInfo.color}`}>{item.repInfo.initials}</span>}
-                                <span className="text-xs text-gray-400 whitespace-nowrap">{item.date}</span>
-                              </div>
+                <div className="bg-white rounded-xl border border-gray-200 overflow-hidden max-h-[520px] overflow-y-auto">
+                  {newsItems.length === 0 ? (
+                    <div className="p-8 text-center text-gray-400 text-sm">No intel updates in the past 7 days.</div>
+                  ) : (
+                    <div className="divide-y divide-gray-100">
+                      {newsItems.map((item, i) => (
+                        <div key={i} className="px-4 py-3 hover:bg-gray-50 cursor-pointer" onClick={() => { const d = districts.find(x => x.id === item.districtId); if (d) { setSelectedDistrict(d); setModalTab(item.type === "board" ? "board notes" : "district intel"); } }}>
+                          <div className="flex items-start justify-between gap-2 mb-1">
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              <span className={`text-xs px-1.5 py-0.5 rounded font-medium ${item.type === "board" ? "bg-blue-50 text-blue-600" : "bg-purple-50 text-purple-600"}`}>
+                                {item.type === "board" ? "📋 Board" : "🔍 Intel"}
+                              </span>
+                              <span className="text-xs font-semibold text-gray-800">{item.distName}</span>
+                              <span className="text-xs text-gray-400">{item.stateLabel}</span>
                             </div>
-                            <p className="text-xs text-gray-600 leading-relaxed line-clamp-2">{item.summary}</p>
-                            {item.source && <a href={item.source} target="_blank" rel="noreferrer" className="text-xs text-indigo-500 hover:underline mt-0.5 inline-block" onClick={e => e.stopPropagation()}>Source ↗</a>}
+                            <div className="flex items-center gap-1.5 flex-shrink-0">
+                              {item.repInfo && <span className={`text-xs px-1.5 py-0.5 rounded-full font-medium ${item.repInfo.color}`}>{item.repInfo.initials}</span>}
+                              <span className="text-xs text-gray-400 whitespace-nowrap">{item.date}</span>
+                            </div>
                           </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
+                          <p className="text-xs text-gray-600 leading-relaxed line-clamp-2">{item.summary}</p>
+                          {item.source && <a href={item.source} target="_blank" rel="noreferrer" className="text-xs text-indigo-500 hover:underline mt-0.5 inline-block" onClick={e => e.stopPropagation()}>Source ↗</a>}
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
