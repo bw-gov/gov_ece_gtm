@@ -1855,11 +1855,11 @@ export default function BrightwheelDashboard() {
                         <td className="px-3 py-2.5 text-center">
                           <span className={`font-bold ${age >= 6 ? "text-red-600" : age >= 4 ? "text-orange-500" : "text-gray-500"}`}>{age}y</span>
                         </td>
-                        <td className="px-3 py-2.5 text-right">{d.enrollment.toLocaleString()}</td>
+                        <td className="px-3 py-2.5 text-right">{d.enrollment != null ? d.enrollment.toLocaleString() : "—"}</td>
                         <td className="px-3 py-2.5" style={{ minWidth: "220px" }}>
                           <div className="flex flex-wrap gap-1">
-                            {d.buyingSignals.length > 0 && (
-                              <span className="bg-amber-50 text-amber-700 border border-amber-200 px-2 py-0.5 rounded text-xs">⚡ {d.buyingSignals.length} signal{d.buyingSignals.length > 1 ? "s" : ""}</span>
+                            {(d.buyingSignals || []).length > 0 && (
+                              <span className="bg-amber-50 text-amber-700 border border-amber-200 px-2 py-0.5 rounded text-xs">⚡ {(d.buyingSignals || []).length} signal{(d.buyingSignals || []).length > 1 ? "s" : ""}</span>
                             )}
                             {d.boardNotes && d.boardNotes.length > 0 && (
                               <span className="bg-blue-50 text-blue-700 border border-blue-200 px-2 py-0.5 rounded text-xs">📋 {d.boardNotes.length} board note{d.boardNotes.length > 1 ? "s" : ""}</span>
@@ -1870,7 +1870,7 @@ export default function BrightwheelDashboard() {
                             {hasPersonalizedEmail(d) && (
                               <span className="bg-yellow-50 text-yellow-700 border border-yellow-300 px-2 py-0.5 rounded text-xs font-medium">✨ Personalized</span>
                             )}
-                            {d.buyingSignals.length === 0 && (!d.boardNotes || d.boardNotes.length === 0) && (!d.districtContext || d.districtContext.length === 0) && <span className="text-gray-300">—</span>}
+                            {(d.buyingSignals || []).length === 0 && (!d.boardNotes || d.boardNotes.length === 0) && (!d.districtContext || d.districtContext.length === 0) && <span className="text-gray-300">—</span>}
                           </div>
                         </td>
                         <td className="px-3 py-2.5">
