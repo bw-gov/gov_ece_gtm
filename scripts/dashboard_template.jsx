@@ -3292,7 +3292,7 @@ export default function BrightwheelDashboard() {
             <div className="text-3xl mb-3">⛔</div>
             <h2 className="text-base font-bold text-gray-900 mb-2">This person unsubscribed</h2>
             <p className="text-sm text-gray-500 mb-1">
-              <span className="font-medium text-gray-700">{unsubConfirm.contactName}</span> ({unsubConfirm.contactEmail})
+              <span className="font-medium text-gray-700">{unsubConfirm.contactName}</span>{" (" + unsubConfirm.contactEmail + ")"}
             </p>
             <p className="text-sm text-gray-500 mb-6">has opted out of brightwheel outreach. Do you want to send to them anyway?</p>
             <div className="flex gap-3 justify-center">
