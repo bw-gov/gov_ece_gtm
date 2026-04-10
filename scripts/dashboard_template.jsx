@@ -120,7 +120,7 @@ const REP_PROFILES = {
   },
   "sudeepta.sridhara@mybrightwheel.com": {
     name: "Sudeepta Sridhara",
-    title: "Head of GTM",
+    title: "",
     email: "sudeepta.sridhara@mybrightwheel.com",
     phone: "",
     calendly: "",
@@ -1597,21 +1597,20 @@ export default function BrightwheelDashboard() {
         <div className="flex items-center gap-6">
           {/* Logged-in rep indicator / sign-in button */}
           {(currentRep || gmailUser) ? (
-            <div className="flex items-center gap-2 pl-4 border-l border-gray-200 group relative">
+            <div className="flex items-center gap-2 pl-4 border-l border-gray-200 group cursor-default">
               <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${currentRep ? currentRep.color : "bg-indigo-100 text-indigo-700"}`}>
                 {currentRep ? currentRep.initials : (gmailUser || "").split("@")[0].slice(0, 2).toUpperCase()}
               </div>
               <div>
                 <div className="text-xs font-semibold text-gray-700">{currentRep ? currentRep.name : (gmailUser || "").split("@")[0]}</div>
-                <div className="text-xs text-gray-400">{currentRep ? currentRep.title : "Logged in"}</div>
+                <div className="text-xs text-gray-400 group-hover:hidden">{currentRep?.title || "Logged in"}</div>
+                <button
+                  onClick={() => { setGmailToken(null); setGmailConnected(false); setGmailUser(null); showNotif("Disconnected — click Sign in to reconnect", "red"); }}
+                  className="hidden group-hover:block text-xs text-red-400 hover:text-red-600 text-left"
+                >
+                  Disconnect
+                </button>
               </div>
-              {/* Disconnect tooltip — appears on hover */}
-              <button
-                onClick={() => { setGmailToken(null); setGmailConnected(false); setGmailUser(null); showNotif("Disconnected — click Sign in to reconnect", "red"); }}
-                className="absolute -bottom-7 right-0 hidden group-hover:block text-xs text-gray-400 hover:text-red-500 whitespace-nowrap bg-white border border-gray-200 rounded px-2 py-0.5 shadow-sm z-50"
-              >
-                Disconnect Gmail
-              </button>
             </div>
           ) : (
             <button
