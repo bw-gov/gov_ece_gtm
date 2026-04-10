@@ -205,8 +205,8 @@ function emailSignature(rep) {
   return `<div style="${S.sig}"><table cellpadding="0" cellspacing="0" border="0"><tr><td style="vertical-align:middle;padding-right:12px;"><img src="${BW_LOGO_URL}" alt="brightwheel" width="36" height="36" style="display:block;border-radius:6px;" /></td><td style="vertical-align:middle;font-size:13px;color:#555555;">Best,<br><strong style="color:#222;">${rep.name}</strong><br>${rep.title} | brightwheel<br>${ea("mailto:"+rep.email,rep.email)}${phoneStr}</td></tr></table></div>`;
 }
 
-function buildUnsubUrl(name, email, district) {
-  return `${UNSUB_PAGE}?name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&district=${encodeURIComponent(district)}`;
+function buildUnsubUrl(name, email, district, districtId) {
+  return `${UNSUB_PAGE}?name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&district=${encodeURIComponent(district)}&districtId=${encodeURIComponent(districtId || "")}`;
 }
 
 function buildHtmlEmail(subject, bodyHtml, unsubUrl, rep) {
@@ -377,7 +377,7 @@ function generateEmail(district, template, rep) {
   const unsubRecipientEmail = (isSummerBridgeTemplate && district.summerBridgeContact)
     ? district.summerBridgeContact.email
     : district.email;
-  const unsubUrl = buildUnsubUrl(unsubRecipientName, unsubRecipientEmail, district.district);
+  const unsubUrl = buildUnsubUrl(unsubRecipientName, unsubRecipientEmail, district.district, district.id);
 
   const templates = {
     // ── Original Email (all states) ───────────────────────────────────────────
@@ -496,7 +496,7 @@ function generatePersonalizedEmail(district, rep) {
   const calendlyLink = r && r.calendly
     ? ep(ea(r.calendly, "Schedule time with me →"))
     : ep(`Happy to find a time — just reply and I'll send over a few options.`);
-  const unsubUrl = buildUnsubUrl(district.director, district.email, district.district);
+  const unsubUrl = buildUnsubUrl(district.director, district.email, district.district, district.id);
 
   // Gather all intel (context + board notes) sorted newest first
   const allIntel = [
@@ -650,6 +650,14 @@ export default function BrightwheelDashboard() {
   // Local edits buffered before save (keyed by districtId)
   const [districtNoteEdits, setDistrictNoteEdits] = useState({});
 
+  // ── UNSUBSCRIBE TRACKING ──────────────────────────────────────────────────────
+  // Set of lowercase email addresses that have opted out via the unsubscribe link.
+  // Populated from the shared activity sheet on startup (no login required).
+  const [unsubs, setUnsubs] = useState(new Set());
+  // When non-null, shows a confirmation dialog before sending to an unsub'd contact.
+  // { district, template, contactEmail, contactName }
+  const [unsubConfirm, setUnsubConfirm] = useState(null);
+
   // Rep profile for the currently logged-in user — null if not signed in or unrecognized
   const currentRep = (gmailUser && REP_PROFILES[gmailUser]) || null;
 
@@ -714,8 +722,9 @@ export default function BrightwheelDashboard() {
       .catch(() => null)
       .then((log) => {
         if (!log || !Array.isArray(log.activities) || log.activities.length === 0) return;
-        // Split district notes from regular activities before merging
+        // Split district notes, unsubscribes, and regular activities before merging
         const fetchedNotes = {};
+        const fetchedUnsubs = new Set();
         const regularActivities = [];
         log.activities.forEach((a) => {
           if (a.type === "district_note") {
@@ -723,11 +732,14 @@ export default function BrightwheelDashboard() {
             if (!existing || (a.loggedAt || "") > (existing.updatedAt || "")) {
               fetchedNotes[a.districtId] = { text: a.notes || "", updatedBy: a.repEmail || "", updatedAt: a.loggedAt || "" };
             }
+          } else if (a.type === "unsubscribe") {
+            if (a.notes) fetchedUnsubs.add(a.notes.toLowerCase().trim());
           } else {
             regularActivities.push(a);
           }
         });
         if (Object.keys(fetchedNotes).length > 0) setDistrictNotes(prev => ({ ...prev, ...fetchedNotes }));
+        if (fetchedUnsubs.size > 0) setUnsubs(prev => new Set([...prev, ...fetchedUnsubs]));
         // Pre-populate synced IDs so browser sync doesn't re-log these
         setSyncedMsgIds(new Set(regularActivities.map((a) => a.gmailMsgId).filter(Boolean)));
         setLastSyncTime(log.lastSynced ? new Date(log.lastSynced).toLocaleTimeString() : null);
@@ -1234,10 +1246,11 @@ export default function BrightwheelDashboard() {
       const byDistrict = {};
       const sheetMsgIds = new Set();
       const sheetGranolaIds = new Set();
-      // Track latest stage, mailer status, and district notes from sheet rows
+      // Track latest stage, mailer status, district notes, and unsubscribes from sheet rows
       const latestStage = {};
       const mailerSentMap = {};
       const latestNotes = {};
+      const unsubEmails = new Set();
 
       for (const row of rows.slice(1)) {
         const distId = parseInt(col(row, "district_id"));
@@ -1262,6 +1275,12 @@ export default function BrightwheelDashboard() {
           if (!existing || loggedAt > existing.updatedAt) {
             latestNotes[distId] = { text: col(row, "notes"), updatedBy: col(row, "rep_email"), updatedAt: loggedAt };
           }
+          continue;
+        }
+        // Unsubscribes — collect opted-out email addresses
+        if (type === "unsubscribe") {
+          const unsubEmail = (col(row, "notes") || "").toLowerCase().trim();
+          if (unsubEmail) unsubEmails.add(unsubEmail);
           continue;
         }
 
@@ -1307,6 +1326,9 @@ export default function BrightwheelDashboard() {
       setSheetSyncing(false);
       if (Object.keys(latestNotes).length > 0) {
         setDistrictNotes(prev => ({ ...prev, ...latestNotes }));
+      }
+      if (unsubEmails.size > 0) {
+        setUnsubs(prev => new Set([...prev, ...unsubEmails]));
       }
       const total = Object.values(byDistrict).reduce((s, a) => s + a.length, 0);
       showNotif(`Shared log loaded — ${total} activit${total !== 1 ? "ies" : "y"} across team ✓`);
@@ -1525,10 +1547,18 @@ export default function BrightwheelDashboard() {
     writeToSheet([activityToRow(district.id, district.district, act)]);
   };
 
-  const queueEmail = (district, template, silent = false) => {
+  const queueEmail = (district, template, silent = false, forceUnsub = false) => {
     const contact = resolveContact(district, template);
     if (!contact.email) {
       showNotif(`⚠️ No email on file for ${district.director || district.district} — skipped`, "red");
+      return;
+    }
+    // Unsubscribe guard
+    const isUnsub = unsubs.has((contact.email || "").toLowerCase());
+    if (isUnsub && !forceUnsub) {
+      if (silent) return; // silently skip bulk / mass sends
+      // Manual single send — show confirmation dialog
+      setUnsubConfirm({ district, template, contactEmail: contact.email, contactName: contact.name });
       return;
     }
     const body = template === "personalized"
@@ -2247,7 +2277,12 @@ export default function BrightwheelDashboard() {
                           <div className="text-xs text-gray-400 truncate">{d.director}</div>
                         </div>
                         <div>
-                          <div className="text-xs text-gray-700 truncate">{d.email || <span className="text-gray-300">No email</span>}</div>
+                          <div className="text-xs text-gray-700 truncate flex items-center gap-1.5">
+                            {d.email || <span className="text-gray-300">No email</span>}
+                            {d.email && unsubs.has(d.email.toLowerCase()) && (
+                              <span className="text-xs bg-red-100 text-red-600 font-semibold px-1.5 py-0 rounded whitespace-nowrap">⛔ Unsub'd</span>
+                            )}
+                          </div>
                           <div className="text-xs text-gray-400">{d.phone}</div>
                         </div>
                         <div>
@@ -3250,6 +3285,34 @@ export default function BrightwheelDashboard() {
           );
         })()}
 
+      {/* ── UNSUBSCRIBE CONFIRMATION DIALOG ── */}
+      {unsubConfirm && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 text-center">
+            <div className="text-3xl mb-3">⛔</div>
+            <h2 className="text-base font-bold text-gray-900 mb-2">This person unsubscribed</h2>
+            <p className="text-sm text-gray-500 mb-1">
+              <span className="font-medium text-gray-700">{unsubConfirm.contactName}</span> ({unsubConfirm.contactEmail})
+            </p>
+            <p className="text-sm text-gray-500 mb-6">has opted out of brightwheel outreach. Do you want to send to them anyway?</p>
+            <div className="flex gap-3 justify-center">
+              <button
+                onClick={() => { setUnsubConfirm(null); queueEmail(unsubConfirm.district, unsubConfirm.template, false, true); }}
+                className="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700"
+              >
+                Send anyway
+              </button>
+              <button
+                onClick={() => setUnsubConfirm(null)}
+                className="px-4 py-2 border border-gray-300 text-gray-600 text-sm font-medium rounded-lg hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ── DISTRICT DETAIL MODAL ── */}
       {selectedDistrict && (
         <div className="fixed inset-0 bg-black/40 z-40 flex items-center justify-center p-4" onClick={(e) => { if (e.target === e.currentTarget) setSelectedDistrict(null); }}>
@@ -3295,7 +3358,13 @@ export default function BrightwheelDashboard() {
                     <div className="space-y-2 text-sm">
                       <div><span className="text-gray-500">Name:</span> <span className="font-medium">{selectedDistrict.director}</span></div>
                       <div><span className="text-gray-500">Title:</span> {selectedDistrict.title}</div>
-                      <div><span className="text-gray-500">Email:</span> <a href={`mailto:${selectedDistrict.email}`} className="text-indigo-600 hover:underline">{selectedDistrict.email}</a></div>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-gray-500">Email:</span>
+                        <a href={`mailto:${selectedDistrict.email}`} className="text-indigo-600 hover:underline">{selectedDistrict.email}</a>
+                        {selectedDistrict.email && unsubs.has(selectedDistrict.email.toLowerCase()) && (
+                          <span className="text-xs bg-red-100 text-red-600 font-semibold px-2 py-0.5 rounded-full">⛔ Unsubscribed</span>
+                        )}
+                      </div>
                       <div><span className="text-gray-500">Phone:</span> {selectedDistrict.phone}</div>
                       <div><span className="text-gray-500">LinkedIn:</span> {selectedDistrict.linkedin ? <a href={`https://${selectedDistrict.linkedin}`} target="_blank" className="text-blue-500 hover:underline">View Profile</a> : <span className="text-gray-300">Not found</span>}</div>
                     </div>

@@ -45,6 +45,57 @@ var COLS = [
 ];
 
 /**
+ * HTTP POST handler — called by unsubscribe.html when a contact opts out.
+ * Writes an unsubscribe row to the activity sheet so the dashboard can
+ * detect it on next load and suppress future sends to that email address.
+ *
+ * Expected form-encoded body params: name, email, district, districtId
+ */
+function doPost(e) {
+  try {
+    var name       = e.parameter.name       || "";
+    var email      = (e.parameter.email     || "").toLowerCase().trim();
+    var district   = e.parameter.district   || "";
+    var districtId = parseInt(e.parameter.districtId) || 0;
+
+    if (!email) {
+      return ContentService
+        .createTextOutput(JSON.stringify({ ok: false, error: "no email" }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    var ss    = SpreadsheetApp.openById(SHEET_ID);
+    var sheet = ss.getSheetByName(SHEET_TAB);
+    var now   = new Date();
+
+    var row = [
+      String(now.getTime()),                    // activity_id
+      String(districtId),                       // district_id
+      district,                                 // district_name
+      "unsubscribe",                            // type
+      Utilities.formatDate(now, Session.getScriptTimeZone(), "yyyy-MM-dd"), // date
+      email,                                    // notes  — stores the unsubscribed email
+      "",                                       // full_notes
+      "unsubscribe_form",                       // source
+      "",                                       // rep_email
+      name,                                     // director_name
+      email,                                    // dedup_id
+      now.toISOString(),                        // logged_at
+    ];
+
+    sheet.appendRow(row);
+
+    return ContentService
+      .createTextOutput(JSON.stringify({ ok: true }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ ok: false, error: err.message }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+/**
  * HTTP GET handler — called when the web app URL is fetched.
  * Returns all activity rows as JSON with CORS headers so the
  * dashboard (served from GitHub Pages) can read it in the browser.

@@ -76,11 +76,15 @@
     const ENTRY_EMAIL    = "entry.191444148";
     const ENTRY_DISTRICT = "entry.853419503";
 
+    // ── Activity sheet API — writes unsubscribe row so dashboard detects it ────
+    const ACTIVITY_API_URL = "https://script.google.com/a/macros/mybrightwheel.com/s/AKfycbzRvpSmE36rXIRdWXdcZoGyci-CrczyjJ-cZVTSpfJRCNBCOonzX1g94FAS8MKn8X6c7w/exec";
+
     // ── Read URL params ─────────────────────────────────────────────────────────
-    const params   = new URLSearchParams(window.location.search);
-    const name     = params.get("name")     || "there";
-    const email    = params.get("email")    || "";
-    const district = params.get("district") || "";
+    const params     = new URLSearchParams(window.location.search);
+    const name       = params.get("name")       || "there";
+    const email      = params.get("email")      || "";
+    const district   = params.get("district")   || "";
+    const districtId = params.get("districtId") || "";
 
     // ── Personalise the ask state ───────────────────────────────────────────────
     document.getElementById("subtext").innerHTML =
@@ -108,12 +112,27 @@
       body.append(ENTRY_DISTRICT, district);
 
       try {
+        // Log to Google Form (existing)
         await fetch(FORM_ACTION, {
           method:  "POST",
-          mode:    "no-cors",   // Google Forms doesn't send CORS headers
+          mode:    "no-cors",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
           body:    body.toString(),
         });
+
+        // Also write to the shared activity sheet so the dashboard detects it
+        const apiBody = new URLSearchParams();
+        apiBody.append("name",       name);
+        apiBody.append("email",      email);
+        apiBody.append("district",   district);
+        apiBody.append("districtId", districtId);
+        fetch(ACTIVITY_API_URL, {
+          method:  "POST",
+          mode:    "no-cors",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body:    apiBody.toString(),
+        }).catch(function() {}); // fire-and-forget, non-blocking
+
         show("state-done");
       } catch (e) {
         show("state-error");
