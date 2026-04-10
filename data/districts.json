@@ -3830,7 +3830,41 @@
       "Steele Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Moody Elementary School",
+        "fullName": "Robert Cisco",
+        "firstName": "Robert",
+        "lastName": "Cisco",
+        "title": "Principal",
+        "phone": "205-640-2180"
+      },
+      {
+        "schoolName": "Odenville Elementary School",
+        "fullName": "Jessica M Lumpkin",
+        "firstName": "Jessica",
+        "lastName": "M Lumpkin",
+        "title": "Principal",
+        "phone": "205-629-6406"
+      },
+      {
+        "schoolName": "Springville Elementary School",
+        "fullName": "Christopher Michael Hill",
+        "firstName": "Christopher",
+        "lastName": "Michael Hill",
+        "title": "Principal",
+        "phone": "205-467-6550"
+      },
+      {
+        "schoolName": "Steele Elementary School",
+        "fullName": "Nathan Prather",
+        "firstName": "Nathan",
+        "lastName": "Prather",
+        "title": "Principal",
+        "phone": "256-538-5489"
+      }
+    ]
   },
   {
     "id": 70,
@@ -3864,7 +3898,17 @@
       "Leeds Primary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Leeds Primary School",
+        "fullName": "Steven Porter",
+        "firstName": "Steven",
+        "lastName": "Porter",
+        "title": "Principal",
+        "phone": "205-702-4206"
+      }
+    ]
   },
   {
     "id": 71,
@@ -3922,7 +3966,161 @@
       "Oak Grove Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Clay Elementary School",
+        "fullName": "Jacqnaii Ahmad Finkley",
+        "firstName": "Jacqnaii",
+        "lastName": "Ahmad Finkley",
+        "title": "Principal",
+        "phone": "205-379-3000"
+      },
+      {
+        "schoolName": "Chalkville Elementary School",
+        "fullName": "Monique Stewart",
+        "firstName": "Monique",
+        "lastName": "Stewart",
+        "title": "Principal",
+        "phone": "205-379-2950"
+      },
+      {
+        "schoolName": "Center Point Elementary School",
+        "fullName": "Christi Jordan Butler",
+        "firstName": "Christi",
+        "lastName": "Jordan Butler",
+        "title": "Principal",
+        "phone": "205-379-2900"
+      },
+      {
+        "schoolName": "Pinson Elementary School",
+        "fullName": "Nino B Mason",
+        "firstName": "Nino",
+        "lastName": "B Mason",
+        "title": "Principal",
+        "phone": "205-379-5050"
+      },
+      {
+        "schoolName": "Irondale Community School",
+        "fullName": "Jessica Marie Hahn",
+        "firstName": "Jessica",
+        "lastName": "Marie Hahn",
+        "title": "Principal",
+        "phone": "205-379-4200"
+      },
+      {
+        "schoolName": "Fultondale Elementary School",
+        "fullName": "Nicole Suzanne Donnell",
+        "firstName": "Nicole",
+        "lastName": "Suzanne Donnell",
+        "title": "Principal",
+        "phone": "205-379-3450"
+      },
+      {
+        "schoolName": "Gardendale Elementary School",
+        "fullName": "Tinker Littles Rogers",
+        "firstName": "Tinker",
+        "lastName": "Littles Rogers",
+        "title": "Principal",
+        "phone": "205-379-3550"
+      },
+      {
+        "schoolName": "Snow Rogers Elementary School",
+        "fullName": "Kristi Moore Long",
+        "firstName": "Kristi",
+        "lastName": "Moore Long",
+        "title": "Principal",
+        "phone": "205-379-5400"
+      },
+      {
+        "schoolName": "Bryan Elementary School",
+        "fullName": "Brandi Wilson",
+        "firstName": "Brandi",
+        "lastName": "Wilson",
+        "title": "Principal",
+        "phone": "205-379-2750"
+      },
+      {
+        "schoolName": "Mount Olive Elementary School",
+        "fullName": "Ryan Matthew Griffin",
+        "firstName": "Ryan",
+        "lastName": "Matthew Griffin",
+        "title": "Principal",
+        "phone": "205-379-4900"
+      },
+      {
+        "schoolName": "Warrior Elementary School",
+        "fullName": "Sandra Lyle",
+        "firstName": "Sandra",
+        "lastName": "Lyle",
+        "title": "Principal",
+        "phone": "205-379-5450"
+      },
+      {
+        "schoolName": "Minor Community School",
+        "fullName": "Alesia Marie Sharpe",
+        "firstName": "Alesia",
+        "lastName": "Marie Sharpe",
+        "title": "Principal",
+        "phone": "205-379-4800"
+      },
+      {
+        "schoolName": "Brighton School",
+        "fullName": "Aisha Bryant",
+        "firstName": "Aisha",
+        "lastName": "Bryant",
+        "title": "Principal",
+        "phone": "205-379-2650"
+      },
+      {
+        "schoolName": "Bagley Elementary School",
+        "fullName": "Shalina Hammock",
+        "firstName": "Shalina",
+        "lastName": "Hammock",
+        "title": "Principal",
+        "phone": "205-379-2500"
+      },
+      {
+        "schoolName": "Hueytown Primary School",
+        "fullName": "Felisha Johnson Reid",
+        "firstName": "Felisha",
+        "lastName": "Johnson Reid",
+        "title": "Principal",
+        "phone": "205-379-4950"
+      },
+      {
+        "schoolName": "Concord Elementary School",
+        "fullName": "Lisa F Holmes",
+        "firstName": "Lisa",
+        "lastName": "F Holmes",
+        "title": "Principal",
+        "phone": "205-379-3150"
+      },
+      {
+        "schoolName": "McCalla Elementary School",
+        "fullName": "Cheritta Latrice Hayes",
+        "firstName": "Cheritta",
+        "lastName": "Latrice Hayes",
+        "title": "Principal",
+        "phone": "205-379-3750"
+      },
+      {
+        "schoolName": "McAdory Elementary School",
+        "fullName": "Lori Jones Franks",
+        "firstName": "Lori",
+        "lastName": "Jones Franks",
+        "title": "Principal",
+        "phone": "205-379-4650"
+      },
+      {
+        "schoolName": "Oak Grove Elementary School",
+        "fullName": "Stevan Taylor Parsons",
+        "firstName": "Stevan",
+        "lastName": "Taylor Parsons",
+        "title": "Principal",
+        "phone": "205-379-2450"
+      }
+    ]
   },
   {
     "id": 72,
@@ -4000,7 +4198,137 @@
       }
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Huffman Academy",
+        "fullName": "Angela Williams Smith",
+        "firstName": "Angela",
+        "lastName": "Williams Smith",
+        "title": "Principal",
+        "phone": "205-231-5800"
+      },
+      {
+        "schoolName": "Sun Valley Elementary School",
+        "fullName": "Delilah Stitt",
+        "firstName": "Delilah",
+        "lastName": "Stitt",
+        "title": "Principal",
+        "phone": "205-231-5740"
+      },
+      {
+        "schoolName": "Robinson Elementary School",
+        "fullName": "Marcia Mitchell Henderson",
+        "firstName": "Marcia",
+        "lastName": "Mitchell Henderson",
+        "title": "Principal",
+        "phone": "205-231-5555"
+      },
+      {
+        "schoolName": "Barrett Elementary School",
+        "fullName": "Tarja Lawson",
+        "firstName": "Tarja",
+        "lastName": "Lawson",
+        "title": "Principal",
+        "phone": "205-231-8130"
+      },
+      {
+        "schoolName": "Oliver Elementary School",
+        "fullName": "Nancy Pierce Edwards",
+        "firstName": "Nancy",
+        "lastName": "Pierce Edwards",
+        "title": "Principal",
+        "phone": "334-740-6620"
+      },
+      {
+        "schoolName": "Avondale Elementary School",
+        "fullName": "Robert David Seale",
+        "firstName": "Robert",
+        "lastName": "David Seale",
+        "title": "Principal",
+        "phone": "205-231-7130"
+      },
+      {
+        "schoolName": "Norwood Elementary School",
+        "fullName": "Sakema Nicole Porterfield",
+        "firstName": "Sakema",
+        "lastName": "Nicole Porterfield",
+        "title": "Principal",
+        "phone": "205-231-3440"
+      },
+      {
+        "schoolName": "Phillips Academy",
+        "fullName": "Emeka Nzeocha",
+        "firstName": "Emeka",
+        "lastName": "Nzeocha",
+        "title": "Principal",
+        "phone": "205-231-9500"
+      },
+      {
+        "schoolName": "Glen Iris Elementary School",
+        "fullName": "Tronci Janavia Southall-Mason",
+        "firstName": "Tronci",
+        "lastName": "Janavia Southall-Mason",
+        "title": "Principal",
+        "phone": "205-231-7440"
+      },
+      {
+        "schoolName": "EPIC Alternative Elementary School",
+        "fullName": "Aulundria Venise Shelley",
+        "firstName": "Aulundria",
+        "lastName": "Venise Shelley",
+        "title": "Principal",
+        "phone": "205-231-7370"
+      },
+      {
+        "schoolName": "Tuggle Elementary School",
+        "fullName": "Elizabeth R Chiles",
+        "firstName": "Elizabeth",
+        "lastName": "R Chiles",
+        "title": "Principal",
+        "phone": "205-231-2675"
+      },
+      {
+        "schoolName": "Hemphill Elementary School",
+        "fullName": "Warren-Maquita Warren-Lewis",
+        "firstName": "Warren-Maquita",
+        "lastName": "Warren-Lewis",
+        "title": "Principal",
+        "phone": "205-231-7500"
+      },
+      {
+        "schoolName": "West End Academy",
+        "fullName": "Chandra Yvette Watkins",
+        "firstName": "Chandra",
+        "lastName": "Yvette Watkins",
+        "title": "Principal",
+        "phone": "205-231-1742"
+      },
+      {
+        "schoolName": "Minor Elementary School",
+        "fullName": "Raynetta Kindred Wiggins",
+        "firstName": "Raynetta",
+        "lastName": "Kindred Wiggins",
+        "title": "Principal",
+        "phone": "205-231-6555"
+      },
+      {
+        "schoolName": "Central Park Elementary School",
+        "fullName": "Rafiq Iman Vaughn",
+        "firstName": "Rafiq",
+        "lastName": "Iman Vaughn",
+        "title": "Principal",
+        "phone": "205-231-1250"
+      },
+      {
+        "schoolName": "Wylam Elementary School",
+        "fullName": "Sabrina Wright",
+        "firstName": "Sabrina",
+        "lastName": "Wright",
+        "title": "Principal",
+        "phone": "205-231-6800"
+      }
+    ]
   },
   {
     "id": 73,
@@ -4034,7 +4362,8 @@
       "The Legacy Center "
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 74,
@@ -4070,7 +4399,8 @@
       "St. Clair County OSR Head Start"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 75,
@@ -4109,7 +4439,41 @@
       "Gwin Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Greystone Elementary School",
+        "fullName": "Stacey Stocks",
+        "firstName": "Stacey",
+        "lastName": "Stocks",
+        "title": "Principal",
+        "phone": "205-439-3200"
+      },
+      {
+        "schoolName": "Rocky Ridge Elementary School",
+        "fullName": "Chelsea Bayko",
+        "firstName": "Chelsea",
+        "lastName": "Bayko",
+        "title": "Principal",
+        "phone": "205-439-2900"
+      },
+      {
+        "schoolName": "Green Valley Elementary School",
+        "fullName": "Amy Franklin Burbank",
+        "firstName": "Amy",
+        "lastName": "Franklin Burbank",
+        "title": "Principal",
+        "phone": "205-439-2500"
+      },
+      {
+        "schoolName": "Gwin Elementary School",
+        "fullName": "Kimberly Nash White",
+        "firstName": "Kimberly",
+        "lastName": "Nash White",
+        "title": "Principal",
+        "phone": "205-439-2600"
+      }
+    ]
   },
   {
     "id": 76,
@@ -4143,7 +4507,17 @@
       "Tarrant Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Tarrant Elementary School",
+        "fullName": "Ashley Jimann Edmonds",
+        "firstName": "Ashley",
+        "lastName": "Jimann Edmonds",
+        "title": "Principal",
+        "phone": "205-841-7541"
+      }
+    ]
   },
   {
     "id": 77,
@@ -4177,7 +4551,8 @@
       "Southeastern High School "
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 78,
@@ -4215,7 +4590,33 @@
       "Shelby Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Vincent Elementary School",
+        "fullName": "Tonya Borden-Hudson",
+        "firstName": "Tonya",
+        "lastName": "Borden-Hudson",
+        "title": "Principal",
+        "phone": "205-682-7320"
+      },
+      {
+        "schoolName": "Wilsonville Elementary School",
+        "fullName": "Cynthia D Monroe",
+        "firstName": "Cynthia",
+        "lastName": "D Monroe",
+        "title": "Principal",
+        "phone": "205-682-6640"
+      },
+      {
+        "schoolName": "Shelby Elementary School",
+        "fullName": "Stacy Rae Aderholt",
+        "firstName": "Stacy",
+        "lastName": "Rae Aderholt",
+        "title": "Principal",
+        "phone": "205-682-6630"
+      }
+    ]
   },
   {
     "id": 79,
@@ -4249,7 +4650,17 @@
       "Inverness Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Inverness Elementary School",
+        "fullName": "Brooke Burton Dunham",
+        "firstName": "Brooke",
+        "lastName": "Burton Dunham",
+        "title": "Principal",
+        "phone": "205-682-5240"
+      }
+    ]
   },
   {
     "id": 80,
@@ -4283,7 +4694,17 @@
       "Ashville Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Ashville Elementary School",
+        "fullName": "Shane Kevin Parker",
+        "firstName": "Shane",
+        "lastName": "Kevin Parker",
+        "title": "Principal",
+        "phone": "205-594-5242"
+      }
+    ]
   },
   {
     "id": 81,
@@ -4317,7 +4738,8 @@
       "Appalachian High School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 82,
@@ -4351,7 +4773,17 @@
       "Oak Mountain Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Oak Mountain Elementary School",
+        "fullName": "Wendy Cespedes",
+        "firstName": "Wendy",
+        "lastName": "Cespedes",
+        "title": "Principal",
+        "phone": "205-682-5230"
+      }
+    ]
   },
   {
     "id": 83,
@@ -4394,7 +4826,41 @@
       "B. B. Comer Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Stemley Road Elementary School",
+        "fullName": "Audrey Eileen Chatman",
+        "firstName": "Audrey",
+        "lastName": "Eileen Chatman",
+        "title": "Principal",
+        "phone": "256-315-5325"
+      },
+      {
+        "schoolName": "Childersburg Elementary School",
+        "fullName": "Nicki Bryant",
+        "firstName": "Nicki",
+        "lastName": "Bryant",
+        "title": "Principal",
+        "phone": "256-315-5525"
+      },
+      {
+        "schoolName": "Lincoln Elementary School",
+        "fullName": "Anna Ledbetter Jones",
+        "firstName": "Anna",
+        "lastName": "Ledbetter Jones",
+        "title": "Principal",
+        "phone": "256-315-5265"
+      },
+      {
+        "schoolName": "Munford Elementary School",
+        "fullName": "Myra Barnett Edwards",
+        "firstName": "Myra",
+        "lastName": "Barnett Edwards",
+        "title": "Principal",
+        "phone": "256-315-5250"
+      }
+    ]
   },
   {
     "id": 84,
@@ -4428,7 +4894,8 @@
       "Locust Fork Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 85,
@@ -4475,7 +4942,8 @@
       "Westminster CAPNA OSR Head Start"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 86,
@@ -4511,7 +4979,8 @@
       "Talladega OSR Head Start"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 87,
@@ -4545,7 +5014,8 @@
       "Hayden Primary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 88,
@@ -4579,7 +5049,8 @@
       "R. L. Young Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 89,
@@ -4613,7 +5084,17 @@
       "Midfield Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Midfield Elementary School",
+        "fullName": "Kimberly Rabb Felton",
+        "firstName": "Kimberly",
+        "lastName": "Rabb Felton",
+        "title": "Principal",
+        "phone": "205-923-7727"
+      }
+    ]
   },
   {
     "id": 90,
@@ -4647,7 +5128,8 @@
       "Fairfield City Pre-K Center"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 91,
@@ -4681,7 +5163,8 @@
       "Cleveland Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 92,
@@ -4717,7 +5200,8 @@
       "Great Start Brighton Head Start"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 93,
@@ -4757,7 +5241,33 @@
       "Westhills Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Jonesboro Elementary School",
+        "fullName": "Erica Tanks",
+        "firstName": "Erica",
+        "lastName": "Tanks",
+        "title": "Principal",
+        "phone": "205-432-3400"
+      },
+      {
+        "schoolName": "Greenwood Elementary School",
+        "fullName": "Angela Bedgood",
+        "firstName": "Angela",
+        "lastName": "Bedgood",
+        "title": "Principal",
+        "phone": "205-432-3201"
+      },
+      {
+        "schoolName": "Westhills Elementary School",
+        "fullName": "LaToya Roshell Walker",
+        "firstName": "LaToya",
+        "lastName": "Roshell Walker",
+        "title": "Principal",
+        "phone": "205-432-3500"
+      }
+    ]
   },
   {
     "id": 94,
@@ -4791,7 +5301,8 @@
       "Elvin Hill Elementary"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 95,
@@ -4825,7 +5336,17 @@
       "Ohatchee Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Ohatchee Elementary School",
+        "fullName": "Emily Smith",
+        "firstName": "Emily",
+        "lastName": "Smith",
+        "title": "Principal",
+        "phone": "256-741-4800"
+      }
+    ]
   },
   {
     "id": 96,
@@ -4863,7 +5384,25 @@
       "DeArmanville Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Coldwater Elementary School",
+        "fullName": "Catherine Nicole Finkley Barton",
+        "firstName": "Catherine",
+        "lastName": "Nicole Finkley Barton",
+        "title": "Principal",
+        "phone": "256-241-3870"
+      },
+      {
+        "schoolName": "Oxford Elementary School",
+        "fullName": "Kelly Whitley Williams",
+        "firstName": "Kelly",
+        "lastName": "Whitley Williams",
+        "title": "Principal",
+        "phone": "256-241-3844"
+      }
+    ]
   },
   {
     "id": 97,
@@ -4897,7 +5436,17 @@
       "Indian Valley Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Indian Valley Elementary School",
+        "fullName": "Paula Bruno",
+        "firstName": "Paula",
+        "lastName": "Bruno",
+        "title": "Principal",
+        "phone": "256-249-0397"
+      }
+    ]
   },
   {
     "id": 98,
@@ -4943,7 +5492,89 @@
       "Duck Springs Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "West End Elementary School",
+        "fullName": "Heather LeAnne Wilson",
+        "firstName": "Heather",
+        "lastName": "LeAnne Wilson",
+        "title": "Principal",
+        "phone": "256-622-1085"
+      },
+      {
+        "schoolName": "Southside Elementary School",
+        "fullName": "Alison Sullivan Turner",
+        "firstName": "Alison",
+        "lastName": "Sullivan Turner",
+        "title": "Principal",
+        "phone": "334-874-9566"
+      },
+      {
+        "schoolName": "Ivalee Elementary School",
+        "fullName": "Skylar Houston Nelson",
+        "firstName": "Skylar",
+        "lastName": "Houston Nelson",
+        "title": "Principal",
+        "phone": "256-538-9781"
+      },
+      {
+        "schoolName": "Glencoe Elementary School",
+        "fullName": "Laura Sims",
+        "firstName": "Laura",
+        "lastName": "Sims",
+        "title": "Principal",
+        "phone": "256-492-4709"
+      },
+      {
+        "schoolName": "Carlisle Elementary School",
+        "fullName": "Andrea Hope Harris",
+        "firstName": "Andrea",
+        "lastName": "Hope Harris",
+        "title": "Principal",
+        "phone": "256-622-1115"
+      },
+      {
+        "schoolName": "Highland Elementary School",
+        "fullName": "Lori Lee Moss",
+        "firstName": "Lori",
+        "lastName": "Lee Moss",
+        "title": "Principal",
+        "phone": "256-546-7409"
+      },
+      {
+        "schoolName": "Hokes Bluff Elementary School",
+        "fullName": "Charles A Gardner",
+        "firstName": "Charles",
+        "lastName": "A Gardner",
+        "title": "Principal",
+        "phone": "256-492-5571"
+      },
+      {
+        "schoolName": "Whitesboro Elementary School",
+        "fullName": "Mary Beth Gilliland",
+        "firstName": "Mary",
+        "lastName": "Beth Gilliland",
+        "title": "Principal",
+        "phone": "256-622-1110"
+      },
+      {
+        "schoolName": "Gaston Elementary School",
+        "fullName": "Christopher Melton",
+        "firstName": "Christopher",
+        "lastName": "Melton",
+        "title": "Principal",
+        "phone": "256-622-1073"
+      },
+      {
+        "schoolName": "Duck Springs Elementary School",
+        "fullName": "Suzanne Nance",
+        "firstName": "Suzanne",
+        "lastName": "Nance",
+        "title": "Principal",
+        "phone": "256-538-6301"
+      }
+    ]
   },
   {
     "id": 99,
@@ -4977,7 +5608,8 @@
       "Susan Moore Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 100,
@@ -5014,7 +5646,8 @@
       "Meadow View Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 101,
@@ -5048,7 +5681,17 @@
       "Blountsville Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Blountsville Elementary School",
+        "fullName": "Shannon Smith Lakey",
+        "firstName": "Shannon",
+        "lastName": "Smith Lakey",
+        "title": "Principal",
+        "phone": "205-775-1990"
+      }
+    ]
   },
   {
     "id": 102,
@@ -5092,7 +5735,41 @@
       "Carbon Hill Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Sumiton Elementary School",
+        "fullName": "Barry Lee Wilson",
+        "firstName": "Barry",
+        "lastName": "Lee Wilson",
+        "title": "Principal",
+        "phone": "205-648-5656"
+      },
+      {
+        "schoolName": "Bankhead Middle School",
+        "fullName": "Amber Suzanne Freeman",
+        "firstName": "Amber",
+        "lastName": "Suzanne Freeman",
+        "title": "Principal",
+        "phone": "205-483-7245"
+      },
+      {
+        "schoolName": "Curry Elementary School",
+        "fullName": "Haley Moore",
+        "firstName": "Haley",
+        "lastName": "Moore",
+        "title": "Principal",
+        "phone": "205-387-7845"
+      },
+      {
+        "schoolName": "Oakman Middle School",
+        "fullName": "Bart Dewayne Lockhart",
+        "firstName": "Bart",
+        "lastName": "Dewayne Lockhart",
+        "title": "Principal",
+        "phone": "205-622-3611"
+      }
+    ]
   },
   {
     "id": 103,
@@ -5126,7 +5803,17 @@
       "Attalla Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Attalla Elementary School",
+        "fullName": "Eleanor Lewis Underwood",
+        "firstName": "Eleanor",
+        "lastName": "Lewis Underwood",
+        "title": "Principal",
+        "phone": "256-328-0502"
+      }
+    ]
   },
   {
     "id": 104,
@@ -5160,7 +5847,17 @@
       "Wellborn Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Wellborn Elementary School",
+        "fullName": "Douglas Allen O'Dell",
+        "firstName": "Douglas",
+        "lastName": "Allen O'Dell",
+        "title": "Principal",
+        "phone": "256-741-7500"
+      }
+    ]
   },
   {
     "id": 105,
@@ -5203,7 +5900,65 @@
       "Harmony Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Hanceville Primary School",
+        "fullName": "Michael Glenn Lindsey",
+        "firstName": "Michael",
+        "lastName": "Glenn Lindsey",
+        "title": "Principal",
+        "phone": "256-939-1500"
+      },
+      {
+        "schoolName": "Welti Elementary School",
+        "fullName": "Robert Strane",
+        "firstName": "Robert",
+        "lastName": "Strane",
+        "title": "Principal",
+        "phone": "256-734-4956"
+      },
+      {
+        "schoolName": "Cold Springs Elementary School",
+        "fullName": "Adam Derrick McKinnon",
+        "firstName": "Adam",
+        "lastName": "Derrick McKinnon",
+        "title": "Principal",
+        "phone": "256-287-1247"
+      },
+      {
+        "schoolName": "Good Hope Primary School",
+        "fullName": "Ashley Mae Uhrig",
+        "firstName": "Ashley",
+        "lastName": "Mae Uhrig",
+        "title": "Principal",
+        "phone": "256-734-0109"
+      },
+      {
+        "schoolName": "Parkside Elementary School",
+        "fullName": "Caleb Ryan Elrod",
+        "firstName": "Caleb",
+        "lastName": "Ryan Elrod",
+        "title": "Principal",
+        "phone": "256-796-5568"
+      },
+      {
+        "schoolName": "Fairview Elementary School",
+        "fullName": "Erica Rutherford",
+        "firstName": "Erica",
+        "lastName": "Rutherford",
+        "title": "Principal",
+        "phone": "256-796-6304"
+      },
+      {
+        "schoolName": "Vinemont Elementary School",
+        "fullName": "Kim Newman Brown",
+        "firstName": "Kim",
+        "lastName": "Newman Brown",
+        "title": "Principal",
+        "phone": "256-734-0314"
+      }
+    ]
   },
   {
     "id": 106,
@@ -5237,7 +5992,17 @@
       "Alexandria Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Alexandria Elementary School",
+        "fullName": "Shannon Anthony Finley",
+        "firstName": "Shannon",
+        "lastName": "Anthony Finley",
+        "title": "Principal",
+        "phone": "256-741-4300"
+      }
+    ]
   },
   {
     "id": 107,
@@ -5278,7 +6043,41 @@
       "Thompson Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Eura Brown Elementary School",
+        "fullName": "Amanda Martinez",
+        "firstName": "Amanda",
+        "lastName": "Martinez",
+        "title": "Principal",
+        "phone": "256-546-0011"
+      },
+      {
+        "schoolName": "Floyd Elementary School",
+        "fullName": "Roy Bliss",
+        "firstName": "Roy",
+        "lastName": "Bliss",
+        "title": "Principal",
+        "phone": "256-546-0836"
+      },
+      {
+        "schoolName": "Donehoo Elementary School",
+        "fullName": "Ernest Calloway",
+        "firstName": "Ernest",
+        "lastName": "Calloway",
+        "title": "Principal",
+        "phone": "256-546-3604"
+      },
+      {
+        "schoolName": "Thompson Elementary School",
+        "fullName": "Patrice Leanne Maxwell",
+        "firstName": "Patrice",
+        "lastName": "Leanne Maxwell",
+        "title": "Principal",
+        "phone": "256-546-7011"
+      }
+    ]
   },
   {
     "id": 108,
@@ -5314,7 +6113,8 @@
       "Hobson City OSR Head Start"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 109,
@@ -5348,7 +6148,17 @@
       "Cobb Preparatory Academy"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Cobb Preparatory Academy",
+        "fullName": "Teresia Joyce Moore Hall",
+        "firstName": "Teresia",
+        "lastName": "Joyce Moore Hall",
+        "title": "Principal",
+        "phone": "256-231-5030"
+      }
+    ]
   },
   {
     "id": 110,
@@ -5384,7 +6194,8 @@
       "Constantine OSR Head Start Center"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 111,
@@ -5418,7 +6229,17 @@
       "Saks Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Saks Elementary School",
+        "fullName": "Julie Opdycke",
+        "firstName": "Julie",
+        "lastName": "Opdycke",
+        "title": "Principal",
+        "phone": "256-741-6800"
+      }
+    ]
   },
   {
     "id": 112,
@@ -5454,7 +6275,8 @@
       "J. W. Stewart OSR Head Start "
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 113,
@@ -5488,7 +6310,17 @@
       "Lake View Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Lake View Elementary School",
+        "fullName": "Dorothiann Elizabeth Martin",
+        "firstName": "Dorothiann",
+        "lastName": "Elizabeth Martin",
+        "title": "Principal",
+        "phone": "205-342-2951"
+      }
+    ]
   },
   {
     "id": 114,
@@ -5522,7 +6354,17 @@
       "Kitty Stone Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Kitty Stone Elementary School",
+        "fullName": "Joel Brett Causey",
+        "firstName": "Joel",
+        "lastName": "Brett Causey",
+        "title": "Principal",
+        "phone": "256-782-5191"
+      }
+    ]
   },
   {
     "id": 115,
@@ -5558,7 +6400,8 @@
       "Ashland OSR Head Start"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 116,
@@ -5592,7 +6435,17 @@
       "Pleasant Valley Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Pleasant Valley Elementary School",
+        "fullName": "Candace Burns",
+        "firstName": "Candace",
+        "lastName": "Burns",
+        "title": "Principal",
+        "phone": "256-741-6600"
+      }
+    ]
   },
   {
     "id": 117,
@@ -5630,7 +6483,25 @@
       "Kate Duncan Smith DAR Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Douglas Elementary School",
+        "fullName": "Kerry Garrett Bush",
+        "firstName": "Kerry",
+        "lastName": "Garrett Bush",
+        "title": "Principal",
+        "phone": "256-593-4420"
+      },
+      {
+        "schoolName": "Brindlee Mountain Elementary School",
+        "fullName": "Amanda Henry Hollaway",
+        "firstName": "Amanda",
+        "lastName": "Henry Hollaway",
+        "title": "Principal",
+        "phone": "256-753-2246"
+      }
+    ]
   },
   {
     "id": 118,
@@ -5671,7 +6542,57 @@
       "Maplesville High School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Jemison Elementary School",
+        "fullName": "Meghan Owens",
+        "firstName": "Meghan",
+        "lastName": "Owens",
+        "title": "Principal",
+        "phone": "205-280-4820"
+      },
+      {
+        "schoolName": "Thorsby High School",
+        "fullName": "Holly Cleveland Matson",
+        "firstName": "Holly",
+        "lastName": "Cleveland Matson",
+        "title": "Principal",
+        "phone": "205-280-4880"
+      },
+      {
+        "schoolName": "Clanton Elementary School",
+        "fullName": "Rebecca Jean Threlkeld",
+        "firstName": "Rebecca",
+        "lastName": "Jean Threlkeld",
+        "title": "Principal",
+        "phone": "205-280-2730"
+      },
+      {
+        "schoolName": "Isabella High School",
+        "fullName": "Ricky L Porter",
+        "firstName": "Ricky",
+        "lastName": "L Porter",
+        "title": "Principal",
+        "phone": "205-280-2770"
+      },
+      {
+        "schoolName": "Verbena High School",
+        "fullName": "Jacob Gregory Garnett",
+        "firstName": "Jacob",
+        "lastName": "Gregory Garnett",
+        "title": "Principal",
+        "phone": "205-280-2820"
+      },
+      {
+        "schoolName": "Maplesville High School",
+        "fullName": "Darrell Wade Baker",
+        "firstName": "Darrell",
+        "lastName": "Wade Baker",
+        "title": "Principal",
+        "phone": "205-280-4904"
+      }
+    ]
   },
   {
     "id": 119,
@@ -5705,7 +6626,17 @@
       "Cullman City Primary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Cullman City Primary School",
+        "fullName": "Elizabeth Johnston Shaddix",
+        "firstName": "Elizabeth",
+        "lastName": "Johnston Shaddix",
+        "title": "Principal",
+        "phone": "256-775-0234"
+      }
+    ]
   },
   {
     "id": 120,
@@ -5739,7 +6670,8 @@
       "Boaz Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 121,
@@ -5773,7 +6705,17 @@
       "Woodstock Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Woodstock Elementary School",
+        "fullName": "Kristin H Lightsey",
+        "firstName": "Kristin",
+        "lastName": "H Lightsey",
+        "title": "Principal",
+        "phone": "205-938-2028"
+      }
+    ]
   },
   {
     "id": 122,
@@ -5809,7 +6751,8 @@
       "Lineville OSR Head Start"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 123,
@@ -5843,7 +6786,17 @@
       "Randolph Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Randolph Elementary School",
+        "fullName": "Hollie Brown Tillery",
+        "firstName": "Hollie",
+        "lastName": "Brown Tillery",
+        "title": "Principal",
+        "phone": "334-366-2897"
+      }
+    ]
   },
   {
     "id": 124,
@@ -5877,7 +6830,17 @@
       "White Plains Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "White Plains Elementary School",
+        "fullName": "Jonathan A Gilbert",
+        "firstName": "Jonathan",
+        "lastName": "A Gilbert",
+        "title": "Principal",
+        "phone": "256-741-7700"
+      }
+    ]
   },
   {
     "id": 125,
@@ -5911,7 +6874,8 @@
       "Pleasant Grove Elementary School Heflin"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 126,
@@ -5945,7 +6909,17 @@
       "West Blocton Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "West Blocton Elementary School",
+        "fullName": "Kimberly Holdsambeck",
+        "firstName": "Kimberly",
+        "lastName": "Holdsambeck",
+        "title": "Principal",
+        "phone": "205-938-9005"
+      }
+    ]
   },
   {
     "id": 127,
@@ -5979,7 +6953,8 @@
       "Albertville Kindergarten and Pre-K"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 128,
@@ -6013,7 +6988,17 @@
       "Arab Primary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Arab Primary School",
+        "fullName": "Cindy Holt Ingram",
+        "firstName": "Cindy",
+        "lastName": "Holt Ingram",
+        "title": "Principal",
+        "phone": "256-586-6005"
+      }
+    ]
   },
   {
     "id": 129,
@@ -6047,7 +7032,17 @@
       "Vance Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Vance Elementary School",
+        "fullName": "Carolyn Wyatt Wilson",
+        "firstName": "Carolyn",
+        "lastName": "Wyatt Wilson",
+        "title": "Principal",
+        "phone": "205-342-2697"
+      }
+    ]
   },
   {
     "id": 130,
@@ -6090,7 +7085,57 @@
       "West Morgan Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Eva School",
+        "fullName": "Jared Landon Miner",
+        "firstName": "Jared",
+        "lastName": "Landon Miner",
+        "title": "Principal",
+        "phone": "256-796-5141"
+      },
+      {
+        "schoolName": "Falkville Elementary School",
+        "fullName": "Brandy Lee Quattlebaum",
+        "firstName": "Brandy",
+        "lastName": "Lee Quattlebaum",
+        "title": "Principal",
+        "phone": "256-784-5249"
+      },
+      {
+        "schoolName": "Union Hill School",
+        "fullName": "Deedee Taylor Hendrix",
+        "firstName": "Deedee",
+        "lastName": "Taylor Hendrix",
+        "title": "Principal",
+        "phone": "256-498-2431"
+      },
+      {
+        "schoolName": "Danville-Neel Elementary School",
+        "fullName": "Tara Paige Morrow",
+        "firstName": "Tara",
+        "lastName": "Paige Morrow",
+        "title": "Principal",
+        "phone": "256-773-7183"
+      },
+      {
+        "schoolName": "Priceville Elementary School",
+        "fullName": "Daniel H Gullion",
+        "firstName": "Daniel",
+        "lastName": "H Gullion",
+        "title": "Principal",
+        "phone": "256-341-9202"
+      },
+      {
+        "schoolName": "West Morgan Elementary School",
+        "fullName": "Rebecca Elaine Burt",
+        "firstName": "Rebecca",
+        "lastName": "Elaine Burt",
+        "title": "Principal",
+        "phone": "256-350-8818"
+      }
+    ]
   },
   {
     "id": 131,
@@ -6128,7 +7173,33 @@
       "Lynn Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Meek Elementary School",
+        "fullName": "Wesley Micheal Harden",
+        "firstName": "Wesley",
+        "lastName": "Micheal Harden",
+        "title": "Principal",
+        "phone": "205-221-9425"
+      },
+      {
+        "schoolName": "Addison Elementary School",
+        "fullName": "Cynthia Hastings",
+        "firstName": "Cynthia",
+        "lastName": "Hastings",
+        "title": "Principal",
+        "phone": "205-717-3310"
+      },
+      {
+        "schoolName": "Lynn Elementary School",
+        "fullName": "James Michael Nanney",
+        "firstName": "James",
+        "lastName": "Michael Nanney",
+        "title": "Principal",
+        "phone": "205-717-3333"
+      }
+    ]
   },
   {
     "id": 132,
@@ -6162,7 +7233,8 @@
       "Guntersville Elementary Pre-K Academy"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 133,
@@ -6196,7 +7268,17 @@
       "Cleburne County Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Cleburne County Elementary School",
+        "fullName": "Rebecca Lee Bowen Smith",
+        "firstName": "Rebecca",
+        "lastName": "Lee Bowen Smith",
+        "title": "Principal",
+        "phone": "256-463-2654"
+      }
+    ]
   },
   {
     "id": 134,
@@ -6230,7 +7312,8 @@
       "Brookwood Elementary School Tuscaloosa"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 135,
@@ -6264,7 +7347,17 @@
       "Brookwood High School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Brookwood High School",
+        "fullName": "Sachiko Hawkins Green",
+        "firstName": "Sachiko",
+        "lastName": "Hawkins Green",
+        "title": "Principal",
+        "phone": "205-342-2777"
+      }
+    ]
   },
   {
     "id": 136,
@@ -6298,7 +7391,17 @@
       "Piedmont Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Piedmont Elementary School",
+        "fullName": "Brigett C Stewart",
+        "firstName": "Brigett",
+        "lastName": "C Stewart",
+        "title": "Principal",
+        "phone": "256-447-7483"
+      }
+    ]
   },
   {
     "id": 137,
@@ -6336,7 +7439,8 @@
       "Bethune OSR Head Start Center"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 138,
@@ -6372,7 +7476,8 @@
       "V. Robinson OSR Head Start "
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 139,
@@ -6417,7 +7522,41 @@
       "Ider High School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Crossville Middle School",
+        "fullName": "Brian Randall Pool",
+        "firstName": "Brian",
+        "lastName": "Randall Pool",
+        "title": "Principal",
+        "phone": "256-528-7859"
+      },
+      {
+        "schoolName": "Collinsville High School",
+        "fullName": "James Bradley Crawford",
+        "firstName": "James",
+        "lastName": "Bradley Crawford",
+        "title": "Principal",
+        "phone": "256-524-2111"
+      },
+      {
+        "schoolName": "Fyffe High School",
+        "fullName": "Jesse Tyler Martin",
+        "firstName": "Jesse",
+        "lastName": "Tyler Martin",
+        "title": "Principal",
+        "phone": "256-623-2116"
+      },
+      {
+        "schoolName": "Valley Head High School",
+        "fullName": "John Corey Dupree",
+        "firstName": "John",
+        "lastName": "Corey Dupree",
+        "title": "Principal",
+        "phone": "256-635-6228"
+      }
+    ]
   },
   {
     "id": 140,
@@ -6451,7 +7590,17 @@
       "Asbury Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Asbury Elementary School",
+        "fullName": "Marie Mae Chastain",
+        "firstName": "Marie",
+        "lastName": "Mae Chastain",
+        "title": "Principal",
+        "phone": "256-878-6221"
+      }
+    ]
   },
   {
     "id": 141,
@@ -6485,7 +7634,8 @@
       "Jim Pearson Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 142,
@@ -6519,7 +7669,17 @@
       "Horseshoe Bend High School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Horseshoe Bend High School",
+        "fullName": "Brett Waites",
+        "firstName": "Brett",
+        "lastName": "Waites",
+        "title": "Principal",
+        "phone": "256-329-9110"
+      }
+    ]
   },
   {
     "id": 143,
@@ -6553,7 +7713,17 @@
       "Brent Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Brent Elementary School",
+        "fullName": "Ronda Mechelle Hollifield",
+        "firstName": "Ronda",
+        "lastName": "Mechelle Hollifield",
+        "title": "Principal",
+        "phone": "205-926-4993"
+      }
+    ]
   },
   {
     "id": 144,
@@ -6593,7 +7763,41 @@
       "Gaylesville School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Centre Elementary School",
+        "fullName": "Wes V Neyman",
+        "firstName": "Wes",
+        "lastName": "V Neyman",
+        "title": "Principal",
+        "phone": "256-927-3302"
+      },
+      {
+        "schoolName": "Spring Garden High School",
+        "fullName": "Brian Clowdis",
+        "firstName": "Brian",
+        "lastName": "Clowdis",
+        "title": "Principal",
+        "phone": "256-447-7045"
+      },
+      {
+        "schoolName": "Sand Rock High School",
+        "fullName": "John B East",
+        "firstName": "John",
+        "lastName": "B East",
+        "title": "Principal",
+        "phone": "256-557-3825"
+      },
+      {
+        "schoolName": "Cedar Bluff High School",
+        "fullName": "Torey Omar McDaniel",
+        "firstName": "Torey",
+        "lastName": "Omar McDaniel",
+        "title": "Principal",
+        "phone": "256-927-1750"
+      }
+    ]
   },
   {
     "id": 145,
@@ -6627,7 +7831,17 @@
       "Wedowee Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Wedowee Elementary School",
+        "fullName": "Karen Ann McMath",
+        "firstName": "Karen",
+        "lastName": "Ann McMath",
+        "title": "Principal",
+        "phone": "256-357-4588"
+      }
+    ]
   },
   {
     "id": 146,
@@ -6661,7 +7875,17 @@
       "Fruithurst Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Fruithurst Elementary School",
+        "fullName": "Christy Jenkins Hiett",
+        "firstName": "Christy",
+        "lastName": "Jenkins Hiett",
+        "title": "Principal",
+        "phone": "256-579-2232"
+      }
+    ]
   },
   {
     "id": 147,
@@ -6695,7 +7919,17 @@
       "Wadley High School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Wadley High School",
+        "fullName": "Sherry J Ashe",
+        "firstName": "Sherry",
+        "lastName": "J Ashe",
+        "title": "Principal",
+        "phone": "256-395-2286"
+      }
+    ]
   },
   {
     "id": 148,
@@ -6729,7 +7963,17 @@
       "Cottondale Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Cottondale Elementary School",
+        "fullName": "Candace Stiggers Cherry",
+        "firstName": "Candace",
+        "lastName": "Stiggers Cherry",
+        "title": "Principal",
+        "phone": "205-342-2642"
+      }
+    ]
   },
   {
     "id": 149,
@@ -6763,7 +8007,17 @@
       "Holt Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Holt Elementary School",
+        "fullName": "Debbie Walker Crawford",
+        "firstName": "Debbie",
+        "lastName": "Walker Crawford",
+        "title": "Principal",
+        "phone": "205-342-2650"
+      }
+    ]
   },
   {
     "id": 150,
@@ -6797,7 +8051,8 @@
       "Hartselle City Pre-K"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 151,
@@ -6843,7 +8098,73 @@
       "Oakdale Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Rock Quarry Elementary School",
+        "fullName": "Laura Magee Jockisch",
+        "firstName": "Laura",
+        "lastName": "Magee Jockisch",
+        "title": "Principal",
+        "phone": "205-759-8347"
+      },
+      {
+        "schoolName": "Arcadia Elementary School",
+        "fullName": "Gladys Lorraine Wright",
+        "firstName": "Gladys",
+        "lastName": "Lorraine Wright",
+        "title": "Principal",
+        "phone": "205-759-3567"
+      },
+      {
+        "schoolName": "Woodland Forrest Elementary School",
+        "fullName": "Teresa Lynn Bivens",
+        "firstName": "Teresa",
+        "lastName": "Lynn Bivens",
+        "title": "Principal",
+        "phone": "205-759-3675"
+      },
+      {
+        "schoolName": "Verner Elementary School",
+        "fullName": "Amy May Elam",
+        "firstName": "Amy",
+        "lastName": "May Elam",
+        "title": "Principal",
+        "phone": "205-759-3667"
+      },
+      {
+        "schoolName": "University Place Elementary School",
+        "fullName": "Nakelya Nicole Mullins",
+        "firstName": "Nakelya",
+        "lastName": "Nicole Mullins",
+        "title": "Principal",
+        "phone": "205-759-3664"
+      },
+      {
+        "schoolName": "Southview Elementary School",
+        "fullName": "Ronika Kirkland Amerson",
+        "firstName": "Ronika",
+        "lastName": "Kirkland Amerson",
+        "title": "Principal",
+        "phone": "205-345-1325"
+      },
+      {
+        "schoolName": "Skyland Elementary School",
+        "fullName": "Keonta Nicole Melton",
+        "firstName": "Keonta",
+        "lastName": "Nicole Melton",
+        "title": "Principal",
+        "phone": "205-759-3638"
+      },
+      {
+        "schoolName": "Oakdale Elementary School",
+        "fullName": "Kiera S Ezell",
+        "firstName": "Kiera",
+        "lastName": "S Ezell",
+        "title": "Principal",
+        "phone": "205-759-3626"
+      }
+    ]
   },
   {
     "id": 152,
@@ -6890,7 +8211,65 @@
       "Madison Cross Roads Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "New Hope Elementary School",
+        "fullName": "Katharine Woolsey",
+        "firstName": "Katharine",
+        "lastName": "Woolsey",
+        "title": "Principal",
+        "phone": "256-851-3260"
+      },
+      {
+        "schoolName": "Madison County Elementary School",
+        "fullName": "Kim Michele Britton",
+        "firstName": "Kim",
+        "lastName": "Michele Britton",
+        "title": "Principal",
+        "phone": "256-851-3290"
+      },
+      {
+        "schoolName": "Central School",
+        "fullName": "Susan Hancock",
+        "firstName": "Susan",
+        "lastName": "Hancock",
+        "title": "Principal",
+        "phone": "256-851-4670"
+      },
+      {
+        "schoolName": "Monrovia Elementary School",
+        "fullName": "Kelly Dawn Reasner",
+        "firstName": "Kelly",
+        "lastName": "Dawn Reasner",
+        "title": "Principal",
+        "phone": "256-851-4570"
+      },
+      {
+        "schoolName": "Legacy Elementary School",
+        "fullName": "Catherine Rogers",
+        "firstName": "Catherine",
+        "lastName": "Rogers",
+        "title": "Principal",
+        "phone": "256-851-4630"
+      },
+      {
+        "schoolName": "Hazel Green Elementary School",
+        "fullName": "Whitney Waldon Collier",
+        "firstName": "Whitney",
+        "lastName": "Waldon Collier",
+        "title": "Principal",
+        "phone": "256-851-4540"
+      },
+      {
+        "schoolName": "Madison Cross Roads Elementary School",
+        "fullName": "Amelia Evans",
+        "firstName": "Amelia",
+        "lastName": "Evans",
+        "title": "Principal",
+        "phone": "256-851-4600"
+      }
+    ]
   },
   {
     "id": 153,
@@ -6929,7 +8308,17 @@
       "Prattville Kindergarten School "
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Pine Level Elementary School",
+        "fullName": "Christen Harry",
+        "firstName": "Christen",
+        "lastName": "Harry",
+        "title": "Principal",
+        "phone": "334-358-2658"
+      }
+    ]
   },
   {
     "id": 154,
@@ -6968,7 +8357,41 @@
       "Coosada Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Holtville Elementary School",
+        "fullName": "Tanya Ison Boone",
+        "firstName": "Tanya",
+        "lastName": "Ison Boone",
+        "title": "Principal",
+        "phone": "334-569-2925"
+      },
+      {
+        "schoolName": "Eclectic Elementary School",
+        "fullName": "Timothy Carlson Turley",
+        "firstName": "Timothy",
+        "lastName": "Carlson Turley",
+        "title": "Principal",
+        "phone": "334-541-2291"
+      },
+      {
+        "schoolName": "Wetumpka Elementary School",
+        "fullName": "Myeshia Brooks",
+        "firstName": "Myeshia",
+        "lastName": "Brooks",
+        "title": "Principal",
+        "phone": "334-567-4323"
+      },
+      {
+        "schoolName": "Coosada Elementary School",
+        "fullName": "Janice B McKenzie",
+        "firstName": "Janice",
+        "lastName": "B McKenzie",
+        "title": "Principal",
+        "phone": "334-285-0273"
+      }
+    ]
   },
   {
     "id": 155,
@@ -7002,7 +8425,17 @@
       "Dadeville Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Dadeville Elementary School",
+        "fullName": "Diane Diane Miller",
+        "firstName": "Diane",
+        "lastName": "Diane Miller",
+        "title": "Principal",
+        "phone": "256-825-6811"
+      }
+    ]
   },
   {
     "id": 156,
@@ -7043,7 +8476,33 @@
       "Hazlewood Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Moulton Elementary School",
+        "fullName": "Ryan Bowerman",
+        "firstName": "Ryan",
+        "lastName": "Bowerman",
+        "title": "Principal",
+        "phone": "256-905-2450"
+      },
+      {
+        "schoolName": "East Lawrence Elementary School",
+        "fullName": "Yulanda Hampton",
+        "firstName": "Yulanda",
+        "lastName": "Hampton",
+        "title": "Principal",
+        "phone": "256-905-2514"
+      },
+      {
+        "schoolName": "Hazlewood Elementary School",
+        "fullName": "Tarrance LaBron Campbell",
+        "firstName": "Tarrance",
+        "lastName": "LaBron Campbell",
+        "title": "Principal",
+        "phone": "256-685-4020"
+      }
+    ]
   },
   {
     "id": 157,
@@ -7117,7 +8576,121 @@
       }
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Farley Elementary School",
+        "fullName": "Stewart Thorson",
+        "firstName": "Stewart",
+        "lastName": "Thorson",
+        "title": "Principal",
+        "phone": "256-428-7160"
+      },
+      {
+        "schoolName": "Challenger Elementary School",
+        "fullName": "Sherita Joiner",
+        "firstName": "Sherita",
+        "lastName": "Joiner",
+        "title": "Principal",
+        "phone": "256-428-7060"
+      },
+      {
+        "schoolName": "Mountain Gap Elementary School",
+        "fullName": "Angelear Warren",
+        "firstName": "Angelear",
+        "lastName": "Warren",
+        "title": "Principal",
+        "phone": "256-428-7360"
+      },
+      {
+        "schoolName": "McDonnell Elementary School",
+        "fullName": "Frazier Barnes",
+        "firstName": "Frazier",
+        "lastName": "Barnes",
+        "title": "Principal",
+        "phone": "256-428-7280"
+      },
+      {
+        "schoolName": "Jones Valley Elementary School",
+        "fullName": "Crystal Elizabeth Alexander",
+        "firstName": "Crystal",
+        "lastName": "Elizabeth Alexander",
+        "title": "Principal",
+        "phone": "256-428-7220"
+      },
+      {
+        "schoolName": "Ridgecrest Elementary School",
+        "fullName": "Mary Lisa OBradovich",
+        "firstName": "Mary",
+        "lastName": "Lisa OBradovich",
+        "title": "Principal",
+        "phone": "256-428-7380"
+      },
+      {
+        "schoolName": "Morris Elementary School",
+        "fullName": "Leslie Z Maples",
+        "firstName": "Leslie",
+        "lastName": "Z Maples",
+        "title": "Principal",
+        "phone": "256-428-7340"
+      },
+      {
+        "schoolName": "Blossomwood Elementary School",
+        "fullName": "Bradley Alton Scott",
+        "firstName": "Bradley",
+        "lastName": "Alton Scott",
+        "title": "Principal",
+        "phone": "256-428-7020"
+      },
+      {
+        "schoolName": "Monte Sano Elementary School",
+        "fullName": "Clifford DWayne Porter",
+        "firstName": "Clifford",
+        "lastName": "DWayne Porter",
+        "title": "Principal",
+        "phone": "256-428-7300"
+      },
+      {
+        "schoolName": "Sonnie Hereford Elementary School",
+        "fullName": "Tarria Walters",
+        "firstName": "Tarria",
+        "lastName": "Walters",
+        "title": "Principal",
+        "phone": "256-428-7440"
+      },
+      {
+        "schoolName": "Montview Elementary School",
+        "fullName": "Marcia Lynn Sutton",
+        "firstName": "Marcia",
+        "lastName": "Lynn Sutton",
+        "title": "Principal",
+        "phone": "256-428-7320"
+      },
+      {
+        "schoolName": "Highlands Elementary School",
+        "fullName": "Beth E Bouchard",
+        "firstName": "Beth",
+        "lastName": "E Bouchard",
+        "title": "Principal",
+        "phone": "334-794-1459"
+      },
+      {
+        "schoolName": "Lakewood Elementary School",
+        "fullName": "Sanchella Jones Graham",
+        "firstName": "Sanchella",
+        "lastName": "Jones Graham",
+        "title": "Principal",
+        "phone": "256-428-7240"
+      },
+      {
+        "schoolName": "Rolling Hills Elementary School",
+        "fullName": "LaKeisha Agun",
+        "firstName": "LaKeisha",
+        "lastName": "Agun",
+        "title": "Principal",
+        "phone": "256-428-7400"
+      }
+    ]
   },
   {
     "id": 158,
@@ -7164,7 +8737,89 @@
       "Bryant Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Woodville High School",
+        "fullName": "Daniel Lee Evans",
+        "firstName": "Daniel",
+        "lastName": "Lee Evans",
+        "title": "Principal",
+        "phone": "256-776-2874"
+      },
+      {
+        "schoolName": "Section High School",
+        "fullName": "Blake Douglas Wigley",
+        "firstName": "Blake",
+        "lastName": "Douglas Wigley",
+        "title": "Principal",
+        "phone": "256-228-6718"
+      },
+      {
+        "schoolName": "Dutton Elementary School",
+        "fullName": "Whitney Wynn",
+        "firstName": "Whitney",
+        "lastName": "Wynn",
+        "title": "Principal",
+        "phone": "256-228-4265"
+      },
+      {
+        "schoolName": "Skyline High School",
+        "fullName": "Joshua Will Wright",
+        "firstName": "Joshua",
+        "lastName": "Will Wright",
+        "title": "Principal",
+        "phone": "256-587-6561"
+      },
+      {
+        "schoolName": "Hollywood Elementary School",
+        "fullName": "Adam Shawn Phillips",
+        "firstName": "Adam",
+        "lastName": "Shawn Phillips",
+        "title": "Principal",
+        "phone": "256-574-2054"
+      },
+      {
+        "schoolName": "Pisgah High School",
+        "fullName": "Rhonda Temple Wheeler",
+        "firstName": "Rhonda",
+        "lastName": "Temple Wheeler",
+        "title": "Principal",
+        "phone": "256-451-3241"
+      },
+      {
+        "schoolName": "Rosalie Elementary School",
+        "fullName": "Truman Eugene Roberts",
+        "firstName": "Truman",
+        "lastName": "Eugene Roberts",
+        "title": "Principal",
+        "phone": "256-451-3616"
+      },
+      {
+        "schoolName": "Stevenson Elementary School",
+        "fullName": "Samuel Christopher Houston",
+        "firstName": "Samuel",
+        "lastName": "Christopher Houston",
+        "title": "Principal",
+        "phone": "256-437-2203"
+      },
+      {
+        "schoolName": "Bridgeport Elementary School",
+        "fullName": "Heather Burnette",
+        "firstName": "Heather",
+        "lastName": "Burnette",
+        "title": "Principal",
+        "phone": "256-495-3147"
+      },
+      {
+        "schoolName": "North Sand Mountain School",
+        "fullName": "Samantha Brooke Phillips",
+        "firstName": "Samantha",
+        "lastName": "Brooke Phillips",
+        "title": "Principal",
+        "phone": "256-597-2368"
+      }
+    ]
   },
   {
     "id": 159,
@@ -7202,7 +8857,8 @@
       "Prattville FGC OSR Head Start Center"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 160,
@@ -7238,7 +8894,8 @@
       "Jessie Ruth Foster FGC OSR Head Start"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 161,
@@ -7272,7 +8929,17 @@
       "Berry Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Berry Elementary School",
+        "fullName": "Darrell Edward Thomas",
+        "firstName": "Darrell",
+        "lastName": "Edward Thomas",
+        "title": "Principal",
+        "phone": "205-689-4464"
+      }
+    ]
   },
   {
     "id": 162,
@@ -7306,7 +8973,17 @@
       "Northside Middle School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Northside Middle School",
+        "fullName": "Autumn Marie Franks",
+        "firstName": "Autumn",
+        "lastName": "Marie Franks",
+        "title": "Principal",
+        "phone": "205-342-2740"
+      }
+    ]
   },
   {
     "id": 163,
@@ -7340,7 +9017,17 @@
       "Walker Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Walker Elementary School",
+        "fullName": "Amanda Folker Wolfe",
+        "firstName": "Amanda",
+        "lastName": "Folker Wolfe",
+        "title": "Principal",
+        "phone": "205-342-2664"
+      }
+    ]
   },
   {
     "id": 164,
@@ -7374,7 +9061,17 @@
       "Matthews Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Matthews Elementary School",
+        "fullName": "Kimberly Renee Lavender",
+        "firstName": "Kimberly",
+        "lastName": "Renee Lavender",
+        "title": "Principal",
+        "phone": "205-342-2654"
+      }
+    ]
   },
   {
     "id": 165,
@@ -7408,7 +9105,17 @@
       "Crestmont Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Crestmont Elementary School",
+        "fullName": "Fayetta Little",
+        "firstName": "Fayetta",
+        "lastName": "Little",
+        "title": "Principal",
+        "phone": "205-342-2695"
+      }
+    ]
   },
   {
     "id": 166,
@@ -7442,7 +9149,17 @@
       "Flatwoods Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Flatwoods Elementary School",
+        "fullName": "Mary Jean Sutton",
+        "firstName": "Mary",
+        "lastName": "Jean Sutton",
+        "title": "Principal",
+        "phone": "205-342-2648"
+      }
+    ]
   },
   {
     "id": 167,
@@ -7476,7 +9193,17 @@
       "Maxwell Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Maxwell Elementary School",
+        "fullName": "Frances Ann Baggett",
+        "firstName": "Frances",
+        "lastName": "Ann Baggett",
+        "title": "Principal",
+        "phone": "205-342-2656"
+      }
+    ]
   },
   {
     "id": 168,
@@ -7510,7 +9237,17 @@
       "Hubbertville School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Hubbertville School",
+        "fullName": "Timothy Joe Dunavant",
+        "firstName": "Timothy",
+        "lastName": "Joe Dunavant",
+        "title": "Principal",
+        "phone": "205-487-2845"
+      }
+    ]
   },
   {
     "id": 169,
@@ -7544,7 +9281,17 @@
       "Taylorville Primary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Taylorville Primary School",
+        "fullName": "George Tyler Johnson",
+        "firstName": "George",
+        "lastName": "Tyler Johnson",
+        "title": "Principal",
+        "phone": "205-342-2939"
+      }
+    ]
   },
   {
     "id": 170,
@@ -7578,7 +9325,17 @@
       "Westwood Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Westwood Elementary School",
+        "fullName": "Marsha B Johnson",
+        "firstName": "Marsha",
+        "lastName": "B Johnson",
+        "title": "Principal",
+        "phone": "205-342-2666"
+      }
+    ]
   },
   {
     "id": 171,
@@ -7612,7 +9369,17 @@
       "Fayette Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Fayette Elementary School",
+        "fullName": "Matthew Parker Lindsey",
+        "firstName": "Matthew",
+        "lastName": "Parker Lindsey",
+        "title": "Principal",
+        "phone": "205-932-3161"
+      }
+    ]
   },
   {
     "id": 172,
@@ -7646,7 +9413,17 @@
       "Buhl Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Buhl Elementary School",
+        "fullName": "Vanessa Trull Clay",
+        "firstName": "Vanessa",
+        "lastName": "Trull Clay",
+        "title": "Principal",
+        "phone": "205-342-2640"
+      }
+    ]
   },
   {
     "id": 173,
@@ -7680,7 +9457,8 @@
       "Big Sandy Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 174,
@@ -7714,7 +9492,17 @@
       "Winfield Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Winfield Elementary School",
+        "fullName": "Kallie Garner Woodley",
+        "firstName": "Kallie",
+        "lastName": "Garner Woodley",
+        "title": "Principal",
+        "phone": "205-948-6784"
+      }
+    ]
   },
   {
     "id": 175,
@@ -7748,7 +9536,17 @@
       "Myrtlewood Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Myrtlewood Elementary School",
+        "fullName": "LaQuita R Coleman",
+        "firstName": "LaQuita",
+        "lastName": "R Coleman",
+        "title": "Principal",
+        "phone": "205-342-2658"
+      }
+    ]
   },
   {
     "id": 176,
@@ -7782,7 +9580,17 @@
       "Gordo Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Gordo Elementary School",
+        "fullName": "Tracy Tolstick",
+        "firstName": "Tracy",
+        "lastName": "Tolstick",
+        "title": "Principal",
+        "phone": "205-364-8480"
+      }
+    ]
   },
   {
     "id": 177,
@@ -7816,7 +9624,17 @@
       "Haleyville Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Haleyville Elementary School",
+        "fullName": "Tammy Hatton",
+        "firstName": "Tammy",
+        "lastName": "Hatton",
+        "title": "Principal",
+        "phone": "205-486-3405"
+      }
+    ]
   },
   {
     "id": 178,
@@ -7850,7 +9668,17 @@
       "Moundville Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Moundville Elementary School",
+        "fullName": "Jonathan N Posey",
+        "firstName": "Jonathan",
+        "lastName": "N Posey",
+        "title": "Principal",
+        "phone": "205-371-2679"
+      }
+    ]
   },
   {
     "id": 179,
@@ -7884,7 +9712,17 @@
       "Guin Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Guin Elementary School",
+        "fullName": "Dustin Neal Silas",
+        "firstName": "Dustin",
+        "lastName": "Neal Silas",
+        "title": "Principal",
+        "phone": "205-468-3433"
+      }
+    ]
   },
   {
     "id": 180,
@@ -7922,7 +9760,33 @@
       "Sulligent School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "South Lamar School",
+        "fullName": "Joshua A. Harper",
+        "firstName": "Joshua",
+        "lastName": "A. Harper",
+        "title": "Principal",
+        "phone": "205-662-4411"
+      },
+      {
+        "schoolName": "Vernon Elementary School",
+        "fullName": "Tracey S. Walker",
+        "firstName": "Tracey",
+        "lastName": "S. Walker",
+        "title": "Principal",
+        "phone": "205-695-9728"
+      },
+      {
+        "schoolName": "Sulligent School",
+        "fullName": "Tommy Clayton Chism",
+        "firstName": "Tommy",
+        "lastName": "Clayton Chism",
+        "title": "Principal",
+        "phone": "205-698-9254"
+      }
+    ]
   },
   {
     "id": 181,
@@ -7956,7 +9820,17 @@
       "Reform Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Reform Elementary School",
+        "fullName": "Linda Faye Jones",
+        "firstName": "Linda",
+        "lastName": "Faye Jones",
+        "title": "Principal",
+        "phone": "205-375-6351"
+      }
+    ]
   },
   {
     "id": 182,
@@ -7990,7 +9864,17 @@
       "Phillips Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Phillips Elementary School",
+        "fullName": "Tina Coan",
+        "firstName": "Tina",
+        "lastName": "Coan",
+        "title": "Principal",
+        "phone": "205-486-5062"
+      }
+    ]
   },
   {
     "id": 183,
@@ -8031,7 +9915,49 @@
       "Red Bay High School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Phil Campbell Elementary School",
+        "fullName": "Lea Dawn Rogers",
+        "firstName": "Lea",
+        "lastName": "Dawn Rogers",
+        "title": "Principal",
+        "phone": "256-331-2170"
+      },
+      {
+        "schoolName": "Tharptown Elementary School",
+        "fullName": "Talia Brooke Harris",
+        "firstName": "Talia",
+        "lastName": "Brooke Harris",
+        "title": "Principal",
+        "phone": "256-332-3404"
+      },
+      {
+        "schoolName": "Belgreen High School",
+        "fullName": "Megean Hancock Berryman",
+        "firstName": "Megean",
+        "lastName": "Hancock Berryman",
+        "title": "Principal",
+        "phone": "256-332-1376"
+      },
+      {
+        "schoolName": "Vina High School",
+        "fullName": "Teddy Humphres",
+        "firstName": "Teddy",
+        "lastName": "Humphres",
+        "title": "Principal",
+        "phone": "256-331-2260"
+      },
+      {
+        "schoolName": "Red Bay High School",
+        "fullName": "Malcolm Brady Ramey",
+        "firstName": "Malcolm",
+        "lastName": "Brady Ramey",
+        "title": "Principal",
+        "phone": "256-331-2270"
+      }
+    ]
   },
   {
     "id": 184,
@@ -8065,7 +9991,17 @@
       "Hackleburg Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Hackleburg Elementary School",
+        "fullName": "Mary Kennedy",
+        "firstName": "Mary",
+        "lastName": "Kennedy",
+        "title": "Principal",
+        "phone": "205-935-5156"
+      }
+    ]
   },
   {
     "id": 185,
@@ -8101,7 +10037,8 @@
       "Pickens County Community Action OSR Head Start"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 186,
@@ -8135,7 +10072,17 @@
       "Hamilton Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Hamilton Elementary School",
+        "fullName": "Gary Wade McCarley",
+        "firstName": "Gary",
+        "lastName": "Wade McCarley",
+        "title": "Principal",
+        "phone": "205-921-2145"
+      }
+    ]
   },
   {
     "id": 187,
@@ -8172,7 +10119,17 @@
       "Robert C. Hatch High School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Francis Marion School",
+        "fullName": "Demetrice Jackson",
+        "firstName": "Demetrice",
+        "lastName": "Jackson",
+        "title": "Principal",
+        "phone": "334-683-6791"
+      }
+    ]
   },
   {
     "id": 188,
@@ -8206,7 +10163,17 @@
       "Greensboro Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Greensboro Elementary School",
+        "fullName": "Stephanie Brown Richey",
+        "firstName": "Stephanie",
+        "lastName": "Brown Richey",
+        "title": "Principal",
+        "phone": "334-624-8611"
+      }
+    ]
   },
   {
     "id": 189,
@@ -8240,7 +10207,8 @@
       "Breakthrough Charter School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 190,
@@ -8278,7 +10246,33 @@
       "Salem Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Valley Grande Elementary School",
+        "fullName": "Adrienne Lee",
+        "firstName": "Adrienne",
+        "lastName": "Lee",
+        "title": "Principal",
+        "phone": "334-872-7661"
+      },
+      {
+        "schoolName": "Brantley Elementary School",
+        "fullName": "John Brandon Solomon",
+        "firstName": "John",
+        "lastName": "Brandon Solomon",
+        "title": "Principal",
+        "phone": "334-874-8185"
+      },
+      {
+        "schoolName": "Salem Elementary School",
+        "fullName": "Chinita Yvonne Irby",
+        "firstName": "Chinita",
+        "lastName": "Yvonne Irby",
+        "title": "Principal",
+        "phone": "334-996-8636"
+      }
+    ]
   },
   {
     "id": 191,
@@ -8314,7 +10308,8 @@
       "Greene County OSR Head Start"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 192,
@@ -8348,7 +10343,17 @@
       "Eutaw Primary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Eutaw Primary School",
+        "fullName": "Brittany Danielle Harris",
+        "firstName": "Brittany",
+        "lastName": "Danielle Harris",
+        "title": "Principal",
+        "phone": "205-372-1051"
+      }
+    ]
   },
   {
     "id": 193,
@@ -8386,7 +10391,8 @@
       "Meadowview Strong Start "
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 194,
@@ -8420,7 +10426,17 @@
       "Westside Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Westside Elementary School",
+        "fullName": "Brandi Smith",
+        "firstName": "Brandi",
+        "lastName": "Smith",
+        "title": "Principal",
+        "phone": "334-289-0377"
+      }
+    ]
   },
   {
     "id": 195,
@@ -8454,7 +10470,8 @@
       "RCS Early Childhood Center"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 196,
@@ -8497,7 +10514,8 @@
       "Woodley Road OSR Head Start"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 197,
@@ -8567,7 +10585,89 @@
       }
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Highland Gardens Elementary School",
+        "fullName": "Quantina M. Sides",
+        "firstName": "Quantina",
+        "lastName": "M. Sides",
+        "title": "Principal",
+        "phone": "334-269-3685"
+      },
+      {
+        "schoolName": "Highland Avenue Elementary School",
+        "fullName": "Takashi H Muhammad",
+        "firstName": "Takashi",
+        "lastName": "H Muhammad",
+        "title": "Principal",
+        "phone": "334-269-3690"
+      },
+      {
+        "schoolName": "Carver Elementary School",
+        "fullName": "Angela Kornegay Sampson",
+        "firstName": "Angela",
+        "lastName": "Kornegay Sampson",
+        "title": "Principal",
+        "phone": "334-851-4855"
+      },
+      {
+        "schoolName": "Wares Ferry Elementary School",
+        "fullName": "Tamara Deniece Nelson",
+        "firstName": "Tamara",
+        "lastName": "Deniece Nelson",
+        "title": "Principal",
+        "phone": "334-851-4913"
+      },
+      {
+        "schoolName": "Dannelly Elementary School",
+        "fullName": "Aundria Latrice Sewell",
+        "firstName": "Aundria",
+        "lastName": "Latrice Sewell",
+        "title": "Principal",
+        "phone": "334-269-3657"
+      },
+      {
+        "schoolName": "Southlawn Elementary School",
+        "fullName": "Tamara H. Winston",
+        "firstName": "Tamara",
+        "lastName": "H. Winston",
+        "title": "Principal",
+        "phone": "334-284-8028"
+      },
+      {
+        "schoolName": "Halcyon Elementary School",
+        "fullName": "Shannon Schmidt",
+        "firstName": "Shannon",
+        "lastName": "Schmidt",
+        "title": "Principal",
+        "phone": "334-851-4881"
+      },
+      {
+        "schoolName": "Brewbaker Primary School",
+        "fullName": "Tiffany McCoy Scissum",
+        "firstName": "Tiffany",
+        "lastName": "McCoy Scissum",
+        "title": "Principal",
+        "phone": "334-284-8005"
+      },
+      {
+        "schoolName": "Crump Elementary School",
+        "fullName": "William R Shaw",
+        "firstName": "William",
+        "lastName": "R Shaw",
+        "title": "Principal",
+        "phone": "334-284-8020"
+      },
+      {
+        "schoolName": "Pintlala Elementary School",
+        "fullName": "Jasmine Andrews Deese",
+        "firstName": "Jasmine",
+        "lastName": "Andrews Deese",
+        "title": "Principal",
+        "phone": "334-288-9523"
+      }
+    ]
   },
   {
     "id": 198,
@@ -8605,7 +10705,8 @@
       "Fort Deposit OSR Head Start"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 199,
@@ -8639,7 +10740,8 @@
       "LEAD Academy"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 200,
@@ -8673,7 +10775,17 @@
       "Reeltown Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Reeltown Elementary School",
+        "fullName": "Kathryn Conradson",
+        "firstName": "Kathryn",
+        "lastName": "Conradson",
+        "title": "Principal",
+        "phone": "334-454-8134"
+      }
+    ]
   },
   {
     "id": 201,
@@ -8707,7 +10819,17 @@
       "Tallassee Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Tallassee Elementary School",
+        "fullName": "Shanikka Beacher",
+        "firstName": "Shanikka",
+        "lastName": "Beacher",
+        "title": "Principal",
+        "phone": "334-283-5001"
+      }
+    ]
   },
   {
     "id": 202,
@@ -8744,7 +10866,25 @@
       "Fairfax Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Lafayette Eastside Elementary School",
+        "fullName": "Wendy Renisa Johnson",
+        "firstName": "Wendy",
+        "lastName": "Renisa Johnson",
+        "title": "Principal",
+        "phone": "334-864-8274"
+      },
+      {
+        "schoolName": "Fairfax Elementary School",
+        "fullName": "Lauren Mitchum Dabbs",
+        "firstName": "Lauren",
+        "lastName": "Mitchum Dabbs",
+        "title": "Principal",
+        "phone": "334-756-2966"
+      }
+    ]
   },
   {
     "id": 203,
@@ -8786,7 +10926,25 @@
       "South Smiths Station Elementary School (closing for 2026-27)"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Loachapoka Elementary School",
+        "fullName": "Carmen Anderson",
+        "firstName": "Carmen",
+        "lastName": "Anderson",
+        "title": "Principal",
+        "phone": "334-705-6031"
+      },
+      {
+        "schoolName": "Beulah Elementary School",
+        "fullName": "Arthur Dewayne Caffey",
+        "firstName": "Arthur",
+        "lastName": "Dewayne Caffey",
+        "title": "Principal",
+        "phone": "334-705-6021"
+      }
+    ]
   },
   {
     "id": 204,
@@ -8820,7 +10978,17 @@
       "Notasulga High School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Notasulga High School",
+        "fullName": "Christopher Hames",
+        "firstName": "Christopher",
+        "lastName": "Hames",
+        "title": "Principal",
+        "phone": "334-724-1240"
+      }
+    ]
   },
   {
     "id": 205,
@@ -8858,7 +11026,8 @@
       "Benson Avenue OSR Head Start Center"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 206,
@@ -8892,7 +11061,17 @@
       "Knight Enloe Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Knight Enloe Elementary School",
+        "fullName": "Elisha Nicole Williams",
+        "firstName": "Elisha",
+        "lastName": "Nicole Williams",
+        "title": "Principal",
+        "phone": "334-539-5261"
+      }
+    ]
   },
   {
     "id": 207,
@@ -8926,7 +11105,8 @@
       "Opelika City School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 208,
@@ -8960,7 +11140,8 @@
       "Rock Mills Jr. High School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 209,
@@ -8994,7 +11175,17 @@
       "George Washington Carver Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "George Washington Carver Elementary School",
+        "fullName": "Norman Jeffery Williams",
+        "firstName": "Norman",
+        "lastName": "Jeffery Williams",
+        "title": "Principal",
+        "phone": "334-727-2700"
+      }
+    ]
   },
   {
     "id": 210,
@@ -9031,7 +11222,17 @@
       "Bob Harding Shawmut Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Huguley Elementary School",
+        "fullName": "Philip Ray Jenkins",
+        "firstName": "Philip",
+        "lastName": "Ray Jenkins",
+        "title": "Principal",
+        "phone": "334-576-2572"
+      }
+    ]
   },
   {
     "id": 211,
@@ -9065,7 +11266,8 @@
       "Deborah Cannon Wolfe Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 212,
@@ -9099,7 +11301,8 @@
       "W. O. Lance Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 213,
@@ -9133,7 +11336,17 @@
       "Woodland Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Woodland Elementary School",
+        "fullName": "Debbie Ann McCauley",
+        "firstName": "Debbie",
+        "lastName": "Ann McCauley",
+        "title": "Principal",
+        "phone": "256-449-6108"
+      }
+    ]
   },
   {
     "id": 214,
@@ -9171,7 +11384,8 @@
       "Wilson Elementary MCAC Head Start"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 215,
@@ -9205,7 +11419,17 @@
       "Pike Road Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Pike Road Elementary School",
+        "fullName": "Cyndal L Whiten",
+        "firstName": "Cyndal",
+        "lastName": "L Whiten",
+        "title": "Principal",
+        "phone": "334-420-5310"
+      }
+    ]
   },
   {
     "id": 216,
@@ -9239,7 +11463,17 @@
       "Blount Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Blount Elementary School",
+        "fullName": "Tiffany Alia Moore Adams",
+        "firstName": "Tiffany",
+        "lastName": "Alia Moore Adams",
+        "title": "Principal",
+        "phone": "334-851-4918"
+      }
+    ]
   },
   {
     "id": 217,
@@ -9278,7 +11512,25 @@
       "Mt. Olive Primary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Dixie Elementary School",
+        "fullName": "Derrick Louis Lane",
+        "firstName": "Derrick",
+        "lastName": "Louis Lane",
+        "title": "Principal",
+        "phone": "334-468-5323"
+      },
+      {
+        "schoolName": "Ladonia Elementary School",
+        "fullName": "Sherry Kerr Huckaby",
+        "firstName": "Sherry",
+        "lastName": "Kerr Huckaby",
+        "title": "Principal",
+        "phone": "334-448-5805"
+      }
+    ]
   },
   {
     "id": 218,
@@ -9312,7 +11564,17 @@
       "Ranburne Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Ranburne Elementary School",
+        "fullName": "Jamie Lynn Smith",
+        "firstName": "Jamie",
+        "lastName": "Lynn Smith",
+        "title": "Principal",
+        "phone": "256-568-9722"
+      }
+    ]
   },
   {
     "id": 219,
@@ -9350,7 +11612,8 @@
       "Greenville OSR Head Start"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 220,
@@ -9387,7 +11650,8 @@
       "Phenix City Early Learning Center"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 221,
@@ -9423,7 +11687,8 @@
       "Higginbotham ESP OSR Head Start"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 222,
@@ -9461,7 +11726,25 @@
       "Brantley High School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Luverne High School",
+        "fullName": "Clifton Pace",
+        "firstName": "Clifton",
+        "lastName": "Pace",
+        "title": "Principal",
+        "phone": "334-335-3331"
+      },
+      {
+        "schoolName": "Brantley High School",
+        "fullName": "Kris M Odom",
+        "firstName": "Kris",
+        "lastName": "M Odom",
+        "title": "Principal",
+        "phone": "334-527-8879"
+      }
+    ]
   },
   {
     "id": 223,
@@ -9495,7 +11778,17 @@
       "Troy Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Troy Elementary School",
+        "fullName": "Kristi Lynn Lewis",
+        "firstName": "Kristi",
+        "lastName": "Lynn Lewis",
+        "title": "Principal",
+        "phone": "334-566-1444"
+      }
+    ]
   },
   {
     "id": 224,
@@ -9529,7 +11822,8 @@
       "Banks Primary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 225,
@@ -9563,7 +11857,8 @@
       "Nelson Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 226,
@@ -9597,7 +11892,8 @@
       "West Madison Pre-K Center"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 227,
@@ -9637,7 +11933,49 @@
       "Sugar Creek Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Tanner Elementary School",
+        "fullName": "Kandye Hillis Jones",
+        "firstName": "Kandye",
+        "lastName": "Hillis Jones",
+        "title": "Principal",
+        "phone": "256-998-5266"
+      },
+      {
+        "schoolName": "Johnson Elementary School",
+        "fullName": "Rikki Taye Wise",
+        "firstName": "Rikki",
+        "lastName": "Taye Wise",
+        "title": "Principal",
+        "phone": "256-233-6665"
+      },
+      {
+        "schoolName": "Blue Springs Elementary School",
+        "fullName": "Charles Jacob Hammond",
+        "firstName": "Charles",
+        "lastName": "Jacob Hammond",
+        "title": "Principal",
+        "phone": "256-729-4092"
+      },
+      {
+        "schoolName": "Elkmont Elementary School",
+        "fullName": "Robert Lee Francis",
+        "firstName": "Robert",
+        "lastName": "Lee Francis",
+        "title": "Principal",
+        "phone": "256-732-4291"
+      },
+      {
+        "schoolName": "Sugar Creek Elementary School",
+        "fullName": "Cleo B Miller",
+        "firstName": "Cleo",
+        "lastName": "B Miller",
+        "title": "Principal",
+        "phone": "256-233-6669"
+      }
+    ]
   },
   {
     "id": 228,
@@ -9676,7 +12014,33 @@
       "Cowart Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Brookhill Elementary School",
+        "fullName": "Crystal McNeal",
+        "firstName": "Crystal",
+        "lastName": "McNeal",
+        "title": "Principal",
+        "phone": "256-233-6603"
+      },
+      {
+        "schoolName": "Julian Newman Elementary School",
+        "fullName": "Sharla Lynn Birdsong",
+        "firstName": "Sharla",
+        "lastName": "Lynn Birdsong",
+        "title": "Principal",
+        "phone": "256-233-6630"
+      },
+      {
+        "schoolName": "Athens Elementary School",
+        "fullName": "Amanda Tedford",
+        "firstName": "Amanda",
+        "lastName": "Tedford",
+        "title": "Principal",
+        "phone": "256-233-6609"
+      }
+    ]
   },
   {
     "id": 229,
@@ -9710,7 +12074,17 @@
       "Cedar Hill Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Cedar Hill Elementary School",
+        "fullName": "Nona Mae Adams",
+        "firstName": "Nona",
+        "lastName": "Mae Adams",
+        "title": "Principal",
+        "phone": "256-423-5950"
+      }
+    ]
   },
   {
     "id": 230,
@@ -9744,7 +12118,8 @@
       "Fort Payne Pre-K Center"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 231,
@@ -9787,7 +12162,49 @@
       "Waterloo High School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Lexington Elementary School",
+        "fullName": "Michael Glenn Cole",
+        "firstName": "Michael",
+        "lastName": "Glenn Cole",
+        "title": "Principal",
+        "phone": "256-229-6622"
+      },
+      {
+        "schoolName": "Brooks Elementary School",
+        "fullName": "Lakesha Bowens",
+        "firstName": "Lakesha",
+        "lastName": "Bowens",
+        "title": "Principal",
+        "phone": "256-757-2171"
+      },
+      {
+        "schoolName": "Rogers Elementary School",
+        "fullName": "Sherri P Matthews",
+        "firstName": "Sherri",
+        "lastName": "P Matthews",
+        "title": "Principal",
+        "phone": "256-757-3106"
+      },
+      {
+        "schoolName": "Underwood Elementary School",
+        "fullName": "Larry Bradford Chaney",
+        "firstName": "Larry",
+        "lastName": "Bradford Chaney",
+        "title": "Principal",
+        "phone": "256-764-8939"
+      },
+      {
+        "schoolName": "Waterloo High School",
+        "fullName": "Timothy Russell McFall",
+        "firstName": "Timothy",
+        "lastName": "Russell McFall",
+        "title": "Principal",
+        "phone": "256-766-3100"
+      }
+    ]
   },
   {
     "id": 232,
@@ -9826,7 +12243,33 @@
       "New Bethel Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Leighton Elementary School",
+        "fullName": "Vickie Kay Osborn",
+        "firstName": "Vickie",
+        "lastName": "Kay Osborn",
+        "title": "Principal",
+        "phone": "256-446-8351"
+      },
+      {
+        "schoolName": "Colbert Heights Elementary School",
+        "fullName": "Brandon Archer",
+        "firstName": "Brandon",
+        "lastName": "Archer",
+        "title": "Principal",
+        "phone": "256-381-6132"
+      },
+      {
+        "schoolName": "New Bethel Elementary School",
+        "fullName": "Jacob Thomas Walker",
+        "firstName": "Jacob",
+        "lastName": "Thomas Walker",
+        "title": "Principal",
+        "phone": "256-383-6471"
+      }
+    ]
   },
   {
     "id": 233,
@@ -9864,7 +12307,33 @@
       "Marengo High School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Amelia L. Johnson High School",
+        "fullName": "Shemia Jackson Wilson",
+        "firstName": "Shemia",
+        "lastName": "Jackson Wilson",
+        "title": "Principal",
+        "phone": "334-627-3364"
+      },
+      {
+        "schoolName": "Sweet Water High School",
+        "fullName": "Tisha Lewis",
+        "firstName": "Tisha",
+        "lastName": "Lewis",
+        "title": "Principal",
+        "phone": "334-994-4263"
+      },
+      {
+        "schoolName": "Marengo High School",
+        "fullName": "Betina Jones Johnson",
+        "firstName": "Betina",
+        "lastName": "Jones Johnson",
+        "title": "Principal",
+        "phone": "334-992-2395"
+      }
+    ]
   },
   {
     "id": 234,
@@ -9898,7 +12367,8 @@
       "ABC Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 235,
@@ -9932,7 +12402,17 @@
       "Linden Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Linden Elementary School",
+        "fullName": "Antwuan Motley",
+        "firstName": "Antwuan",
+        "lastName": "Motley",
+        "title": "Principal",
+        "phone": "334-295-5860"
+      }
+    ]
   },
   {
     "id": 236,
@@ -9969,7 +12449,8 @@
       "York West End Jr. High School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 237,
@@ -10003,7 +12484,8 @@
       "University Charter School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 238,
@@ -10037,7 +12519,8 @@
       "J. E. Hobbs Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 239,
@@ -10071,7 +12554,8 @@
       "F. S. Ervin Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 240,
@@ -10105,7 +12589,17 @@
       "Monroe Intermediate School "
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Monroe Intermediate School",
+        "fullName": "Ramona Renita Lewis",
+        "firstName": "Ramona",
+        "lastName": "Renita Lewis",
+        "title": "Principal",
+        "phone": "334-636-2032"
+      }
+    ]
   },
   {
     "id": 241,
@@ -10139,7 +12633,17 @@
       "Thomasville Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Thomasville Elementary School",
+        "fullName": "Melisa Washington",
+        "firstName": "Melisa",
+        "lastName": "Washington",
+        "title": "Principal",
+        "phone": "334-636-0063"
+      }
+    ]
   },
   {
     "id": 242,
@@ -10173,7 +12677,8 @@
       "Choctaw County Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 243,
@@ -10207,7 +12712,8 @@
       "J. F. Shields High School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 244,
@@ -10245,7 +12751,25 @@
       "McKenzie High School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Georgiana School",
+        "fullName": "Deedra McNaughton Benson",
+        "firstName": "Deedra",
+        "lastName": "McNaughton Benson",
+        "title": "Principal",
+        "phone": "334-376-9130"
+      },
+      {
+        "schoolName": "McKenzie High School",
+        "fullName": "Michael Scott Collins",
+        "firstName": "Michael",
+        "lastName": "Scott Collins",
+        "title": "Principal",
+        "phone": "334-374-2711"
+      }
+    ]
   },
   {
     "id": 245,
@@ -10279,7 +12803,8 @@
       "Muscle Shoals Early Learning Center"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 246,
@@ -10313,7 +12838,8 @@
       "G. W. Trenholm Primary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 247,
@@ -10347,7 +12873,8 @@
       "Threadgill Primary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 248,
@@ -10381,7 +12908,8 @@
       "W. C. Handy Early Childhood Development Center"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 249,
@@ -10415,7 +12943,8 @@
       "UNA Kilby Child Development Center"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 250,
@@ -10451,7 +12980,8 @@
       "Lauderdale County CAPNA OSR Head Start"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 251,
@@ -10485,7 +13015,17 @@
       "Southern Choctaw Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Southern Choctaw Elementary School",
+        "fullName": "Dalton Redale Holyfield",
+        "firstName": "Dalton",
+        "lastName": "Redale Holyfield",
+        "title": "Principal",
+        "phone": "251-206-6922"
+      }
+    ]
   },
   {
     "id": 252,
@@ -10519,7 +13059,17 @@
       "Grove Hill Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Grove Hill Elementary School",
+        "fullName": "Niquitha Jones Merida",
+        "firstName": "Niquitha",
+        "lastName": "Jones Merida",
+        "title": "Principal",
+        "phone": "251-250-2150"
+      }
+    ]
   },
   {
     "id": 253,
@@ -10553,7 +13103,17 @@
       "Millry High School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Millry High School",
+        "fullName": "Lance Dowry Bolen",
+        "firstName": "Lance",
+        "lastName": "Dowry Bolen",
+        "title": "Principal",
+        "phone": "251-846-2987"
+      }
+    ]
   },
   {
     "id": 254,
@@ -10587,7 +13147,8 @@
       "Gillmore Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 255,
@@ -10623,7 +13184,8 @@
       "GRECS ELC Jackson Head Start"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 256,
@@ -10657,7 +13219,17 @@
       "Leroy High School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Leroy High School",
+        "fullName": "Gerald Pace",
+        "firstName": "Gerald",
+        "lastName": "Pace",
+        "title": "Principal",
+        "phone": "251-246-2000"
+      }
+    ]
   },
   {
     "id": 257,
@@ -10691,7 +13263,17 @@
       "Monroeville Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Monroeville Elementary School",
+        "fullName": "Bridgett S Hollinger",
+        "firstName": "Bridgett",
+        "lastName": "S Hollinger",
+        "title": "Principal",
+        "phone": "251-743-3474"
+      }
+    ]
   },
   {
     "id": 258,
@@ -10725,7 +13307,17 @@
       "Chatom Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Chatom Elementary School",
+        "fullName": "Benjamin E. Jones",
+        "firstName": "Benjamin",
+        "lastName": "E. Jones",
+        "title": "Principal",
+        "phone": "251-847-2946"
+      }
+    ]
   },
   {
     "id": 259,
@@ -10759,7 +13351,8 @@
       "Excel School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 260,
@@ -10793,7 +13386,17 @@
       "Fruitdale High School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Fruitdale High School",
+        "fullName": "William C. Stagner",
+        "firstName": "William",
+        "lastName": "C. Stagner",
+        "title": "Principal",
+        "phone": "251-827-6655"
+      }
+    ]
   },
   {
     "id": 261,
@@ -10827,7 +13430,8 @@
       "Conecuh County Schools Early Learning Program"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 262,
@@ -10861,7 +13465,8 @@
       "Red Level Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 263,
@@ -10895,7 +13500,17 @@
       "Straughn Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Straughn Elementary School",
+        "fullName": "Daniel Ray Rodgers",
+        "firstName": "Daniel",
+        "lastName": "Ray Rodgers",
+        "title": "Principal",
+        "phone": "334-427-1311"
+      }
+    ]
   },
   {
     "id": 264,
@@ -10929,7 +13544,17 @@
       "Cherokee Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Cherokee Elementary School",
+        "fullName": "Heather M Johnson",
+        "firstName": "Heather",
+        "lastName": "M Johnson",
+        "title": "Principal",
+        "phone": "256-359-6422"
+      }
+    ]
   },
   {
     "id": 265,
@@ -10963,7 +13588,17 @@
       "McIntosh Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "McIntosh Elementary School",
+        "fullName": "Ebony Shenese Johnson",
+        "firstName": "Ebony",
+        "lastName": "Shenese Johnson",
+        "title": "Principal",
+        "phone": "251-944-2481"
+      }
+    ]
   },
   {
     "id": 266,
@@ -10997,7 +13632,8 @@
       "J. U. Blacksher High School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 267,
@@ -11031,7 +13667,8 @@
       "Andalusia Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 268,
@@ -11071,7 +13708,8 @@
       "Florala SEARP&DC OSR Head Start"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 269,
@@ -11105,7 +13743,17 @@
       "Pleasant Home School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Pleasant Home School",
+        "fullName": "Barry Stanford Wood",
+        "firstName": "Barry",
+        "lastName": "Stanford Wood",
+        "title": "Principal",
+        "phone": "334-222-1315"
+      }
+    ]
   },
   {
     "id": 270,
@@ -11142,7 +13790,25 @@
       "Pike County Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Goshen Elementary School",
+        "fullName": "Kristina Gabrielle Griffin",
+        "firstName": "Kristina",
+        "lastName": "Gabrielle Griffin",
+        "title": "Principal",
+        "phone": "334-566-1851"
+      },
+      {
+        "schoolName": "Pike County Elementary School",
+        "fullName": "Rochelle Victoria Duebelt McKenney",
+        "firstName": "Rochelle",
+        "lastName": "Victoria Duebelt McKenney",
+        "title": "Principal",
+        "phone": "334-735-2683"
+      }
+    ]
   },
   {
     "id": 271,
@@ -11176,7 +13842,8 @@
       "Zion Chapel School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 272,
@@ -11210,7 +13877,17 @@
       "Elba Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Elba Elementary School",
+        "fullName": "Kenya Hammond Martin",
+        "firstName": "Kenya",
+        "lastName": "Hammond Martin",
+        "title": "Principal",
+        "phone": "334-897-2814"
+      }
+    ]
   },
   {
     "id": 273,
@@ -11244,7 +13921,8 @@
       "Fleeta Jr. High School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 274,
@@ -11278,7 +13956,8 @@
       "Barbour County Primary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 275,
@@ -11312,7 +13991,17 @@
       "Ariton School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Ariton School",
+        "fullName": "Joshua Dean Herring",
+        "firstName": "Joshua",
+        "lastName": "Dean Herring",
+        "title": "Principal",
+        "phone": "334-762-2371"
+      }
+    ]
   },
   {
     "id": 276,
@@ -11346,7 +14035,8 @@
       "George W. Long Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 277,
@@ -11380,7 +14070,8 @@
       "Lisenby Primary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 278,
@@ -11414,7 +14105,17 @@
       "Abbeville Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Abbeville Elementary School",
+        "fullName": "Tameka Maria Hicks",
+        "firstName": "Tameka",
+        "lastName": "Maria Hicks",
+        "title": "Principal",
+        "phone": "334-585-3679"
+      }
+    ]
   },
   {
     "id": 279,
@@ -11448,7 +14149,17 @@
       "New Brockton Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "New Brockton Elementary School",
+        "fullName": "Emily Herbert",
+        "firstName": "Emily",
+        "lastName": "Herbert",
+        "title": "Principal",
+        "phone": "334-894-6152"
+      }
+    ]
   },
   {
     "id": 280,
@@ -11482,7 +14193,17 @@
       "Newton Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Newton Elementary School",
+        "fullName": "James E Andrews",
+        "firstName": "James",
+        "lastName": "E Andrews",
+        "title": "Principal",
+        "phone": "334-445-5564"
+      }
+    ]
   },
   {
     "id": 281,
@@ -11516,7 +14237,8 @@
       "A. M. Windham Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 282,
@@ -11552,7 +14274,8 @@
       "Enterprise OSR Head Start"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 283,
@@ -11586,7 +14309,17 @@
       "Midland City Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Midland City Elementary School",
+        "fullName": "Jennifer Snellgrove",
+        "firstName": "Jennifer",
+        "lastName": "Snellgrove",
+        "title": "Principal",
+        "phone": "334-983-4591"
+      }
+    ]
   },
   {
     "id": 284,
@@ -11620,7 +14353,8 @@
       "Brookwood Elementary School Enterprise (closing for 26-27)"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 285,
@@ -11654,7 +14388,17 @@
       "Headland Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Headland Elementary School",
+        "fullName": "Carmen Cogan Neiswanger",
+        "firstName": "Carmen",
+        "lastName": "Cogan Neiswanger",
+        "title": "Principal",
+        "phone": "334-585-7080"
+      }
+    ]
   },
   {
     "id": 286,
@@ -11694,7 +14438,49 @@
       "Cottonwood Elementary School "
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Wicksburg Elementary School",
+        "fullName": "Richard Paul Tisdale",
+        "firstName": "Richard",
+        "lastName": "Paul Tisdale",
+        "title": "Principal",
+        "phone": "334-692-5549"
+      },
+      {
+        "schoolName": "Webb Elementary School",
+        "fullName": "Reygan Woodall",
+        "firstName": "Reygan",
+        "lastName": "Woodall",
+        "title": "Principal",
+        "phone": "334-792-5744"
+      },
+      {
+        "schoolName": "Rehobeth Elementary School",
+        "fullName": "Mary Freeman Hudson",
+        "firstName": "Mary",
+        "lastName": "Freeman Hudson",
+        "title": "Principal",
+        "phone": "334-677-3838"
+      },
+      {
+        "schoolName": "Ashford Elementary School",
+        "fullName": "Sharon LeRoy",
+        "firstName": "Sharon",
+        "lastName": "LeRoy",
+        "title": "Principal",
+        "phone": "334-726-5960"
+      },
+      {
+        "schoolName": "Cottonwood Elementary School",
+        "fullName": "Paul Wayne Strange",
+        "firstName": "Paul",
+        "lastName": "Wayne Strange",
+        "title": "Principal",
+        "phone": "334-691-2587"
+      }
+    ]
   },
   {
     "id": 287,
@@ -11731,7 +14517,25 @@
       "Dothan City Early Education Center"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Faine Elementary School",
+        "fullName": "Tina Marie Garst",
+        "firstName": "Tina",
+        "lastName": "Marie Garst",
+        "title": "Principal",
+        "phone": "334-794-1455"
+      },
+      {
+        "schoolName": "Dothan City Early Education Center",
+        "fullName": "Frances C Martin",
+        "firstName": "Frances",
+        "lastName": "C Martin",
+        "title": "Principal",
+        "phone": "334-794-1420"
+      }
+    ]
   },
   {
     "id": 288,
@@ -11765,7 +14569,17 @@
       "Opp Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Opp Elementary School",
+        "fullName": "Shawn Short",
+        "firstName": "Shawn",
+        "lastName": "Short",
+        "title": "Principal",
+        "phone": "334-493-6031"
+      }
+    ]
   },
   {
     "id": 289,
@@ -11799,7 +14613,17 @@
       "Kinston School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Kinston School",
+        "fullName": "Megan Piland Driggers",
+        "firstName": "Megan",
+        "lastName": "Piland Driggers",
+        "title": "Principal",
+        "phone": "334-565-3016"
+      }
+    ]
   },
   {
     "id": 290,
@@ -11833,7 +14657,17 @@
       "Geneva County Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Geneva County Elementary School",
+        "fullName": "Amanda Leigh Smith",
+        "firstName": "Amanda",
+        "lastName": "Leigh Smith",
+        "title": "Principal",
+        "phone": "334-588-2923"
+      }
+    ]
   },
   {
     "id": 291,
@@ -11867,7 +14701,17 @@
       "Slocomb Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Slocomb Elementary School",
+        "fullName": "Heather Mauldin Hatton",
+        "firstName": "Heather",
+        "lastName": "Mauldin Hatton",
+        "title": "Principal",
+        "phone": "334-886-2132"
+      }
+    ]
   },
   {
     "id": 292,
@@ -11901,7 +14745,17 @@
       "Samson Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Samson Elementary School",
+        "fullName": "Samanda Stafford",
+        "firstName": "Samanda",
+        "lastName": "Stafford",
+        "title": "Principal",
+        "phone": "334-898-7439"
+      }
+    ]
   },
   {
     "id": 293,
@@ -11935,7 +14789,8 @@
       "James A. Mulkey Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 294,
@@ -11969,7 +14824,8 @@
       "W. S. Harlan Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 295,
@@ -12003,7 +14859,8 @@
       "Brewton Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 296,
@@ -12042,7 +14899,17 @@
       "A. C. Moore Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Flomaton Elementary School",
+        "fullName": "Candace Lynn Hendricks",
+        "firstName": "Candace",
+        "lastName": "Lynn Hendricks",
+        "title": "Principal",
+        "phone": "251-296-3991"
+      }
+    ]
   },
   {
     "id": 297,
@@ -12124,7 +14991,65 @@
       }
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Perdido Elementary School",
+        "fullName": "Charlotte Parker",
+        "firstName": "Charlotte",
+        "lastName": "Parker",
+        "title": "Principal",
+        "phone": "251-937-8456"
+      },
+      {
+        "schoolName": "Pine Grove Elementary School",
+        "fullName": "Pamela Michele Moorer",
+        "firstName": "Pamela",
+        "lastName": "Michele Moorer",
+        "title": "Principal",
+        "phone": "251-937-0453"
+      },
+      {
+        "schoolName": "Loxley Elementary School",
+        "fullName": "Gina Elaine McClure",
+        "firstName": "Gina",
+        "lastName": "Elaine McClure",
+        "title": "Principal",
+        "phone": "251-964-5334"
+      },
+      {
+        "schoolName": "Robertsdale Elementary School",
+        "fullName": "Thomas William Duncan",
+        "firstName": "Thomas",
+        "lastName": "William Duncan",
+        "title": "Principal",
+        "phone": "251-947-4003"
+      },
+      {
+        "schoolName": "Rockwell Elementary School",
+        "fullName": "Robert D Owen",
+        "firstName": "Robert",
+        "lastName": "D Owen",
+        "title": "Principal",
+        "phone": "251-626-5528"
+      },
+      {
+        "schoolName": "Spanish Fort Elementary School",
+        "fullName": "Rachel Allison Guy",
+        "firstName": "Rachel",
+        "lastName": "Allison Guy",
+        "title": "Principal",
+        "phone": "251-626-9751"
+      },
+      {
+        "schoolName": "Magnolia School",
+        "fullName": "Pamela Jane Sute",
+        "firstName": "Pamela",
+        "lastName": "Jane Sute",
+        "title": "Principal",
+        "phone": "251-965-6200"
+      }
+    ]
   },
   {
     "id": 298,
@@ -12158,7 +15083,17 @@
       "Orange Beach Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Orange Beach Elementary School",
+        "fullName": "Mary Catherine Law",
+        "firstName": "Mary",
+        "lastName": "Catherine Law",
+        "title": "Principal",
+        "phone": "251-981-5662"
+      }
+    ]
   },
   {
     "id": 299,
@@ -12194,7 +15129,8 @@
       "GRECS ELC Fairhope Head Start"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 300,
@@ -12228,7 +15164,17 @@
       "Gulf Shores Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Gulf Shores Elementary School",
+        "fullName": "Anna Alicia Early",
+        "firstName": "Anna",
+        "lastName": "Alicia Early",
+        "title": "Principal",
+        "phone": "251-968-7375"
+      }
+    ]
   },
   {
     "id": 301,
@@ -12328,7 +15274,161 @@
       }
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Calcedeaver Elementary School",
+        "fullName": "George John Sullivan",
+        "firstName": "George",
+        "lastName": "John Sullivan",
+        "title": "Principal",
+        "phone": "251-221-1092"
+      },
+      {
+        "schoolName": "McDavid-Jones Elementary School",
+        "fullName": "Kristy Lynn Davis",
+        "firstName": "Kristy",
+        "lastName": "Lynn Davis",
+        "title": "Principal",
+        "phone": "251-221-1510"
+      },
+      {
+        "schoolName": "Whitley Elementary School",
+        "fullName": "JaaDaa Scruggs Holcombe",
+        "firstName": "JaaDaa",
+        "lastName": "Scruggs Holcombe",
+        "title": "Principal",
+        "phone": "251-221-1737"
+      },
+      {
+        "schoolName": "Florence Howard Elementary School",
+        "fullName": "Regina A. Flowers",
+        "firstName": "Regina",
+        "lastName": "A. Flowers",
+        "title": "Principal",
+        "phone": "251-221-1406"
+      },
+      {
+        "schoolName": "Collins-Rhodes Elementary School",
+        "fullName": "Claudia D Bishop",
+        "firstName": "Claudia",
+        "lastName": "D Bishop",
+        "title": "Principal",
+        "phone": "251-221-1226"
+      },
+      {
+        "schoolName": "Leinkauf Elementary School",
+        "fullName": "Hope Belle-Payne",
+        "firstName": "Hope",
+        "lastName": "Belle-Payne",
+        "title": "Principal",
+        "phone": "251-221-1495"
+      },
+      {
+        "schoolName": "Indian Springs Elementary School",
+        "fullName": "Jameson D Branch",
+        "firstName": "Jameson",
+        "lastName": "D Branch",
+        "title": "Principal",
+        "phone": "251-221-1436"
+      },
+      {
+        "schoolName": "George Hall Elementary School",
+        "fullName": "Tiffany Friday",
+        "firstName": "Tiffany",
+        "lastName": "Friday",
+        "title": "Principal",
+        "phone": "251-221-1345"
+      },
+      {
+        "schoolName": "Maryvale Elementary School",
+        "fullName": "Carla Sumpter Lewis",
+        "firstName": "Carla",
+        "lastName": "Sumpter Lewis",
+        "title": "Principal",
+        "phone": "251-221-1810"
+      },
+      {
+        "schoolName": "Spencer-Westlawn Elementary School",
+        "fullName": "Tivella Samantha Davis",
+        "firstName": "Tivella",
+        "lastName": "Samantha Davis",
+        "title": "Principal",
+        "phone": "251-221-1705"
+      },
+      {
+        "schoolName": "John Will Elementary School",
+        "fullName": "Deidre R Jefferson",
+        "firstName": "Deidre",
+        "lastName": "R Jefferson",
+        "title": "Principal",
+        "phone": "251-221-1750"
+      },
+      {
+        "schoolName": "Orchard Elementary School",
+        "fullName": "Beanner D Powe",
+        "firstName": "Beanner",
+        "lastName": "D Powe",
+        "title": "Principal",
+        "phone": "251-221-1571"
+      },
+      {
+        "schoolName": "Wilmer Elementary School",
+        "fullName": "Amy Warren Lassiter",
+        "firstName": "Amy",
+        "lastName": "Warren Lassiter",
+        "title": "Principal",
+        "phone": "251-221-1780"
+      },
+      {
+        "schoolName": "Allentown Elementary School",
+        "fullName": "Ashtiny Cleveland Roberts",
+        "firstName": "Ashtiny",
+        "lastName": "Cleveland Roberts",
+        "title": "Principal",
+        "phone": "251-221-1000"
+      },
+      {
+        "schoolName": "O'Rourke Elementary School",
+        "fullName": "Kim Rice",
+        "firstName": "Kim",
+        "lastName": "Rice",
+        "title": "Principal",
+        "phone": "251-221-1585"
+      },
+      {
+        "schoolName": "Elsie Collier Elementary School",
+        "fullName": "DeAnna Marie Stevens",
+        "firstName": "DeAnna",
+        "lastName": "Marie Stevens",
+        "title": "Principal",
+        "phone": "251-221-1120"
+      },
+      {
+        "schoolName": "Nan Gray Davis Elementary School",
+        "fullName": "Paul Journey Agnew",
+        "firstName": "Paul",
+        "lastName": "Journey Agnew",
+        "title": "Principal",
+        "phone": "251-221-1166"
+      },
+      {
+        "schoolName": "Hutchens Elementary School",
+        "fullName": "Brittney Ann Owen",
+        "firstName": "Brittney",
+        "lastName": "Ann Owen",
+        "title": "Principal",
+        "phone": "251-221-1420"
+      },
+      {
+        "schoolName": "Dixon Elementary School",
+        "fullName": "Michelle Renee McNew",
+        "firstName": "Michelle",
+        "lastName": "Renee McNew",
+        "title": "Principal",
+        "phone": "251-824-4314"
+      }
+    ]
   },
   {
     "id": 302,
@@ -12362,7 +15462,8 @@
       "Robert E. Lee Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 303,
@@ -12406,7 +15507,8 @@
       "Bayou La Batre MCA OSR Head Start"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 304,
@@ -12440,7 +15542,8 @@
       "Chickasaw Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": []
   },
   {
     "id": 305,
@@ -12474,7 +15577,17 @@
       "Tanner Williams Elementary School"
     ],
     "inSalesforce": false,
-    "sfContacts": []
+    "sfContacts": [],
+    "schoolPrincipalContacts": [
+      {
+        "schoolName": "Tanner Williams Elementary School",
+        "fullName": "Nancy Prine Lowell",
+        "firstName": "Nancy",
+        "lastName": "Prine Lowell",
+        "title": "Principal",
+        "phone": "251-221-1675"
+      }
+    ]
   },
   {
     "id": 306,
