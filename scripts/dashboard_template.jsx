@@ -633,6 +633,14 @@ export default function BrightwheelDashboard() {
   const [gisReady, setGisReady] = useState(false);
   const pendingDraftRef = useRef(null);
 
+  // ── SHARED DISTRICT NOTES ────────────────────────────────────────────────────
+  // Persisted per-district sticky notes stored in the activity sheet as
+  // type="district_note". Visible to anyone who opens the dashboard.
+  // { [districtId]: { text, updatedBy, updatedAt } }
+  const [districtNotes, setDistrictNotes] = useState({});
+  // Local edits buffered before save (keyed by districtId)
+  const [districtNoteEdits, setDistrictNoteEdits] = useState({});
+
   // Rep profile for the currently logged-in user — null if not signed in or unrecognized
   const currentRep = (gmailUser && REP_PROFILES[gmailUser]) || null;
 
@@ -697,13 +705,27 @@ export default function BrightwheelDashboard() {
       .catch(() => null)
       .then((log) => {
         if (!log || !Array.isArray(log.activities) || log.activities.length === 0) return;
+        // Split district notes from regular activities before merging
+        const fetchedNotes = {};
+        const regularActivities = [];
+        log.activities.forEach((a) => {
+          if (a.type === "district_note") {
+            const existing = fetchedNotes[a.districtId];
+            if (!existing || (a.loggedAt || "") > (existing.updatedAt || "")) {
+              fetchedNotes[a.districtId] = { text: a.notes || "", updatedBy: a.repEmail || "", updatedAt: a.loggedAt || "" };
+            }
+          } else {
+            regularActivities.push(a);
+          }
+        });
+        if (Object.keys(fetchedNotes).length > 0) setDistrictNotes(prev => ({ ...prev, ...fetchedNotes }));
         // Pre-populate synced IDs so browser sync doesn't re-log these
-        setSyncedMsgIds(new Set(log.activities.map((a) => a.gmailMsgId).filter(Boolean)));
+        setSyncedMsgIds(new Set(regularActivities.map((a) => a.gmailMsgId).filter(Boolean)));
         setLastSyncTime(log.lastSynced ? new Date(log.lastSynced).toLocaleTimeString() : null);
-        // Merge activities into district state (deduped by activity id or gmailMsgId)
+        // Merge regular activities into district state (deduped by activity id or gmailMsgId)
         setDistricts((prev) => {
           const updated = [...prev];
-          log.activities.forEach((activity) => {
+          regularActivities.forEach((activity) => {
             const idx = updated.findIndex((d) => d.id === activity.districtId);
             if (idx === -1) return;
             const d = updated[idx];
@@ -719,7 +741,7 @@ export default function BrightwheelDashboard() {
           });
           return updated;
         });
-        setActivityLog((prev) => [...log.activities, ...prev]);
+        setActivityLog((prev) => [...regularActivities, ...prev]);
       });
   }, []); // runs once on mount
 
@@ -1203,9 +1225,10 @@ export default function BrightwheelDashboard() {
       const byDistrict = {};
       const sheetMsgIds = new Set();
       const sheetGranolaIds = new Set();
-      // Track latest stage and mailer status from sheet rows
+      // Track latest stage, mailer status, and district notes from sheet rows
       const latestStage = {};
       const mailerSentMap = {};
+      const latestNotes = {};
 
       for (const row of rows.slice(1)) {
         const distId = parseInt(col(row, "district_id"));
@@ -1223,6 +1246,15 @@ export default function BrightwheelDashboard() {
         }
         // Mailer sent rows
         if (type === "mailer_sent") { mailerSentMap[distId] = true; continue; }
+        // Shared district notes — keep only the most recent per district
+        if (type === "district_note") {
+          const loggedAt = col(row, "logged_at");
+          const existing = latestNotes[distId];
+          if (!existing || loggedAt > existing.updatedAt) {
+            latestNotes[distId] = { text: col(row, "notes"), updatedBy: col(row, "rep_email"), updatedAt: loggedAt };
+          }
+          continue;
+        }
 
         if (dedupId) {
           if (src === "granola") sheetGranolaIds.add(dedupId);
@@ -1264,6 +1296,9 @@ export default function BrightwheelDashboard() {
       setSyncedGranolaIds(prev => new Set([...prev, ...sheetGranolaIds]));
       setSheetConnected(true);
       setSheetSyncing(false);
+      if (Object.keys(latestNotes).length > 0) {
+        setDistrictNotes(prev => ({ ...prev, ...latestNotes }));
+      }
       const total = Object.values(byDistrict).reduce((s, a) => s + a.length, 0);
       showNotif(`Shared log loaded — ${total} activit${total !== 1 ? "ies" : "y"} across team ✓`);
     } catch (e) {
@@ -1449,6 +1484,25 @@ export default function BrightwheelDashboard() {
       };
       writeToSheet([activityToRow(districtId, d.district, act)]);
     }
+  };
+
+  const saveDistrictNote = (district, text) => {
+    const act = {
+      id: Date.now(),
+      type: "district_note",
+      date: new Date().toISOString().split("T")[0],
+      notes: text,
+      source: "manual",
+      repEmail: gmailUser || "",
+      directorName: district.director,
+    };
+    setDistrictNotes(prev => ({
+      ...prev,
+      [district.id]: { text, updatedBy: gmailUser || "", updatedAt: new Date().toISOString() },
+    }));
+    setDistrictNoteEdits(prev => { const n = { ...prev }; delete n[district.id]; return n; });
+    writeToSheet([activityToRow(district.id, district.district, act)]);
+    showNotif("Note saved ✓");
   };
 
   const addActivity = (district) => {
@@ -3271,13 +3325,41 @@ export default function BrightwheelDashboard() {
                     </div>
                   )}
                   <div className="col-span-2">
-                    <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Notes</h3>
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Shared Notes</h3>
+                      {districtNotes[selectedDistrict.id]?.updatedBy && (
+                        <span className="text-xs text-gray-400">
+                          Last edited by {(districtNotes[selectedDistrict.id].updatedBy || "").split("@")[0]}
+                          {districtNotes[selectedDistrict.id].updatedAt
+                            ? " · " + new Date(districtNotes[selectedDistrict.id].updatedAt).toLocaleDateString()
+                            : ""}
+                        </span>
+                      )}
+                    </div>
                     <textarea
-                      value={selectedDistrict.notes}
-                      onChange={(e) => updateDistrict(selectedDistrict.id, { notes: e.target.value })}
-                      placeholder="Add notes about this district..."
+                      value={districtNoteEdits[selectedDistrict.id] !== undefined
+                        ? districtNoteEdits[selectedDistrict.id]
+                        : (districtNotes[selectedDistrict.id]?.text || "")}
+                      onChange={(e) => setDistrictNoteEdits(prev => ({ ...prev, [selectedDistrict.id]: e.target.value }))}
+                      placeholder="Add notes visible to everyone on the team..."
                       className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 h-24 resize-none"
                     />
+                    {districtNoteEdits[selectedDistrict.id] !== undefined && (
+                      <div className="flex gap-2 mt-1.5">
+                        <button
+                          onClick={() => saveDistrictNote(selectedDistrict, districtNoteEdits[selectedDistrict.id])}
+                          className="text-xs bg-indigo-600 text-white px-3 py-1 rounded-lg hover:bg-indigo-700"
+                        >
+                          Save note
+                        </button>
+                        <button
+                          onClick={() => setDistrictNoteEdits(prev => { const n = { ...prev }; delete n[selectedDistrict.id]; return n; })}
+                          className="text-xs text-gray-400 hover:text-gray-600 px-2 py-1"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    )}
                   </div>
                   {selectedDistrict.activities?.length > 0 && (
                     <div className="col-span-2">
