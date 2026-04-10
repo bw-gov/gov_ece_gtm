@@ -11,6 +11,14 @@ const SLACK_WEBHOOK_URL = ""; // e.g. "https://hooks.slack.com/services/T.../B..
 const ACTIVITY_SHEET_ID = "1PasvZHeHTbAaiM1oI0Xe9pxyx-MgwDTF64Y-yuQACwM";
 const SHEET_COLS = ["activity_id","district_id","district_name","type","date","notes","full_notes","source","rep_email","director_name","dedup_id","logged_at"];
 
+// ─── PUBLIC ACTIVITY LOG API ──────────────────────────────────────────────────
+// Deploy activity_log_api.gs as a Google Apps Script web app (execute as: Me,
+// access: Anyone) and paste the resulting URL below. Once set, ALL logged
+// activities (Gmail, Granola, and manual notes) are visible to anyone who
+// opens the dashboard — no sign-in required.
+// See activity_log_api.gs for step-by-step deployment instructions.
+const ACTIVITY_WEBAPP_URL = "https://script.google.com/a/macros/mybrightwheel.com/s/AKfycbzRvpSmE36rXIRdWXdcZoGyci-CrczyjJ-cZVTSpfJRCNBCOonzX1g94FAS8MKn8X6c7w/exec";
+
 // ─── SEQUENCE STAGES ─────────────────────────────────────────────────────────
 const SEQUENCE_STAGES = {
   not_started:    { label: "Not Started",    color: "bg-gray-100 text-gray-500",     dot: "bg-gray-400"    },
@@ -677,10 +685,14 @@ export default function BrightwheelDashboard() {
   }, []); // runs once on mount, after localStorage load
 
   // ── LOAD PERSISTED ACTIVITY LOG ON STARTUP ──────────────────────────────────
-  // The daily scheduled task writes data/activity_log.json. Fetch it here so
-  // activities survive page refreshes and are pre-populated without a manual sync.
+  // Fetches all shared team activity so it's visible to anyone who opens the
+  // dashboard — no Gmail sign-in required.
+  // Priority: ACTIVITY_WEBAPP_URL (live from Google Sheet) → activity_log.json (static fallback)
   useEffect(() => {
-    fetch("https://bw-gov.github.io/gov_ece_gtm/data/activity_log.json?_=" + Date.now())
+    const url = ACTIVITY_WEBAPP_URL
+      ? ACTIVITY_WEBAPP_URL
+      : "https://bw-gov.github.io/gov_ece_gtm/data/activity_log.json?_=" + Date.now();
+    fetch(url)
       .then((r) => r.ok ? r.json() : null)
       .catch(() => null)
       .then((log) => {
@@ -688,14 +700,18 @@ export default function BrightwheelDashboard() {
         // Pre-populate synced IDs so browser sync doesn't re-log these
         setSyncedMsgIds(new Set(log.activities.map((a) => a.gmailMsgId).filter(Boolean)));
         setLastSyncTime(log.lastSynced ? new Date(log.lastSynced).toLocaleTimeString() : null);
-        // Merge activities into district state
+        // Merge activities into district state (deduped by activity id or gmailMsgId)
         setDistricts((prev) => {
           const updated = [...prev];
           log.activities.forEach((activity) => {
             const idx = updated.findIndex((d) => d.id === activity.districtId);
             if (idx === -1) return;
             const d = updated[idx];
-            if ((d.activities || []).some((a) => a.gmailMsgId && a.gmailMsgId === activity.gmailMsgId)) return;
+            const alreadyExists = (d.activities || []).some((a) =>
+              (activity.id && String(a.id) === String(activity.id)) ||
+              (a.gmailMsgId && activity.gmailMsgId && a.gmailMsgId === activity.gmailMsgId)
+            );
+            if (alreadyExists) return;
             const newStatus = activity.source === "gmail_reply"
               ? (["email_sent","mailer_queued","vm_left","not_started"].includes(d.status) ? "responded" : d.status)
               : ((d.status === "not_started" || !d.status) ? "email_sent" : d.status);
