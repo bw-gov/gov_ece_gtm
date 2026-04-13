@@ -129,6 +129,48 @@ const REP_PROFILES = {
   },
 };
 const DEFAULT_REP = REP_PROFILES["christie.cooley@mybrightwheel.com"];
+
+// Users allowed to edit email copy
+const AUTHORIZED_EDITORS = new Set([
+  "christie.cooley@mybrightwheel.com",
+  "eric.truog@mybrightwheel.com",
+  "sudeepta.sridhara@mybrightwheel.com",
+]);
+
+// Default plain-text bodies for each template.
+// Tokens: [First Name], [State Name], [District Name], [Calendly Link], [Learn More Link]
+const DEFAULT_TEMPLATE_TEXTS = {
+  original: {
+    label: "📧 Original Email",
+    states: "All states",
+    subject: "Improve Kindergarten Readiness Scores",
+    body: `Hi [First Name],\n\nMany districts are looking for ways to increase Kindergarten readiness scores and support students transitioning into Kindergarten.\n\nBrightwheel's Experience Preschool is a flexible, play-based curriculum designed to support 4–8 week summer programs that help incoming Kindergarten students build the skills measured in readiness assessments. Because lessons are pre-packaged and organized by the day, many districts use it for summer programs.\n\n[Learn More Link] if your program is planning summer readiness or transition programming.\n\nI'd be happy to share a quick overview or send sample materials. Use the link below to schedule a quick connect.\n\n[Calendly Link]`,
+  },
+  summerLong: {
+    label: "☀️ Summer Long",
+    states: "All states",
+    subject: "Improve Kindergarten Readiness with Play-Based Summer Learning",
+    body: `Hello [First Name],\n\nThe summer before kindergarten is one of the most critical windows in a child's educational journey.\n\nExperience Curriculum, powered by brightwheel, is the perfect solution for [State Name]'s summer programs. Everything teachers need is delivered in a ready-to-use kit, including lesson plans, materials, and student supplies for a classroom of 12.\n\nAt $249 for 4 weeks and $399 for 8 weeks, Experience Curriculum is priced to address the budgetary challenges many programs are facing.\n\nFor [State Name]'s summer programs, Experience Curriculum is a strong fit:\n• Aligned to [State Name]'s Standards for Early Learning and Development; emergent literacy instruction is grounded in the science of reading and built into every lesson\n• Easy to Implement: Whether your staff includes seasoned veterans or teachers just finding their footing, Experience Curriculum is ready to run from day one with access to free onboarding & training.\n• Built-in progress monitoring: Student observations and attendance documentation are integrated through the Brightwheel app.\n\n[Learn More Link] if your program is planning summer readiness or transition programming for VPK students.\n\nI'd be happy to share a quick overview or send sample materials. Use the link below to schedule a quick connect.\n\n[Calendly Link]`,
+  },
+  summerShort: {
+    label: "☀️ Summer Short",
+    states: "All states",
+    subject: "Improve Kindergarten Readiness with Play-Based Summer Learning",
+    body: `Hi [First Name],\n\nAre you planning for the summer transition to Kindergarten?\n\nExperience Curriculum, powered by brightwheel, is the perfect solution.\n• Everything teachers need is delivered in a ready-to-use kit, including lesson plans, materials, and student supplies for a classroom of 12\n• It's aligned to [State Name]'s Standards for Early Learning and Development\n• Progress monitoring ties directly into the Brightwheel app, so there's minimal setup for teachers\n• Free online professional development\n\nPricing is $249 for 4-week programs or $399 for 8-week programs.\n\nHappy to send additional materials or jump on a quick call if it's helpful. Schedule time with me at the link below or just reply and we can find a time.\n\n[Calendly Link]`,
+  },
+  summerBridge: {
+    label: "🌴 FL Summer Bridge (Long)",
+    states: "Florida only",
+    subject: "Let's simplify your Summer Bridge program",
+    body: `Hello [First Name],\n\nThe summer before kindergarten is one of the most critical windows in a child's educational journey.\n\nExperience Curriculum, powered by brightwheel, is the perfect solution for Florida's Summer Bridge Program. Everything teachers need is delivered in a ready-to-use kit, including lesson plans, materials, and student supplies for a classroom of 12.\n\nAt $249 for 4 weeks and $399 for 8 weeks, Experience Curriculum is priced to address the budgetary challenges many programs are facing.\n\nFor Summer Bridge, Experience Curriculum is a strong fit:\n• Aligned to Florida's Early Learning and Developmental Standards; emergent literacy instruction is grounded in the science of reading and built into every lesson\n• Easy to Implement: Whether your staff includes seasoned veterans or teachers just finding their footing, Experience Curriculum is ready to run from day one with access to free onboarding & training.\n• Built-in progress monitoring: Student observations and attendance documentation are integrated through the Brightwheel app.\n\n[Learn More Link] if your program is planning summer readiness or transition programming for VPK students.\n\nI'd be happy to share a quick overview or send sample materials. Use the link below to schedule a quick connect.\n\n[Calendly Link]`,
+  },
+  summerBridgeShort: {
+    label: "🌴 FL Summer Bridge (Short)",
+    states: "Florida only",
+    subject: "Experience Curriculum Simplifies Summer",
+    body: `Hi [First Name],\n\nAre you planning for summer transition to Kindergarten?\n\nExperience Curriculum, powered by brightwheel, is the perfect solution.\n• Everything teachers need is delivered in a ready-to-use kit, including lesson plans, materials, and student supplies for a classroom of 12\n• It's aligned to Florida's Early Learning and Developmental Standards\n• Progress monitoring ties directly into the Brightwheel app, so there's minimal setup for teachers\n• Free online professional development\n\nPricing is $249 for 4 week programs or $399 for 8 week programs.\n\nHappy to send additional materials or jump on a quick call if it's helpful. Schedule time with me at the link below or just reply and we can find a time.\n\n[Calendly Link]`,
+  },
+};
 // Map each state to its assigned rep email
 const STATE_REP_EMAIL = {
   // Christie Cooley
@@ -475,6 +517,52 @@ function generateEmail(district, template, rep) {
   return templates[template] || "";
 }
 
+// ─── OVERRIDE EMAIL GENERATION ───────────────────────────────────────────────
+// Builds an HTML email from a manually edited template override.
+// override must have { subject, body, _templateKey }.
+// Tokens supported in subject + body: [First Name], [State Name], [District Name],
+// [Calendly Link], [Learn More Link]
+function generateEmailFromOverride(override, district, rep) {
+  const r = rep !== undefined ? rep : null;
+  const isSB = override._templateKey === "summerBridge" || override._templateKey === "summerBridgeShort";
+  const greetingName = (isSB && district.summerBridgeContact)
+    ? district.summerBridgeContact.firstName
+    : district.director.split(" ")[0];
+  const STATE_NAMES = { FL: "Florida", AL: "Alabama", ID: "Idaho", NV: "Nevada", CA: "California", OR: "Oregon", NM: "New Mexico", GA: "Georgia", MI: "Michigan", WA: "Washington" };
+  const stateName = STATE_NAMES[district.state || "FL"] || district.state || "FL";
+  const shortName = district.district.includes(" — ") ? district.district.split(" — ").slice(1).join(" — ") : district.district;
+  const calendlyHtml = r && r.calendly ? ea(r.calendly, "Schedule time with me →") : "Happy to find a time — just reply and we can schedule a quick connect.";
+  const learnMoreHtml = ea(LEARN_MORE_URL, "Click here to learn more");
+  const unsubName  = (isSB && district.summerBridgeContact) ? district.summerBridgeContact.fullName : district.director;
+  const unsubEmail = (isSB && district.summerBridgeContact) ? district.summerBridgeContact.email : district.email;
+  const unsubUrl   = buildUnsubUrl(unsubName, unsubEmail, district.district, district.id);
+
+  const substituteTokens = (str) => str
+    .replace(/\[First Name\]/g, greetingName)
+    .replace(/\[State Name\]/g, stateName)
+    .replace(/\[District Name\]/g, shortName)
+    .replace(/\[Calendly Link\]/g, calendlyHtml)
+    .replace(/\[Learn More Link\]/g, learnMoreHtml);
+
+  const segments = override.body.split(/\n\n+/);
+  let htmlBody = "";
+  for (const seg of segments) {
+    const trimmed = seg.trim();
+    if (!trimmed) continue;
+    const lines = trimmed.split("\n");
+    const isList = lines.length > 1 && lines.every(l => /^[•\-\*]/.test(l.trim()));
+    if (isList) {
+      const items = lines.map(l => `<li style="${S.li}">${substituteTokens(l.replace(/^[•\-\*]\s*/, ""))}</li>`).join("");
+      htmlBody += `<ul style="${S.ul}">${items}</ul>`;
+    } else {
+      htmlBody += ep(substituteTokens(trimmed));
+    }
+  }
+
+  const subject = substituteTokens(override.subject);
+  return buildHtmlEmail(subject, htmlBody, unsubUrl, r);
+}
+
 // ─── PERSONALIZED EMAIL GENERATION ───────────────────────────────────────────
 
 // Returns true if the district has enough intel to generate a personalized draft
@@ -642,6 +730,15 @@ export default function BrightwheelDashboard() {
   const [gisReady, setGisReady] = useState(false);
   const pendingDraftRef = useRef(null);
 
+  // ── TEMPLATE OVERRIDES ───────────────────────────────────────────────────────
+  // Editable email copy stored in localStorage + shared sheet.
+  // { [templateKey]: { subject, body, lastEditedBy, lastEditedAt } }
+  const [templateOverrides, setTemplateOverrides] = useState(() => {
+    try { const s = localStorage.getItem("bw_template_overrides_v1"); return s ? JSON.parse(s) : {}; } catch { return {}; }
+  });
+  const [editingTemplate, setEditingTemplate] = useState(null);
+  const [editDraft, setEditDraft] = useState({ subject: "", body: "" });
+
   // ── SHARED DISTRICT NOTES ────────────────────────────────────────────────────
   // Persisted per-district sticky notes stored in the activity sheet as
   // type="district_note". Visible to anyone who opens the dashboard.
@@ -660,6 +757,16 @@ export default function BrightwheelDashboard() {
 
   // Rep profile for the currently logged-in user — null if not signed in or unrecognized
   const currentRep = (gmailUser && REP_PROFILES[gmailUser]) || null;
+  const canEditEmailCopy = gmailUser && AUTHORIZED_EDITORS.has(gmailUser);
+
+  // Wrapper that uses a saved template override when available, otherwise falls
+  // back to the hardcoded generateEmail function.
+  const getEmailBody = (district, template, rep) => {
+    if (templateOverrides[template]) {
+      return generateEmailFromOverride({ ...templateOverrides[template], _templateKey: template }, district, rep);
+    }
+    return generateEmail(district, template, rep);
+  };
 
   const [emailPickerId, setEmailPickerId] = useState(null); // must be declared before the useEffect below
 
@@ -700,6 +807,11 @@ export default function BrightwheelDashboard() {
   useEffect(() => {
     try { localStorage.setItem('bw_campaign_enrollments_v1', JSON.stringify(campaignEnrollments)); } catch(e) {}
   }, [campaignEnrollments]);
+
+  // Persist template overrides to localStorage whenever they change
+  useEffect(() => {
+    try { localStorage.setItem("bw_template_overrides_v1", JSON.stringify(templateOverrides)); } catch(e) {}
+  }, [templateOverrides]);
 
   // Migrate any legacy status values to sequence stage keys
   useEffect(() => {
@@ -1252,8 +1364,25 @@ export default function BrightwheelDashboard() {
       const mailerSentMap = {};
       const latestNotes = {};
       const unsubEmails = new Set();
+      // Template overrides keyed by template key — pick most recent per key
+      const sheetTemplateOverrides = {};
 
       for (const row of rows.slice(1)) {
+        // Template override rows — district_id is 0, district_name holds the key
+        if (col(row, "type") === "template_override") {
+          const key = col(row, "district_name");
+          const loggedAt = col(row, "logged_at");
+          const existing = sheetTemplateOverrides[key];
+          if (key && (!existing || loggedAt > (existing.lastEditedAt || ""))) {
+            sheetTemplateOverrides[key] = {
+              subject: col(row, "notes"),
+              body: col(row, "full_notes"),
+              lastEditedBy: col(row, "rep_email"),
+              lastEditedAt: loggedAt,
+            };
+          }
+          continue;
+        }
         const distId = parseInt(col(row, "district_id"));
         if (!distId) continue;
         const src = col(row, "source");
@@ -1328,6 +1457,10 @@ export default function BrightwheelDashboard() {
       if (Object.keys(latestNotes).length > 0) {
         setDistrictNotes(prev => ({ ...prev, ...latestNotes }));
       }
+      // Apply any template overrides from the sheet (sheet wins over localStorage)
+      if (Object.keys(sheetTemplateOverrides).length > 0) {
+        setTemplateOverrides(prev => ({ ...prev, ...sheetTemplateOverrides }));
+      }
       if (unsubEmails.size > 0) {
         setUnsubs(prev => new Set([...prev, ...unsubEmails]));
       }
@@ -1371,6 +1504,29 @@ export default function BrightwheelDashboard() {
       else if (e.status === 401) showNotif("Sheet write failed: reconnect Gmail to refresh your token", "red");
       else showNotif(`Sheet write failed: ${e.message}`, "red");
     }
+  };
+
+  // Saves a template override to state, localStorage, and the shared sheet.
+  const saveTemplateOverride = async (templateKey, subject, body) => {
+    const now = new Date().toISOString();
+    const override = { subject, body, lastEditedBy: gmailUser || "", lastEditedAt: now };
+    setTemplateOverrides(prev => ({ ...prev, [templateKey]: override }));
+    // Write to shared sheet as a template_override row
+    const row = [
+      String(Date.now()),      // activity_id
+      "0",                     // district_id (0 = not a district)
+      templateKey,             // district_name holds the template key
+      "template_override",     // type
+      now.split("T")[0],       // date
+      subject,                 // notes holds the subject
+      body,                    // full_notes holds the body
+      "template_override",     // source
+      gmailUser || "",         // rep_email
+      "",                      // director_name
+      templateKey,             // dedup_id
+      now,                     // logged_at
+    ];
+    await writeToSheet([row]);
   };
 
   // ── BULK SELECTION ──
@@ -1564,7 +1720,7 @@ export default function BrightwheelDashboard() {
     }
     const body = template === "personalized"
       ? generatePersonalizedEmail(district, currentRep)
-      : generateEmail(district, template, currentRep);
+      : getEmailBody(district, template, currentRep);
     if (!body) {
       showNotif(`⚠️ Not enough intel to personalize email for ${district.district}`, "red");
       return;
@@ -1688,6 +1844,7 @@ export default function BrightwheelDashboard() {
             { id: "contacts", label: "👥 Outreach Tracking" },
             { id: "callqueue", label: `🔁 Sequence` },
             { id: "districtinfo", label: "🏫 District Info" },
+            { id: "emailcopy", label: "✏️ Email Copy" },
             { id: "approval", label: `📤 Send Queue ${stats.queue > 0 ? `(${stats.queue})` : ""}` },
           ].map((t) => (
             <button
@@ -2943,6 +3100,129 @@ export default function BrightwheelDashboard() {
         )}
       </div>
 
+        {/* ── EMAIL COPY TAB ── */}
+        {activeTab === "emailcopy" && (
+          <div className="p-6 max-w-4xl mx-auto">
+            <div className="mb-6">
+              <h2 className="text-lg font-bold text-gray-800">Email Copy</h2>
+              <p className="text-sm text-gray-500 mt-1">
+                All outreach templates in one place. Edits apply to every email sent from the Send Queue.
+                {canEditEmailCopy
+                  ? <span className="ml-2 text-green-600 font-medium">✓ You can edit</span>
+                  : <span className="ml-2 text-gray-400">Sign in as Christie, Eric, or Sudeepta to edit.</span>}
+              </p>
+            </div>
+
+            <div className="space-y-6">
+              {Object.entries(DEFAULT_TEMPLATE_TEXTS).map(([key, defaults]) => {
+                const override = templateOverrides[key];
+                const current = override || defaults;
+                const isEditing = editingTemplate === key;
+                const isModified = !!override;
+
+                return (
+                  <div key={key} className={`bg-white rounded-xl border ${isModified ? "border-indigo-200" : "border-gray-200"} overflow-hidden shadow-sm`}>
+                    {/* Header */}
+                    <div className="flex items-center justify-between px-5 py-3 bg-gray-50 border-b border-gray-100">
+                      <div className="flex items-center gap-3">
+                        <span className="font-semibold text-gray-800 text-sm">{defaults.label}</span>
+                        <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">{defaults.states}</span>
+                        {isModified && (
+                          <span className="text-xs text-indigo-600 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded-full font-medium">
+                            ✏️ Edited by {override.lastEditedBy?.split("@")[0] || "team"} · {override.lastEditedAt ? new Date(override.lastEditedAt).toLocaleDateString() : ""}
+                          </span>
+                        )}
+                      </div>
+                      {canEditEmailCopy && !isEditing && (
+                        <div className="flex gap-2">
+                          {isModified && (
+                            <button
+                              onClick={() => { if (window.confirm("Reset to default copy?")) setTemplateOverrides(prev => { const n = { ...prev }; delete n[key]; return n; }); }}
+                              className="text-xs text-gray-400 hover:text-red-500 px-2 py-1 rounded transition-colors"
+                            >Reset</button>
+                          )}
+                          <button
+                            onClick={() => { setEditingTemplate(key); setEditDraft({ subject: current.subject, body: current.body }); }}
+                            className="text-xs bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 rounded-lg font-semibold transition-colors"
+                          >Edit</button>
+                        </div>
+                      )}
+                      {canEditEmailCopy && isEditing && (
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => setEditingTemplate(null)}
+                            className="text-xs border border-gray-300 text-gray-600 hover:bg-gray-50 px-3 py-1.5 rounded-lg font-semibold"
+                          >Cancel</button>
+                          <button
+                            onClick={async () => {
+                              await saveTemplateOverride(key, editDraft.subject, editDraft.body);
+                              setEditingTemplate(null);
+                              showNotif(`✅ ${defaults.label} saved`);
+                            }}
+                            className="text-xs bg-green-600 hover:bg-green-500 text-white px-3 py-1.5 rounded-lg font-semibold"
+                          >Save</button>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Content — view or edit mode */}
+                    {isEditing ? (
+                      <div className="p-5 space-y-4">
+                        <div>
+                          <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-1">Subject line</label>
+                          <input
+                            type="text"
+                            value={editDraft.subject}
+                            onChange={e => setEditDraft(p => ({ ...p, subject: e.target.value }))}
+                            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-1">
+                            Body
+                            <span className="ml-2 font-normal text-gray-400 normal-case">
+                              Available tokens: <code className="bg-gray-100 px-1 rounded">[First Name]</code> <code className="bg-gray-100 px-1 rounded">[State Name]</code> <code className="bg-gray-100 px-1 rounded">[District Name]</code> <code className="bg-gray-100 px-1 rounded">[Calendly Link]</code> <code className="bg-gray-100 px-1 rounded">[Learn More Link]</code>
+                            </span>
+                          </label>
+                          <textarea
+                            rows={16}
+                            value={editDraft.body}
+                            onChange={e => setEditDraft(p => ({ ...p, body: e.target.value }))}
+                            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-300 resize-y"
+                            spellCheck={true}
+                          />
+                          <p className="text-xs text-gray-400 mt-1">Separate paragraphs with a blank line. Start bullet lines with •</p>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="p-5 space-y-3">
+                        <div className="flex items-start gap-2">
+                          <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide w-14 flex-shrink-0 mt-0.5">Subject</span>
+                          <span className="text-sm text-gray-800 font-medium">{(() => {
+                            const parts = current.subject.split(/(\[(?:First Name|State Name|District Name|Calendly Link|Learn More Link)\])/g);
+                            return parts.map((p, i) => /^\[/.test(p)
+                              ? <span key={i} className="bg-indigo-50 text-indigo-600 border border-indigo-200 px-1 py-0 rounded text-xs font-mono font-semibold">{p}</span>
+                              : p);
+                          })()}</span>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide w-14 flex-shrink-0 mt-0.5">Body</span>
+                          <div className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap flex-1">{(() => {
+                            const TOKEN_RE = /(\[(?:First Name|State Name|District Name|Calendly Link|Learn More Link)\])/g;
+                            return current.body.split(TOKEN_RE).map((p, i) => /^\[/.test(p)
+                              ? <span key={i} className="bg-indigo-50 text-indigo-600 border border-indigo-200 px-1 py-0 rounded text-xs font-mono font-semibold">{p}</span>
+                              : p);
+                          })()}</div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         {/* ── DISTRICT INFO TAB ── */}
         {activeTab === "districtinfo" && (() => {
           const diDistricts = districts.filter(d => {
@@ -3248,7 +3528,7 @@ export default function BrightwheelDashboard() {
                               onClick={() => {
                                 const body = diInfoEmailTemplate === "personalized"
                                   ? generatePersonalizedEmail(selectedDi, currentRep)
-                                  : generateEmail(selectedDi, diInfoEmailTemplate, currentRep);
+                                  : getEmailBody(selectedDi, diInfoEmailTemplate, currentRep);
                                 if (!body) { showNotif("⚠️ No email body generated", "red"); return; }
                                 setEmailPreview(body);
                                 setShowEmailPreview(true);
@@ -3579,7 +3859,7 @@ export default function BrightwheelDashboard() {
                         <p className="text-xs text-gray-400 mb-2">{t.desc}</p>
                         <div className="flex gap-2">
                           <button
-                            onClick={() => { setEmailPreview(generateEmail(selectedDistrict, t.key, currentRep)); setShowEmailPreview(true); }}
+                            onClick={() => { setEmailPreview(getEmailBody(selectedDistrict, t.key, currentRep)); setShowEmailPreview(true); }}
                             className="text-xs border border-gray-200 bg-white px-2 py-1 rounded hover:bg-gray-50"
                           >Preview</button>
                           <button
@@ -3622,7 +3902,7 @@ export default function BrightwheelDashboard() {
                             <p className="text-xs text-green-600 mb-2">FL-specific — kit details, pricing, 3 bullets, learn more link.</p>
                             <div className="flex gap-2">
                               <button
-                                onClick={() => { setEmailPreview(generateEmail(selectedDistrict, "summerBridge", currentRep)); setShowEmailPreview(true); }}
+                                onClick={() => { setEmailPreview(getEmailBody(selectedDistrict, "summerBridge", currentRep)); setShowEmailPreview(true); }}
                                 className="text-xs border border-green-300 bg-white text-green-700 px-2 py-1 rounded hover:bg-green-50"
                               >Preview</button>
                               <button
@@ -3637,7 +3917,7 @@ export default function BrightwheelDashboard() {
                             <p className="text-xs text-green-600 mb-2">Quick intro — 4 bullets, pricing, casual CTA.</p>
                             <div className="flex gap-2">
                               <button
-                                onClick={() => { setEmailPreview(generateEmail(selectedDistrict, "summerBridgeShort", currentRep)); setShowEmailPreview(true); }}
+                                onClick={() => { setEmailPreview(getEmailBody(selectedDistrict, "summerBridgeShort", currentRep)); setShowEmailPreview(true); }}
                                 className="text-xs border border-green-300 bg-white text-green-700 px-2 py-1 rounded hover:bg-green-50"
                               >Preview</button>
                               <button
