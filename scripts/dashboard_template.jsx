@@ -793,6 +793,7 @@ export default function BrightwheelDashboard() {
     window.google.accounts.oauth2.initTokenClient({
       client_id: GOOGLE_CLIENT_ID,
       scope: "https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/gmail.compose https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/spreadsheets",
+      prompt: "consent",
       callback: (resp) => {
         if (resp.access_token) {
           setGmailToken(resp.access_token);
