@@ -756,6 +756,13 @@ export default function BrightwheelDashboard() {
   // { district, template, contactEmail, contactName }
   const [unsubConfirm, setUnsubConfirm] = useState(null);
 
+  // ── BOUNCE TRACKING ───────────────────────────────────────────────────────────
+  // Set of lowercase email addresses where delivery has failed (hard bounce).
+  const [bounces, setBounces] = useState(() => {
+    try { const s = localStorage.getItem("bw_bounces_v1"); return s ? new Set(JSON.parse(s)) : new Set(); } catch { return new Set(); }
+  });
+  const [bounceConfirm, setBounceConfirm] = useState(null); // { district, template, contactEmail, contactName }
+
   // Rep profile for the currently logged-in user — null if not signed in or unrecognized
   const currentRep = (gmailUser && REP_PROFILES[gmailUser]) || null;
   const canEditEmailCopy = gmailUser && AUTHORIZED_EDITORS.has(gmailUser);
@@ -814,6 +821,11 @@ export default function BrightwheelDashboard() {
     try { localStorage.setItem("bw_template_overrides_v1", JSON.stringify(templateOverrides)); } catch(e) {}
   }, [templateOverrides]);
 
+  // Persist bounces to localStorage
+  useEffect(() => {
+    try { localStorage.setItem("bw_bounces_v1", JSON.stringify([...bounces])); } catch(e) {}
+  }, [bounces]);
+
   // Migrate any legacy status values to sequence stage keys
   useEffect(() => {
     setDistricts(prev => prev.map(d => {
@@ -835,9 +847,10 @@ export default function BrightwheelDashboard() {
       .catch(() => null)
       .then((log) => {
         if (!log || !Array.isArray(log.activities) || log.activities.length === 0) return;
-        // Split district notes, unsubscribes, and regular activities before merging
+        // Split district notes, unsubscribes, bounces, and regular activities before merging
         const fetchedNotes = {};
         const fetchedUnsubs = new Set();
+        const fetchedBounces = new Set();
         const regularActivities = [];
         log.activities.forEach((a) => {
           if (a.type === "district_note") {
@@ -852,12 +865,19 @@ export default function BrightwheelDashboard() {
             const unsubEmail   = (fromNotes.includes("@") ? fromNotes : null)
                               || (fromDistrict.includes("@") ? fromDistrict : null);
             if (unsubEmail) fetchedUnsubs.add(unsubEmail);
+          } else if (a.type === "bounce") {
+            const fromNotes    = (a.notes    || "").toLowerCase().trim();
+            const fromDistrict = (a.district || "").toLowerCase().trim();
+            const bounceEmail  = (fromNotes.includes("@") ? fromNotes : null)
+                              || (fromDistrict.includes("@") ? fromDistrict : null);
+            if (bounceEmail) fetchedBounces.add(bounceEmail);
           } else {
             regularActivities.push(a);
           }
         });
         if (Object.keys(fetchedNotes).length > 0) setDistrictNotes(prev => ({ ...prev, ...fetchedNotes }));
         if (fetchedUnsubs.size > 0) setUnsubs(prev => new Set([...prev, ...fetchedUnsubs]));
+        if (fetchedBounces.size > 0) setBounces(prev => new Set([...prev, ...fetchedBounces]));
         // Pre-populate synced IDs so browser sync doesn't re-log these
         setSyncedMsgIds(new Set(regularActivities.map((a) => a.gmailMsgId).filter(Boolean)));
         setLastSyncTime(log.lastSynced ? new Date(log.lastSynced).toLocaleTimeString() : null);
@@ -1136,6 +1156,41 @@ export default function BrightwheelDashboard() {
           await new Promise(r => setTimeout(r, 50));
         }
       }
+
+      // ── PASS 3: Bounce detection ─────────────────────────────────────────
+      // Search for delivery-failure emails from mailer-daemon / postmaster.
+      // Match against district emails by looking at the subject line.
+      const bounceQuery = `in:inbox after:${afterStr} (from:mailer-daemon OR from:postmaster) (subject:"delivery" OR subject:"undeliverable" OR subject:"failed" OR subject:"returned")`;
+      const bounceMsgs = await searchMessages(bounceQuery, 50);
+      const newBounceEmails = new Set();
+      for (const stub of bounceMsgs) {
+        if (newSyncedIds.has(stub.id)) continue;
+        const msg = await getMeta(stub.id);
+        if (!msg) continue;
+        const subject = (msg.headers.subject || "").toLowerCase();
+        // Check if any district email appears in the bounce subject
+        const matchedDistrict = Object.entries(emailToDistrict).find(([email]) => subject.includes(email));
+        if (!matchedDistrict) { newSyncedIds.add(stub.id); continue; }
+        const [bouncedEmail, district] = matchedDistrict;
+        const dateStr = msg.headers.date ? new Date(msg.headers.date).toISOString().split("T")[0] : new Date().toISOString().split("T")[0];
+        const activity = {
+          id: stub.id,
+          type: "bounce",
+          date: dateStr,
+          notes: bouncedEmail,
+          district: district.district,
+          directorName: district.director,
+          source: "gmail_bounce",
+          gmailMsgId: stub.id,
+        };
+        newActivities.push({ districtId: district.id, activity });
+        newBounceEmails.add(bouncedEmail.toLowerCase());
+        newSyncedIds.add(stub.id);
+        await new Promise(r => setTimeout(r, 50));
+      }
+      if (newBounceEmails.size > 0) {
+        setBounces(prev => new Set([...prev, ...newBounceEmails]));
+      }
     } catch (e) {
       showNotif("Sync error: " + e.message, "red");
       setGmailSyncing(false);
@@ -1167,9 +1222,11 @@ export default function BrightwheelDashboard() {
     setGmailSyncing(false);
     const sentCount = newActivities.filter(a => a.activity.source === "gmail_sent").length;
     const replyCount = newActivities.filter(a => a.activity.source === "gmail_reply").length;
+    const bounceCount = newActivities.filter(a => a.activity.source === "gmail_bounce").length;
+    const bounceNote  = bounceCount > 0 ? ` · ${bounceCount} bounce${bounceCount !== 1 ? "s" : ""} detected` : "";
     showNotif(newActivities.length === 0
       ? "Gmail sync complete — no new activity found"
-      : `Gmail sync: ${sentCount} sent email${sentCount !== 1 ? "s" : ""} + ${replyCount} repl${replyCount !== 1 ? "ies" : "y"} logged ✓`
+      : `Gmail sync: ${sentCount} sent email${sentCount !== 1 ? "s" : ""} + ${replyCount} repl${replyCount !== 1 ? "ies" : "y"} logged${bounceNote} ✓`
     );
     // Persist new activities to shared sheet
     if (newActivities.length > 0) {
@@ -1370,6 +1427,7 @@ export default function BrightwheelDashboard() {
       const mailerSentMap = {};
       const latestNotes = {};
       const unsubEmails = new Set();
+      const bounceEmails = new Set();
       // Template overrides keyed by template key — pick most recent per key
       const sheetTemplateOverrides = {};
 
@@ -1389,16 +1447,18 @@ export default function BrightwheelDashboard() {
           }
           continue;
         }
-        // Unsubscribes — must be checked BEFORE the distId guard because
+        // Unsubscribes + bounces — checked BEFORE the distId guard because
         // district_id can be 0 if the param was missing when the row was written.
-        // Email address may be in district_name (col C) or notes (col F) depending
-        // on how the row was written — check both.
-        if (col(row, "type") === "unsubscribe") {
-          const fromNotes      = (col(row, "notes") || "").toLowerCase().trim();
-          const fromDistName   = (col(row, "district_name") || "").toLowerCase().trim();
-          const unsubEmail = (fromNotes.includes("@") ? fromNotes : null)
-                          || (fromDistName.includes("@") ? fromDistName : null);
-          if (unsubEmail) unsubEmails.add(unsubEmail);
+        // Email may be in district_name (col C) or notes (col F) — check both.
+        if (col(row, "type") === "unsubscribe" || col(row, "type") === "bounce") {
+          const fromNotes    = (col(row, "notes") || "").toLowerCase().trim();
+          const fromDistName = (col(row, "district_name") || "").toLowerCase().trim();
+          const email = (fromNotes.includes("@") ? fromNotes : null)
+                     || (fromDistName.includes("@") ? fromDistName : null);
+          if (email) {
+            if (col(row, "type") === "unsubscribe") unsubEmails.add(email);
+            else bounceEmails.add(email);
+          }
           continue;
         }
         const distId = parseInt(col(row, "district_id"));
@@ -1475,6 +1535,9 @@ export default function BrightwheelDashboard() {
       }
       if (unsubEmails.size > 0) {
         setUnsubs(prev => new Set([...prev, ...unsubEmails]));
+      }
+      if (bounceEmails.size > 0) {
+        setBounces(prev => new Set([...prev, ...bounceEmails]));
       }
       const total = Object.values(byDistrict).reduce((s, a) => s + a.length, 0);
       showNotif(`Shared log loaded — ${total} activit${total !== 1 ? "ies" : "y"} across team ✓`);
@@ -1716,10 +1779,17 @@ export default function BrightwheelDashboard() {
     writeToSheet([activityToRow(district.id, district.district, act)]);
   };
 
-  const queueEmail = (district, template, silent = false, forceUnsub = false) => {
+  const queueEmail = (district, template, silent = false, forceUnsub = false, forceBounce = false) => {
     const contact = resolveContact(district, template);
     if (!contact.email) {
       showNotif(`⚠️ No email on file for ${district.director || district.district} — skipped`, "red");
+      return;
+    }
+    // Bounce guard
+    const isBounce = bounces.has((contact.email || "").toLowerCase());
+    if (isBounce && !forceBounce) {
+      if (silent) return;
+      setBounceConfirm({ district, template, contactEmail: contact.email, contactName: contact.name });
       return;
     }
     // Unsubscribe guard
@@ -2451,6 +2521,9 @@ export default function BrightwheelDashboard() {
                             {d.email || <span className="text-gray-300">No email</span>}
                             {d.email && unsubs.has(d.email.toLowerCase()) && (
                               <span className="text-xs bg-red-100 text-red-600 font-semibold px-1.5 py-0 rounded whitespace-nowrap">⛔ Unsub'd</span>
+                            )}
+                            {d.email && !unsubs.has(d.email.toLowerCase()) && bounces.has(d.email.toLowerCase()) && (
+                              <span className="text-xs bg-orange-100 text-orange-600 font-semibold px-1.5 py-0 rounded whitespace-nowrap">⚠️ Bounced</span>
                             )}
                           </div>
                           <div className="text-xs text-gray-400">{d.phone}</div>
@@ -3714,6 +3787,34 @@ export default function BrightwheelDashboard() {
         </div>
       )}
 
+      {/* ── BOUNCE CONFIRMATION DIALOG ── */}
+      {bounceConfirm && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 text-center">
+            <div className="text-3xl mb-3">⚠️</div>
+            <h2 className="text-base font-bold text-gray-900 mb-2">This email bounced</h2>
+            <p className="text-sm text-gray-500 mb-1">
+              <span className="font-medium text-gray-700">{bounceConfirm.contactName}</span>{" (" + bounceConfirm.contactEmail + ")"}
+            </p>
+            <p className="text-sm text-gray-500 mb-6">A previous email to this address failed to deliver. It may be invalid or the mailbox is full. Send anyway?</p>
+            <div className="flex gap-3 justify-center">
+              <button
+                onClick={() => { setBounceConfirm(null); queueEmail(bounceConfirm.district, bounceConfirm.template, false, false, true); }}
+                className="px-4 py-2 bg-orange-600 text-white text-sm font-medium rounded-lg hover:bg-orange-700"
+              >
+                Send anyway
+              </button>
+              <button
+                onClick={() => setBounceConfirm(null)}
+                className="px-4 py-2 border border-gray-300 text-gray-600 text-sm font-medium rounded-lg hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ── DISTRICT DETAIL MODAL ── */}
       {selectedDistrict && (
         <div className="fixed inset-0 bg-black/40 z-40 flex items-center justify-center p-4" onClick={(e) => { if (e.target === e.currentTarget) setSelectedDistrict(null); }}>
@@ -3764,6 +3865,9 @@ export default function BrightwheelDashboard() {
                         <a href={`mailto:${selectedDistrict.email}`} className="text-indigo-600 hover:underline">{selectedDistrict.email}</a>
                         {selectedDistrict.email && unsubs.has(selectedDistrict.email.toLowerCase()) && (
                           <span className="text-xs bg-red-100 text-red-600 font-semibold px-2 py-0.5 rounded-full">⛔ Unsubscribed</span>
+                        )}
+                        {selectedDistrict.email && !unsubs.has(selectedDistrict.email.toLowerCase()) && bounces.has(selectedDistrict.email.toLowerCase()) && (
+                          <span className="text-xs bg-orange-100 text-orange-600 font-semibold px-2 py-0.5 rounded-full">⚠️ Bounced</span>
                         )}
                       </div>
                       <div><span className="text-gray-500">Phone:</span> {selectedDistrict.phone}</div>

@@ -139,8 +139,8 @@ function buildPayload() {
     var src    = String(row[7] || "manual").trim();
     var distId = parseInt(row[1]);
 
-    // Unsubscribes must be returned even if district_id is 0 (can happen if
-    // the districtId param was missing when the row was written).
+    // Unsubscribes and bounces must be returned even if district_id is 0
+    // (can happen if the districtId param was missing when the row was written).
     if (type === "unsubscribe") {
       // Email address may be in district_name (col C) or notes (col F) depending
       // on how the row was originally written — expose both so the dashboard can
@@ -153,6 +153,21 @@ function buildPayload() {
         date:       String(row[4] || "").trim(),
         notes:      String(row[5] || "").trim(),   // col F — may contain the email
         source:     "unsubscribe_form",
+        repEmail:   String(row[8] || "").trim(),
+        loggedAt:   String(row[11] || "").trim(),
+      });
+      continue;
+    }
+
+    if (type === "bounce") {
+      activities.push({
+        id:         String(row[0] || (Date.now() + "_" + i)),
+        districtId: distId || 0,
+        district:   String(row[2] || "").trim(),   // col C — may contain the email
+        type:       "bounce",
+        date:       String(row[4] || "").trim(),
+        notes:      String(row[5] || "").trim(),   // col F — may contain the email
+        source:     "gmail_bounce",
         repEmail:   String(row[8] || "").trim(),
         loggedAt:   String(row[11] || "").trim(),
       });
