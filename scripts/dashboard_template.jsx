@@ -105,7 +105,7 @@ const REP_PROFILES = {
     title: "District Partnerships",
     email: "kevin.elston@mybrightwheel.com",
     phone: "",
-    calendly: "", // add link when available
+    calendly: "https://mybrightwheel.chilipiper.com/me/kevin-elston/meeting-with-kevin-elston",
     color: "bg-green-100 text-green-700",
     initials: "KE",
   },
@@ -114,7 +114,7 @@ const REP_PROFILES = {
     title: "District Partnerships",
     email: "eric.bernstein@mybrightwheel.com",
     phone: "",
-    calendly: "", // add link when available
+    calendly: "https://mybrightwheel.chilipiper.com/personal-page/eric-bernstein",
     color: "bg-orange-100 text-orange-700",
     initials: "EB",
   },
@@ -180,9 +180,12 @@ const STATE_REP_EMAIL = {
   MI: "christie.cooley@mybrightwheel.com",
   // Eric Truog
   ID: "eric.truog@mybrightwheel.com",
+  UT: "eric.truog@mybrightwheel.com",
+  CO: "eric.truog@mybrightwheel.com",
   // Kevin Elston
   NV: "kevin.elston@mybrightwheel.com",
   NM: "kevin.elston@mybrightwheel.com",
+  AZ: "kevin.elston@mybrightwheel.com",
   // Eric Bernstein
   CA: "eric.bernstein@mybrightwheel.com",
   OR: "eric.bernstein@mybrightwheel.com",
@@ -395,7 +398,7 @@ function generateEmail(district, template, rep) {
   const contact = resolveContact(district, template);
 
   const stateCode = district.state || "FL";
-  const STATE_NAMES = { FL: "Florida", AL: "Alabama", ID: "Idaho", NV: "Nevada", CA: "California", OR: "Oregon", NM: "New Mexico", GA: "Georgia", MI: "Michigan", WA: "Washington" };
+  const STATE_NAMES = { FL: "Florida", AL: "Alabama", ID: "Idaho", NV: "Nevada", CA: "California", OR: "Oregon", NM: "New Mexico", GA: "Georgia", MI: "Michigan", WA: "Washington", AZ: "Arizona", UT: "Utah", CO: "Colorado" };
   const stateName = STATE_NAMES[stateCode] || stateCode;
 
   const isSummerBridgeTemplate = template === "summerBridge" || template === "summerBridgeShort";
@@ -528,7 +531,7 @@ function generateEmailFromOverride(override, district, rep) {
   const greetingName = (isSB && district.summerBridgeContact)
     ? district.summerBridgeContact.firstName
     : district.director.split(" ")[0];
-  const STATE_NAMES = { FL: "Florida", AL: "Alabama", ID: "Idaho", NV: "Nevada", CA: "California", OR: "Oregon", NM: "New Mexico", GA: "Georgia", MI: "Michigan", WA: "Washington" };
+  const STATE_NAMES = { FL: "Florida", AL: "Alabama", ID: "Idaho", NV: "Nevada", CA: "California", OR: "Oregon", NM: "New Mexico", GA: "Georgia", MI: "Michigan", WA: "Washington", AZ: "Arizona", UT: "Utah", CO: "Colorado" };
   const stateName = STATE_NAMES[district.state || "FL"] || district.state || "FL";
   const shortName = district.district.includes(" — ") ? district.district.split(" — ").slice(1).join(" — ") : district.district;
   const calendlyHtml = r && r.calendly ? ea(r.calendly, "Schedule time with me →") : "Happy to find a time — just reply and we can schedule a quick connect.";
@@ -1951,7 +1954,7 @@ export default function BrightwheelDashboard() {
       <div className="px-6 py-4">
         {/* ── OVERVIEW TAB ── */}
         {activeTab === "overview" && (() => {
-          const STATE_NAMES_OV = { FL: "Florida", AL: "Alabama", ID: "Idaho", NV: "Nevada", CA: "California", OR: "Oregon", NM: "New Mexico", GA: "Georgia", MI: "Michigan", WA: "Washington" };
+          const STATE_NAMES_OV = { FL: "Florida", AL: "Alabama", ID: "Idaho", NV: "Nevada", CA: "California", OR: "Oregon", NM: "New Mexico", GA: "Georgia", MI: "Michigan", WA: "Washington", AZ: "Arizona", UT: "Utah", CO: "Colorado" };
           const repEmail = globalRepFilter === "all" ? null : globalRepFilter;
           const stateFilter = overviewFilterState === "all" ? null : overviewFilterState;
 
@@ -2012,13 +2015,16 @@ export default function BrightwheelDashboard() {
                   <option value="all">All States</option>
                   <option value="FL">Florida</option>
                   <option value="AL">Alabama</option>
-                  <option value="ID">Idaho</option>
-                  <option value="NV">Nevada</option>
-                  <option value="CA">California</option>
-                  <option value="OR">Oregon</option>
-                  <option value="NM">New Mexico</option>
                   <option value="GA">Georgia</option>
                   <option value="MI">Michigan</option>
+                  <option value="ID">Idaho</option>
+                  <option value="UT">Utah</option>
+                  <option value="CO">Colorado</option>
+                  <option value="NV">Nevada</option>
+                  <option value="NM">New Mexico</option>
+                  <option value="AZ">Arizona</option>
+                  <option value="CA">California</option>
+                  <option value="OR">Oregon</option>
                   <option value="WA">Washington</option>
                 </select>
                 <select value={globalRepFilter} onChange={e => setGlobalRepFilter(e.target.value)} className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200">
@@ -2131,7 +2137,7 @@ export default function BrightwheelDashboard() {
                 className="border border-gray-200 rounded-lg px-3 py-2 text-sm flex-shrink-0 w-56 focus:outline-none focus:ring-2 focus:ring-indigo-200"
               />
               {[
-                { label: "State", val: filterState, setter: setFilterState, opts: [["all","All States"],["FL","Florida"],["AL","Alabama"],["ID","Idaho"],["NV","Nevada"],["CA","California"],["OR","Oregon"],["NM","New Mexico"],["GA","Georgia"],["MI","Michigan"],["WA","Washington"]] },
+                { label: "State", val: filterState, setter: setFilterState, opts: [["all","All States"],["FL","Florida"],["AL","Alabama"],["GA","Georgia"],["MI","Michigan"],["ID","Idaho"],["UT","Utah"],["CO","Colorado"],["NV","Nevada"],["NM","New Mexico"],["AZ","Arizona"],["CA","California"],["OR","Oregon"],["WA","Washington"]] },
                 { label: "Priority", val: filterPriority, setter: setFilterPriority, opts: [["all","All Priorities"],["hot","🔥 Hot"],["warm","🌡️ Warm"],["cool","💧 Cool"],["cold","❄️ Cold"]] },
                 { label: "Curriculum", val: filterCurriculum, setter: setFilterCurriculum, opts: [["all","All Curricula"], ...CURRICULUM_VENDORS.map(v => [v, v])] },
                 { label: "Stage", val: filterStatus, setter: setFilterStatus, opts: [["all","All Stages"], ...Object.entries(SEQUENCE_STAGES).map(([k,v]) => [k, v.label])] },
@@ -2464,13 +2470,16 @@ export default function BrightwheelDashboard() {
                   <option value="all">All States</option>
                   <option value="FL">Florida</option>
                   <option value="AL">Alabama</option>
-                  <option value="ID">Idaho</option>
-                  <option value="NV">Nevada</option>
-                  <option value="CA">California</option>
-                  <option value="OR">Oregon</option>
-                  <option value="NM">New Mexico</option>
                   <option value="GA">Georgia</option>
                   <option value="MI">Michigan</option>
+                  <option value="ID">Idaho</option>
+                  <option value="UT">Utah</option>
+                  <option value="CO">Colorado</option>
+                  <option value="NV">Nevada</option>
+                  <option value="NM">New Mexico</option>
+                  <option value="AZ">Arizona</option>
+                  <option value="CA">California</option>
+                  <option value="OR">Oregon</option>
                   <option value="WA">Washington</option>
                 </select>
                 <select value={globalRepFilter} onChange={(e) => setGlobalRepFilter(e.target.value)} className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200">
@@ -3443,7 +3452,7 @@ export default function BrightwheelDashboard() {
           ] : [];
 
           const repForDi = selectedDi ? REP_PROFILES[STATE_REP_EMAIL[selectedDi.state || "FL"]] : null;
-          const STATE_NAMES_DI = { FL: "Florida", AL: "Alabama", ID: "Idaho", NV: "Nevada", CA: "California", OR: "Oregon", NM: "New Mexico", GA: "Georgia", MI: "Michigan", WA: "Washington" };
+          const STATE_NAMES_DI = { FL: "Florida", AL: "Alabama", ID: "Idaho", NV: "Nevada", CA: "California", OR: "Oregon", NM: "New Mexico", GA: "Georgia", MI: "Michigan", WA: "Washington", AZ: "Arizona", UT: "Utah", CO: "Colorado" };
 
           return (
             <div className="pl-2">
@@ -3462,13 +3471,16 @@ export default function BrightwheelDashboard() {
                   <option value="all">All States</option>
                   <option value="FL">Florida</option>
                   <option value="AL">Alabama</option>
-                  <option value="ID">Idaho</option>
-                  <option value="NV">Nevada</option>
-                  <option value="CA">California</option>
-                  <option value="OR">Oregon</option>
-                  <option value="NM">New Mexico</option>
                   <option value="GA">Georgia</option>
                   <option value="MI">Michigan</option>
+                  <option value="ID">Idaho</option>
+                  <option value="UT">Utah</option>
+                  <option value="CO">Colorado</option>
+                  <option value="NV">Nevada</option>
+                  <option value="NM">New Mexico</option>
+                  <option value="AZ">Arizona</option>
+                  <option value="CA">California</option>
+                  <option value="OR">Oregon</option>
                   <option value="WA">Washington</option>
                 </select>
 
