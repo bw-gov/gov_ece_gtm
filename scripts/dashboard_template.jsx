@@ -2140,23 +2140,27 @@ export default function BrightwheelDashboard() {
                   { key: "note",     label: "📝 Notes",    color: "text-gray-600",   bg: "bg-gray-50"   },
                 ];
 
-                // Build a districtId → rep email lookup so we can attribute
-                // activities even when repEmail wasn't stored on the row
-                // (e.g. logged before the field was populated, or without Gmail sign-in).
-                const distIdToRepEmail = {};
+                // Flatten all activities from every district, attributing each
+                // to the rep who owns that district's state (fallback when repEmail
+                // is blank — covers activities logged before the field existed or
+                // without Gmail sign-in). District state is the authoritative source
+                // since it's always populated from localStorage / JSON.
+                const allActivities = [];
                 districts.forEach(d => {
-                  distIdToRepEmail[String(d.id)] = STATE_REP_EMAIL[d.state || "FL"] || "";
+                  const ownerEmail = STATE_REP_EMAIL[d.state || "FL"] || "";
+                  (d.activities || []).forEach(a => {
+                    allActivities.push({
+                      ...a,
+                      _resolvedRep: a.repEmail || ownerEmail,
+                    });
+                  });
                 });
-                const resolveRepEmail = (a) => {
-                  if (a.repEmail) return a.repEmail;
-                  return distIdToRepEmail[String(a.districtId)] || "";
-                };
 
                 const repRows = Object.entries(REP_PROFILES)
                   .filter(([, r]) => r.name)
                   .map(([email, rep]) => {
-                    const logs = activityLog.filter(a =>
-                      resolveRepEmail(a) === email &&
+                    const logs = allActivities.filter(a =>
+                      a._resolvedRep === email &&
                       ACT_TYPES.some(t => t.key === a.type) &&
                       (!cutoffStr || (a.date || "") >= cutoffStr)
                     );
