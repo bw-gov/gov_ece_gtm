@@ -135,6 +135,8 @@ const AUTHORIZED_EDITORS = new Set([
   "christie.cooley@mybrightwheel.com",
   "eric.truog@mybrightwheel.com",
   "sudeepta.sridhara@mybrightwheel.com",
+  "kevin.elston@mybrightwheel.com",
+  "eric.bernstein@mybrightwheel.com",
 ]);
 
 // Default plain-text bodies for each template.
@@ -658,6 +660,7 @@ export default function BrightwheelDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
   const [overviewFilterState, setOverviewFilterState] = useState("all");
   const [globalRepFilter, setGlobalRepFilter] = useState("all");
+  const [ovActivityWindow, setOvActivityWindow] = useState("7d");
   const [search, setSearch] = useState("");
   const [filterState, setFilterState] = useState("all");
   const [filterPriority, setFilterPriority] = useState("all");
@@ -2108,6 +2111,115 @@ export default function BrightwheelDashboard() {
                   </table>
                 </div>
               </div>
+
+              {/* ── Team Activity ── */}
+              {(() => {
+                const ACT_WINDOWS = [
+                  { v: "1d", l: "Today" },
+                  { v: "7d", l: "Last 7 days" },
+                  { v: "30d", l: "Last 30 days" },
+                  { v: "all", l: "All time" },
+                ];
+                const todayStr = new Date().toISOString().split("T")[0];
+                const cutoffStr = ovActivityWindow === "1d"
+                  ? todayStr
+                  : ovActivityWindow === "7d"
+                  ? new Date(Date.now() - 7 * 86400000).toISOString().split("T")[0]
+                  : ovActivityWindow === "30d"
+                  ? new Date(Date.now() - 30 * 86400000).toISOString().split("T")[0]
+                  : null;
+
+                const ACT_TYPES = [
+                  { key: "email",    label: "✉️ Emails",   color: "text-blue-600",   bg: "bg-blue-50"   },
+                  { key: "call",     label: "📞 Calls",    color: "text-green-600",  bg: "bg-green-50"  },
+                  { key: "linkedin", label: "🔗 LinkedIn", color: "text-sky-600",    bg: "bg-sky-50"    },
+                  { key: "meeting",  label: "📅 Meetings", color: "text-purple-600", bg: "bg-purple-50" },
+                  { key: "note",     label: "📝 Notes",    color: "text-gray-600",   bg: "bg-gray-50"   },
+                ];
+
+                const repRows = Object.entries(REP_PROFILES)
+                  .filter(([, r]) => r.name)
+                  .map(([email, rep]) => {
+                    const logs = activityLog.filter(a =>
+                      a.repEmail === email &&
+                      ACT_TYPES.some(t => t.key === a.type) &&
+                      (!cutoffStr || (a.date || "") >= cutoffStr)
+                    );
+                    const counts = {};
+                    ACT_TYPES.forEach(t => { counts[t.key] = 0; });
+                    logs.forEach(a => { if (counts[a.type] !== undefined) counts[a.type]++; });
+                    const total = Object.values(counts).reduce((s, n) => s + n, 0);
+                    return { email, rep, counts, total };
+                  })
+                  .filter(r => !repEmail || r.email === repEmail)
+                  .sort((a, b) => b.total - a.total);
+
+                const colTotals = {};
+                ACT_TYPES.forEach(t => { colTotals[t.key] = repRows.reduce((s, r) => s + r.counts[t.key], 0); });
+                const grandTotal = repRows.reduce((s, r) => s + r.total, 0);
+
+                return (
+                  <div className="mb-6">
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="text-sm font-semibold text-gray-700">📊 Team Activity</h3>
+                      <div className="flex gap-1">
+                        {ACT_WINDOWS.map(({ v, l }) => (
+                          <button
+                            key={v}
+                            onClick={() => setOvActivityWindow(v)}
+                            className={"text-xs px-3 py-1.5 rounded-lg font-medium transition-colors " + (ovActivityWindow === v ? "bg-indigo-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200")}
+                          >{l}</button>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                      <table className="w-full text-xs">
+                        <thead>
+                          <tr className="bg-gray-50 border-b border-gray-200">
+                            <th className="text-left px-4 py-2.5 font-semibold text-gray-500">Rep</th>
+                            {ACT_TYPES.map(t => (
+                              <th key={t.key} className={"text-right px-4 py-2.5 font-semibold " + t.color}>{t.label}</th>
+                            ))}
+                            <th className="text-right px-4 py-2.5 font-semibold text-gray-700">Total</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {repRows.length === 0 ? (
+                            <tr><td colSpan={ACT_TYPES.length + 2} className="px-4 py-8 text-center text-gray-400">No activity logged in this period.</td></tr>
+                          ) : (
+                            repRows.map(({ email, rep, counts, total }) => (
+                              <tr key={email} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                                <td className="px-4 py-2.5">
+                                  <span className={"text-xs px-2 py-0.5 rounded-full font-semibold " + rep.color}>{rep.name}</span>
+                                </td>
+                                {ACT_TYPES.map(t => (
+                                  <td key={t.key} className={"text-right px-4 py-2.5 font-medium " + (counts[t.key] > 0 ? t.color : "text-gray-300")}>
+                                    {counts[t.key] > 0 ? counts[t.key] : "—"}
+                                  </td>
+                                ))}
+                                <td className={"text-right px-4 py-2.5 font-bold " + (total > 0 ? "text-gray-800" : "text-gray-300")}>{total > 0 ? total : "—"}</td>
+                              </tr>
+                            ))
+                          )}
+                        </tbody>
+                        {grandTotal > 0 && (
+                          <tfoot>
+                            <tr className="border-t-2 border-gray-200 bg-gray-50">
+                              <td className="px-4 py-2.5 font-semibold text-gray-600 text-xs">Total</td>
+                              {ACT_TYPES.map(t => (
+                                <td key={t.key} className={"text-right px-4 py-2.5 font-semibold " + (colTotals[t.key] > 0 ? t.color : "text-gray-300")}>
+                                  {colTotals[t.key] > 0 ? colTotals[t.key] : "—"}
+                                </td>
+                              ))}
+                              <td className="text-right px-4 py-2.5 font-bold text-gray-800">{grandTotal}</td>
+                            </tr>
+                          </tfoot>
+                        )}
+                      </table>
+                    </div>
+                  </div>
+                );
+              })()}
 
               {/* ── Weekly Intel News ── */}
               <div>
