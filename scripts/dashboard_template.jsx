@@ -2140,11 +2140,23 @@ export default function BrightwheelDashboard() {
                   { key: "note",     label: "📝 Notes",    color: "text-gray-600",   bg: "bg-gray-50"   },
                 ];
 
+                // Build a districtId → rep email lookup so we can attribute
+                // activities even when repEmail wasn't stored on the row
+                // (e.g. logged before the field was populated, or without Gmail sign-in).
+                const distIdToRepEmail = {};
+                districts.forEach(d => {
+                  distIdToRepEmail[String(d.id)] = STATE_REP_EMAIL[d.state || "FL"] || "";
+                });
+                const resolveRepEmail = (a) => {
+                  if (a.repEmail) return a.repEmail;
+                  return distIdToRepEmail[String(a.districtId)] || "";
+                };
+
                 const repRows = Object.entries(REP_PROFILES)
                   .filter(([, r]) => r.name)
                   .map(([email, rep]) => {
                     const logs = activityLog.filter(a =>
-                      a.repEmail === email &&
+                      resolveRepEmail(a) === email &&
                       ACT_TYPES.some(t => t.key === a.type) &&
                       (!cutoffStr || (a.date || "") >= cutoffStr)
                     );
