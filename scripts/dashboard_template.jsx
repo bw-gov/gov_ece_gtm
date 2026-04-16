@@ -29,6 +29,7 @@ const SEQUENCE_STAGES = {
   closing_sent:   { label: "Closing Sent",   color: "bg-teal-100 text-teal-700",     dot: "bg-teal-500"    },
   responded:      { label: "Responded ✓",    color: "bg-green-100 text-green-700",   dot: "bg-green-500"   },
   nurture:        { label: "Nurture",        color: "bg-slate-100 text-slate-500",   dot: "bg-slate-400"   },
+  linkedin:       { label: "LinkedIn Sent",  color: "bg-sky-100 text-sky-600",       dot: "bg-sky-500"     },
 };
 
 // ─── CAMPAIGNS ────────────────────────────────────────────────────────────────
@@ -47,6 +48,17 @@ const CAMPAIGNS = {
       { key: "nurture",        day: 14, label: "Nurture",              icon: "🌱", action: "Move to nurture list",              color: "bg-slate-100 text-slate-500"  },
     ],
   },
+};
+
+// ─── STEP TYPES ──────────────────────────────────────────────────────────────
+// Available step types for custom sequences. stageKey maps to SEQUENCE_STAGES.
+const STEP_TYPES = {
+  email:    { label: "Email",           icon: "📧", color: "bg-blue-100 text-blue-700",     defaultLabel: "Initial Email",     stageKey: "email_sent",     isEmail: true  },
+  followup: { label: "Follow-up Email", icon: "✉️",  color: "bg-indigo-100 text-indigo-700", defaultLabel: "Follow-up Email",   stageKey: "follow_up_sent", isEmail: true  },
+  closing:  { label: "Closing Email",   icon: "🔒", color: "bg-teal-100 text-teal-700",     defaultLabel: "Closing Email",     stageKey: "closing_sent",   isEmail: true  },
+  call:     { label: "Call / VM",       icon: "📞", color: "bg-purple-100 text-purple-700", defaultLabel: "Call + Voicemail",  stageKey: "vm_left",        isEmail: false },
+  linkedin: { label: "LinkedIn",        icon: "💼", color: "bg-sky-100 text-sky-700",       defaultLabel: "LinkedIn Outreach", stageKey: "linkedin",       isEmail: false },
+  mailer:   { label: "Physical Mailer", icon: "📮", color: "bg-orange-100 text-orange-700", defaultLabel: "Physical Mailer",   stageKey: "mailer_queued",  isEmail: false },
 };
 
 // Map old status strings → new stage keys (for localStorage / sheet migration)
@@ -763,6 +775,15 @@ export default function BrightwheelDashboard() {
   const newTemplateBodyRef = React.useRef(null);
   const customEditBodyRef = React.useRef(null);
 
+  // ── CUSTOM SEQUENCES ─────────────────────────────────────────────────────────
+  // User-built sequences stored in localStorage.
+  const [customSequences, setCustomSequences] = useState(() => {
+    try { const s = localStorage.getItem("bw_custom_sequences_v1"); return s ? JSON.parse(s) : {}; } catch { return {}; }
+  });
+  const [showSequenceBuilder, setShowSequenceBuilder] = useState(false);
+  const [editingSequenceId, setEditingSequenceId] = useState(null); // null = new
+  const [seqDraft, setSeqDraft] = useState({ label: "", description: "", steps: [] });
+
   // ── SHARED DISTRICT NOTES ────────────────────────────────────────────────────
   // Persisted per-district sticky notes stored in the activity sheet as
   // type="district_note". Visible to anyone who opens the dashboard.
@@ -789,6 +810,12 @@ export default function BrightwheelDashboard() {
   // Rep profile for the currently logged-in user — null if not signed in or unrecognized
   const currentRep = (gmailUser && REP_PROFILES[gmailUser]) || null;
   const canEditEmailCopy = gmailUser && AUTHORIZED_EDITORS.has(gmailUser);
+
+  // Merge built-in CAMPAIGNS with user-created custom sequences
+  const allCampaigns = useMemo(() => ({
+    ...CAMPAIGNS,
+    ...Object.fromEntries(Object.entries(customSequences).map(([id, seq]) => [id, { ...seq, isCustom: true }]))
+  }), [customSequences]);
 
   // Wrapper that uses a saved template override when available, otherwise falls
   // back to the hardcoded generateEmail function.
@@ -848,6 +875,11 @@ export default function BrightwheelDashboard() {
   useEffect(() => {
     try { localStorage.setItem("bw_custom_templates_v1", JSON.stringify(customTemplates)); } catch(e) {}
   }, [customTemplates]);
+
+  // Persist custom sequences to localStorage
+  useEffect(() => {
+    try { localStorage.setItem("bw_custom_sequences_v1", JSON.stringify(customSequences)); } catch(e) {}
+  }, [customSequences]);
 
   // Persist bounces to localStorage
   useEffect(() => {
@@ -2814,7 +2846,7 @@ export default function BrightwheelDashboard() {
 
         {/* ── CALL QUEUE TAB ── */}
         {activeTab === "callqueue" && (() => {
-          const campaign = CAMPAIGNS[campaignFilter];
+          const campaign = allCampaigns[campaignFilter] || CAMPAIGNS.summer_outreach;
           const terminalStages = ["responded", "nurture"];
           const enrollments = campaignEnrollments[campaignFilter] || {};
 
@@ -2905,10 +2937,37 @@ export default function BrightwheelDashboard() {
                     onChange={e => { setCampaignFilter(e.target.value); setSeqStageFilter(null); }}
                     className="border border-gray-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-200"
                   >
-                    {Object.entries(CAMPAIGNS).map(([k, v]) => (
-                      <option key={k} value={k}>{v.label}</option>
-                    ))}
+                    <optgroup label="Built-in">
+                      {Object.entries(CAMPAIGNS).map(([k, v]) => (
+                        <option key={k} value={k}>{v.label}</option>
+                      ))}
+                    </optgroup>
+                    {Object.keys(customSequences).length > 0 && (
+                      <optgroup label="Custom">
+                        {Object.entries(customSequences).map(([k, v]) => (
+                          <option key={k} value={k}>{v.label}</option>
+                        ))}
+                      </optgroup>
+                    )}
                   </select>
+                  {campaign.isCustom && (
+                    <button
+                      onClick={() => {
+                        setEditingSequenceId(campaignFilter);
+                        setSeqDraft({ label: campaign.label, description: campaign.description || "", steps: campaign.steps.map(s => ({ ...s })) });
+                        setShowSequenceBuilder(true);
+                      }}
+                      className="text-xs border border-gray-200 text-gray-600 px-3 py-2 rounded-lg hover:bg-gray-50 flex items-center gap-1"
+                    >✏️ Edit</button>
+                  )}
+                  <button
+                    onClick={() => {
+                      setEditingSequenceId(null);
+                      setSeqDraft({ label: "", description: "", steps: [] });
+                      setShowSequenceBuilder(true);
+                    }}
+                    className="text-xs bg-violet-600 hover:bg-violet-700 text-white px-3 py-2 rounded-lg font-medium flex items-center gap-1.5"
+                  >✨ New Sequence</button>
                   <select
                     value={seqStateFilter}
                     onChange={e => setSeqStateFilter(e.target.value)}
@@ -3108,7 +3167,12 @@ export default function BrightwheelDashboard() {
                               <div className="flex gap-1">
                                 <select value={d.status || "not_started"} onChange={e => updateStage(d.id, e.target.value)}
                                   className="text-xs border border-gray-200 rounded-lg px-1.5 py-1 focus:outline-none focus:ring-1 focus:ring-indigo-300 bg-white flex-1">
-                                  {Object.entries(SEQUENCE_STAGES).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
+                                  <option value="not_started">Not Started</option>
+                                  {campaign.steps.map(s => (
+                                    <option key={s.key} value={s.key}>{s.icon} {s.label}</option>
+                                  ))}
+                                  <option value="responded">Responded ✓</option>
+                                  <option value="nurture">Nurture</option>
                                 </select>
                               </div>
                             </div>
@@ -3171,9 +3235,12 @@ export default function BrightwheelDashboard() {
                               onChange={(e) => updateStage(d.id, e.target.value)}
                               className="text-xs border border-gray-200 rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-indigo-300 bg-white w-full"
                             >
-                              {Object.entries(SEQUENCE_STAGES).map(([k, v]) => (
-                                <option key={k} value={k}>{v.label}</option>
+                              <option value="not_started">Not Started</option>
+                              {campaign.steps.map(s => (
+                                <option key={s.key} value={s.key}>{s.icon} {s.label}</option>
                               ))}
+                              <option value="responded">Responded ✓</option>
+                              <option value="nurture">Nurture</option>
                             </select>
                           </div>
                           <div>
@@ -3372,6 +3439,247 @@ export default function BrightwheelDashboard() {
                         >
                           Enroll {enrollSelected.size > 0 ? enrollSelected.size : ""} in {CAMPAIGNS[campaignFilter].label}
                         </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Sequence Builder Slide-Over */}
+              {showSequenceBuilder && (
+                <div className="fixed inset-0 z-50 flex">
+                  <div className="flex-1 bg-black/30" onClick={() => setShowSequenceBuilder(false)} />
+                  <div className="w-full max-w-2xl bg-white shadow-2xl flex flex-col h-full overflow-hidden">
+                    {/* Header */}
+                    <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between flex-shrink-0">
+                      <div>
+                        <div className="font-semibold text-gray-900 text-sm">{editingSequenceId ? "Edit Sequence" : "New Sequence"}</div>
+                        <div className="text-xs text-gray-400 mt-0.5">Define steps, timing, and email templates for this sequence</div>
+                      </div>
+                      <button onClick={() => setShowSequenceBuilder(false)} className="text-gray-400 hover:text-gray-600 text-xl font-bold leading-none">✕</button>
+                    </div>
+
+                    {/* Body */}
+                    <div className="flex-1 overflow-y-auto p-6 space-y-6">
+
+                      {/* Name + Description */}
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-1">Sequence Name *</label>
+                          <input
+                            value={seqDraft.label}
+                            onChange={e => setSeqDraft(p => ({ ...p, label: e.target.value }))}
+                            placeholder="e.g. Fall Outreach 2026"
+                            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-1">Description (optional)</label>
+                          <input
+                            value={seqDraft.description}
+                            onChange={e => setSeqDraft(p => ({ ...p, description: e.target.value }))}
+                            placeholder="Short description"
+                            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Steps */}
+                      <div>
+                        <div className="flex items-center justify-between mb-3">
+                          <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Steps ({seqDraft.steps.length})</span>
+                          {seqDraft.steps.length > 1 && (
+                            <span className="text-xs text-gray-400">Day 0 → Day {Math.max(...seqDraft.steps.map(s => s.day))}</span>
+                          )}
+                        </div>
+
+                        {seqDraft.steps.length === 0 && (
+                          <div className="bg-gray-50 border border-dashed border-gray-200 rounded-xl p-8 text-center text-gray-400 text-sm mb-4">
+                            No steps yet — add your first step below.
+                          </div>
+                        )}
+
+                        <div className="space-y-3 mb-4">
+                          {seqDraft.steps.map((step, idx) => {
+                            const typeInfo = STEP_TYPES[step.type] || STEP_TYPES.email;
+                            const usedStageKeys = seqDraft.steps.filter((_, i) => i !== idx).map(s => STEP_TYPES[s.type]?.stageKey);
+                            const allTmpl = { ...DEFAULT_TEMPLATE_TEXTS, ...customTemplates };
+                            return (
+                              <div key={step.id} className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+                                {/* Step header */}
+                                <div className="flex items-center gap-3 px-4 py-2.5 bg-gray-50 border-b border-gray-100">
+                                  <div className="w-5 h-5 rounded-full bg-indigo-600 text-white text-xs flex items-center justify-center font-bold flex-shrink-0">{idx + 1}</div>
+                                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${typeInfo.color}`}>{typeInfo.icon} {typeInfo.label}</span>
+                                  <span className="text-xs text-gray-400">Day {step.day}</span>
+                                  <div className="ml-auto flex items-center gap-1">
+                                    {idx > 0 && (
+                                      <button onClick={() => { const s = [...seqDraft.steps]; [s[idx-1], s[idx]] = [s[idx], s[idx-1]]; setSeqDraft(p => ({...p, steps: s})); }}
+                                        className="text-xs text-gray-400 hover:text-gray-600 w-6 h-6 flex items-center justify-center rounded hover:bg-gray-200 transition-colors">↑</button>
+                                    )}
+                                    {idx < seqDraft.steps.length - 1 && (
+                                      <button onClick={() => { const s = [...seqDraft.steps]; [s[idx], s[idx+1]] = [s[idx+1], s[idx]]; setSeqDraft(p => ({...p, steps: s})); }}
+                                        className="text-xs text-gray-400 hover:text-gray-600 w-6 h-6 flex items-center justify-center rounded hover:bg-gray-200 transition-colors">↓</button>
+                                    )}
+                                    <button onClick={() => setSeqDraft(p => ({...p, steps: p.steps.filter((_, i) => i !== idx)}))}
+                                      className="text-xs text-red-400 hover:text-red-600 w-6 h-6 flex items-center justify-center rounded hover:bg-red-50 transition-colors">✕</button>
+                                  </div>
+                                </div>
+                                {/* Step fields */}
+                                <div className={`p-4 grid gap-3 ${typeInfo.isEmail ? "grid-cols-2" : "grid-cols-2"}`}>
+                                  <div>
+                                    <label className="text-xs font-semibold text-gray-400 uppercase tracking-wide block mb-1">Step Type</label>
+                                    <select
+                                      value={step.type}
+                                      onChange={e => {
+                                        const newType = e.target.value;
+                                        const ti = STEP_TYPES[newType];
+                                        setSeqDraft(p => ({
+                                          ...p,
+                                          steps: p.steps.map((s, i) => i !== idx ? s : {
+                                            ...s, type: newType, label: ti.defaultLabel, action: ti.defaultLabel,
+                                            stageKey: ti.stageKey, key: ti.stageKey,
+                                            icon: ti.icon, color: ti.color,
+                                            templateKey: ti.isEmail ? (s.templateKey || "original") : undefined,
+                                          })
+                                        }));
+                                      }}
+                                      className="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                                    >
+                                      {Object.entries(STEP_TYPES).map(([k, v]) => {
+                                        const alreadyUsed = k !== step.type && usedStageKeys.includes(v.stageKey);
+                                        return <option key={k} value={k} disabled={alreadyUsed}>{v.icon} {v.label}{alreadyUsed ? " (already added)" : ""}</option>;
+                                      })}
+                                    </select>
+                                  </div>
+                                  <div>
+                                    <label className="text-xs font-semibold text-gray-400 uppercase tracking-wide block mb-1">Day (from Day 0)</label>
+                                    <input
+                                      type="number" min="0" max="365"
+                                      value={step.day}
+                                      onChange={e => setSeqDraft(p => ({...p, steps: p.steps.map((s, i) => i === idx ? {...s, day: Math.max(0, parseInt(e.target.value) || 0)} : s)}))}
+                                      className="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                                    />
+                                  </div>
+                                  <div>
+                                    <label className="text-xs font-semibold text-gray-400 uppercase tracking-wide block mb-1">Step Label</label>
+                                    <input
+                                      value={step.label}
+                                      onChange={e => setSeqDraft(p => ({...p, steps: p.steps.map((s, i) => i === idx ? {...s, label: e.target.value, action: e.target.value} : s)}))}
+                                      className="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                                    />
+                                  </div>
+                                  {typeInfo.isEmail && (
+                                    <div>
+                                      <label className="text-xs font-semibold text-gray-400 uppercase tracking-wide block mb-1">Email Template</label>
+                                      <select
+                                        value={step.templateKey || "original"}
+                                        onChange={e => setSeqDraft(p => ({...p, steps: p.steps.map((s, i) => i === idx ? {...s, templateKey: e.target.value} : s)}))}
+                                        className="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                                      >
+                                        {Object.entries(allTmpl).map(([k, v]) => (
+                                          <option key={k} value={k}>{v.label || k}</option>
+                                        ))}
+                                        <option value="personalized">✨ Personalized (AI-generated)</option>
+                                      </select>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+
+                        {/* Add step buttons */}
+                        <div>
+                          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Add a step:</p>
+                          <div className="flex flex-wrap gap-2">
+                            {Object.entries(STEP_TYPES).map(([k, v]) => {
+                              const alreadyUsed = seqDraft.steps.some(s => STEP_TYPES[s.type]?.stageKey === v.stageKey);
+                              return (
+                                <button
+                                  key={k}
+                                  disabled={alreadyUsed}
+                                  onClick={() => {
+                                    const maxDay = seqDraft.steps.length > 0 ? Math.max(...seqDraft.steps.map(s => s.day)) + 3 : 0;
+                                    setSeqDraft(p => ({
+                                      ...p,
+                                      steps: [...p.steps, {
+                                        id: `step_${Date.now()}_${k}`,
+                                        key: v.stageKey,
+                                        type: k,
+                                        label: v.defaultLabel,
+                                        action: v.defaultLabel,
+                                        icon: v.icon,
+                                        color: v.color,
+                                        day: maxDay,
+                                        stageKey: v.stageKey,
+                                        templateKey: v.isEmail ? "original" : undefined,
+                                      }]
+                                    }));
+                                  }}
+                                  className={`text-xs px-3 py-1.5 rounded-lg font-medium border flex items-center gap-1.5 transition-colors ${
+                                    alreadyUsed
+                                      ? "bg-gray-50 text-gray-300 border-gray-100 cursor-not-allowed"
+                                      : `${v.color} border-current opacity-90 hover:opacity-100 cursor-pointer`
+                                  }`}
+                                >{v.icon} {v.label}</button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Delete (edit mode only) */}
+                      {editingSequenceId && (
+                        <div className="border-t border-gray-100 pt-4">
+                          <button
+                            onClick={() => {
+                              if (window.confirm("Delete this sequence? Districts enrolled in it will keep their current stage.")) {
+                                setCustomSequences(prev => { const n = {...prev}; delete n[editingSequenceId]; return n; });
+                                if (campaignFilter === editingSequenceId) setCampaignFilter("summer_outreach");
+                                setShowSequenceBuilder(false);
+                                showNotif("Sequence deleted.");
+                              }
+                            }}
+                            className="text-xs text-red-500 hover:text-red-700 border border-red-200 hover:bg-red-50 px-3 py-1.5 rounded-lg transition-colors"
+                          >🗑️ Delete this sequence</button>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Footer */}
+                    <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between flex-shrink-0">
+                      <span className="text-xs text-gray-400">
+                        {seqDraft.steps.length} step{seqDraft.steps.length !== 1 ? "s" : ""}
+                        {seqDraft.steps.length > 0 && ` · Day 0 → Day ${Math.max(...seqDraft.steps.map(s => s.day))}`}
+                      </span>
+                      <div className="flex gap-2">
+                        <button onClick={() => setShowSequenceBuilder(false)}
+                          className="text-xs border border-gray-200 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-50">Cancel</button>
+                        <button
+                          disabled={!seqDraft.label.trim() || seqDraft.steps.length === 0}
+                          onClick={() => {
+                            const id = editingSequenceId || `custom_${Date.now()}`;
+                            const sortedSteps = [...seqDraft.steps].sort((a, b) => a.day - b.day);
+                            setCustomSequences(prev => ({
+                              ...prev,
+                              [id]: {
+                                label: seqDraft.label.trim(),
+                                description: seqDraft.description.trim(),
+                                steps: sortedSteps,
+                                isCustom: true,
+                                createdBy: gmailUser || "",
+                                createdAt: editingSequenceId ? (prev[id]?.createdAt || new Date().toISOString()) : new Date().toISOString(),
+                                lastEditedAt: new Date().toISOString(),
+                              }
+                            }));
+                            setCampaignFilter(id);
+                            setSeqStageFilter(null);
+                            setShowSequenceBuilder(false);
+                            showNotif(`✅ "${seqDraft.label.trim()}" saved`);
+                          }}
+                          className="text-xs bg-indigo-600 hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed text-white px-5 py-2 rounded-lg font-semibold"
+                        >{editingSequenceId ? "Save Changes" : "Create Sequence"}</button>
                       </div>
                     </div>
                   </div>
