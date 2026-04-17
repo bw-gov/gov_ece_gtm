@@ -882,6 +882,7 @@ export default function BrightwheelDashboard() {
   const [filterCurriculum, setFilterCurriculum] = useState("all");
   const [filterStatus, setFilterStatus] = useState("all");
   const [filterSalesforce, setFilterSalesforce] = useState("all"); // "all" | "in_sf" | "not_in_sf"
+  const [filterEnrollment, setFilterEnrollment] = useState("all"); // "all" | "lt500" | "500to1k" | "1kto3k" | "3kplus"
   const [sortBy, setSortBy] = useState("priority"); // priority | enrollment | tier | adoptionYear | lastUpdated
   const [selectedDistrict, setSelectedDistrict] = useState(null);
   const [modalTab, setModalTab] = useState("overview");
@@ -1912,9 +1913,9 @@ export default function BrightwheelDashboard() {
   const filtered = useMemo(() => {
     const results = districts.filter((d) => {
       const matchSearch =
-        d.district.toLowerCase().includes(search.toLowerCase()) ||
-        d.director.toLowerCase().includes(search.toLowerCase()) ||
-        d.county.toLowerCase().includes(search.toLowerCase());
+        (d.district || "").toLowerCase().includes(search.toLowerCase()) ||
+        (d.director || "").toLowerCase().includes(search.toLowerCase()) ||
+        (d.county || "").toLowerCase().includes(search.toLowerCase());
       const matchPriority =
         filterPriority === "all" ||
         (filterPriority === "hot" && d.priority >= 75) ||
@@ -1929,7 +1930,13 @@ export default function BrightwheelDashboard() {
       const matchSalesforce = filterSalesforce === "all" ||
         (filterSalesforce === "in_sf" && d.inSalesforce) ||
         (filterSalesforce === "not_in_sf" && !d.inSalesforce);
-      return matchSearch && matchPriority && matchState && matchCurriculum && matchStatus && matchRep && matchSalesforce;
+      const enr = d.enrollment || 0;
+      const matchEnrollment = filterEnrollment === "all" ||
+        (filterEnrollment === "lt500"   && enr < 500) ||
+        (filterEnrollment === "500to1k" && enr >= 500  && enr < 1000) ||
+        (filterEnrollment === "1kto3k"  && enr >= 1000 && enr < 3000) ||
+        (filterEnrollment === "3kplus"  && enr >= 3000);
+      return matchSearch && matchPriority && matchState && matchCurriculum && matchStatus && matchRep && matchSalesforce && matchEnrollment;
     });
     return results.sort((a, b) => {
       if (sortBy === "enrollment") return (b.enrollment || 0) - (a.enrollment || 0);
@@ -1943,7 +1950,7 @@ export default function BrightwheelDashboard() {
       // default: priority score descending
       return (b.priority || 0) - (a.priority || 0);
     });
-  }, [districts, search, filterState, filterPriority, filterCurriculum, filterStatus, sortBy, globalRepFilter, filterSalesforce]);
+  }, [districts, search, filterState, filterPriority, filterCurriculum, filterStatus, sortBy, globalRepFilter, filterSalesforce, filterEnrollment]);
 
   // ── BULK SELECTION DERIVED ── (must come after filtered)
   const allVisibleSelected = filtered.length > 0 && filtered.every((d) => selectedIds.has(d.id));
@@ -2555,6 +2562,7 @@ export default function BrightwheelDashboard() {
                 { label: "Stage", val: filterStatus, setter: setFilterStatus, opts: [["all","All Stages"], ...Object.entries(SEQUENCE_STAGES).map(([k,v]) => [k, v.label])] },
                 { label: "Rep", val: globalRepFilter, setter: setGlobalRepFilter, opts: [["all","All Reps"], ...Object.values(REP_PROFILES).map(r => [r.email, r.name])] },
                 { label: "Salesforce", val: filterSalesforce, setter: setFilterSalesforce, opts: [["all","All"], ["in_sf","✓ In Salesforce"], ["not_in_sf","Not in SF"]] },
+                { label: "Enrollment", val: filterEnrollment, setter: setFilterEnrollment, opts: [["all","All Sizes"],["lt500","< 500"],["500to1k","500 – 1,000"],["1kto3k","1,000 – 3,000"],["3kplus","3,000+"]] },
               ].map((f) => (
                 <select
                   key={f.label}
@@ -4834,8 +4842,11 @@ export default function BrightwheelDashboard() {
                     <div className="space-y-2 text-sm">
                       <div><span className="text-gray-500">Current:</span> <span className="font-medium text-indigo-700">{selectedDistrict.curriculum}</span></div>
                       <div><span className="text-gray-500">Vendor:</span> {selectedDistrict.curriculumVendor}</div>
-                      <div><span className="text-gray-500">Adopted:</span> {selectedDistrict.curriculumAdoptionYear} <span className="text-red-500 font-medium">({2026 - selectedDistrict.curriculumAdoptionYear} years ago)</span></div>
-                      <div><span className="text-gray-500">Enrollment:</span> {selectedDistrict.enrollment.toLocaleString()}</div>
+                      {selectedDistrict.curriculumAdoptionYear
+                        ? <div><span className="text-gray-500">Adopted:</span> {selectedDistrict.curriculumAdoptionYear} <span className="text-red-500 font-medium">({2026 - selectedDistrict.curriculumAdoptionYear} years ago)</span></div>
+                        : <div><span className="text-gray-500">Adopted:</span> <span className="text-gray-400">Unknown</span></div>
+                      }
+                      <div><span className="text-gray-500">Enrollment:</span> {selectedDistrict.enrollment != null ? selectedDistrict.enrollment.toLocaleString() : "—"}</div>
                       <div><span className="text-gray-500">Stage:</span>
                         <select
                           value={selectedDistrict.status || "not_started"}
@@ -4847,7 +4858,7 @@ export default function BrightwheelDashboard() {
                       </div>
                     </div>
                   </div>
-                  {selectedDistrict.recentNews.length > 0 && (
+                  {(selectedDistrict.recentNews?.length > 0) && (
                     <div className="col-span-2">
                       <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Recent News</h3>
                       {selectedDistrict.recentNews.map((n, i) => (
@@ -4912,11 +4923,11 @@ export default function BrightwheelDashboard() {
               {modalTab === "buying signals" && (
                 <div>
                   <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-4">Why Now — Buying Signals</h3>
-                  {selectedDistrict.buyingSignals.length === 0 ? (
+                  {(!selectedDistrict.buyingSignals || selectedDistrict.buyingSignals.length === 0) ? (
                     <p className="text-gray-400 text-sm">No specific buying signals identified yet.</p>
                   ) : (
                     <div className="space-y-3">
-                      {selectedDistrict.buyingSignals.map((s, i) => (
+                      {(selectedDistrict.buyingSignals || []).map((s, i) => (
                         <div key={i} className="bg-amber-50 border border-amber-200 rounded-lg p-3 flex gap-3">
                           <span className="text-amber-500 text-lg mt-0.5">⚡</span>
                           <div>
