@@ -2698,7 +2698,20 @@ export default function BrightwheelDashboard() {
                             {d.inSalesforce && (
                               <span className="bg-green-50 text-green-700 border border-green-200 px-2 py-0.5 rounded text-xs font-medium">✓ In SF{(d.sfContacts||[]).length > 0 ? ` (${(d.sfContacts||[]).length})` : ""}</span>
                             )}
-                            {!d.newLeadership && (d.buyingSignals || []).length === 0 && (!d.boardNotes || d.boardNotes.length === 0) && (!d.districtContext || d.districtContext.length === 0) && !d.inSalesforce && <span className="text-gray-300">—</span>}
+                            {d.demographics?.ellPercent >= 15 && (
+                              <span className="bg-orange-50 text-orange-700 border border-orange-200 px-2 py-0.5 rounded text-xs">🌐 {d.demographics.ellPercent}% ELL</span>
+                            )}
+                            {d.demographics?.frlPercent >= 50 && (
+                              <span className="bg-sky-50 text-sky-700 border border-sky-200 px-2 py-0.5 rounded text-xs">🍎 Title I</span>
+                            )}
+                            {d.nicheGrade && (
+                              <span className={`px-2 py-0.5 rounded text-xs font-bold border ${
+                                d.nicheGrade[0] === "A" ? "bg-green-50 text-green-700 border-green-200" :
+                                d.nicheGrade[0] === "B" ? "bg-blue-50 text-blue-700 border-blue-200" :
+                                "bg-yellow-50 text-yellow-700 border-yellow-200"
+                              }`}>{d.nicheGrade}</span>
+                            )}
+                            {!d.newLeadership && (d.buyingSignals || []).length === 0 && (!d.boardNotes || d.boardNotes.length === 0) && (!d.districtContext || d.districtContext.length === 0) && !d.inSalesforce && !d.demographics && !d.nicheGrade && <span className="text-gray-300">—</span>}
                           </div>
                         </td>
                         <td className="px-3 py-2.5">
@@ -4905,6 +4918,195 @@ export default function BrightwheelDashboard() {
                       </div>
                     </div>
                   </div>
+                  {/* ── Demographics & Performance ── */}
+                  {(() => {
+                    const demo = selectedDistrict.demographics;
+                    const hasDemo = demo && (demo.ellPercent != null || demo.frlPercent != null || Object.keys(demo.enrollmentByRace || {}).length > 0);
+                    const hasPerf = selectedDistrict.nicheGrade || selectedDistrict.kindergartenReadiness;
+                    if (!hasDemo && !hasPerf) return null;
+
+                    // Colours for race/ethnicity bars
+                    const RACE_COLORS = {
+                      hispanic:        "bg-orange-400",
+                      white:           "bg-blue-400",
+                      black:           "bg-purple-400",
+                      asian:           "bg-green-400",
+                      twoOrMore:       "bg-pink-400",
+                      nativeAmerican:  "bg-yellow-500",
+                      pacificIslander: "bg-teal-400",
+                      unknown:         "bg-gray-300",
+                    };
+                    const RACE_LABELS = {
+                      hispanic:        "Hispanic/Latino",
+                      white:           "White",
+                      black:           "Black / African American",
+                      asian:           "Asian",
+                      twoOrMore:       "Two or more races",
+                      nativeAmerican:  "Native American",
+                      pacificIslander: "Pacific Islander",
+                      unknown:         "Unknown",
+                    };
+
+                    // Niche grade colour
+                    const gradeColor = (g) => {
+                      if (!g) return "bg-gray-100 text-gray-500";
+                      const letter = g[0].toUpperCase();
+                      return letter === "A" ? "bg-green-100 text-green-700"
+                           : letter === "B" ? "bg-blue-100 text-blue-700"
+                           : letter === "C" ? "bg-yellow-100 text-yellow-700"
+                           : "bg-red-100 text-red-700";
+                    };
+
+                    const ellPct  = demo?.ellPercent;
+                    const frlPct  = demo?.frlPercent;
+                    const races   = demo?.enrollmentByRace || {};
+                    const topRace = Object.entries(races).sort((a,b)=>b[1]-a[1])[0];
+
+                    return (
+                      <div className="col-span-2">
+                        <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Demographics &amp; Performance</h3>
+                        <div className="grid grid-cols-2 gap-4">
+
+                          {/* Left: Demographics */}
+                          {hasDemo && (
+                            <div className="space-y-3">
+
+                              {/* ELL + FRL indicator bars */}
+                              <div className="space-y-2">
+                                {ellPct != null && (
+                                  <div>
+                                    <div className="flex justify-between text-xs mb-0.5">
+                                      <span className="text-gray-600 font-medium flex items-center gap-1">
+                                        🌐 English Language Learners
+                                        {ellPct >= 15 && <span className="bg-orange-100 text-orange-700 text-xs px-1.5 rounded-full font-semibold">Multilingual needed</span>}
+                                      </span>
+                                      <span className="font-bold text-gray-800">{ellPct}%</span>
+                                    </div>
+                                    <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                                      <div className={`h-full rounded-full transition-all ${ellPct >= 25 ? "bg-orange-500" : ellPct >= 15 ? "bg-orange-400" : "bg-green-400"}`}
+                                           style={{ width: `${Math.min(ellPct, 100)}%` }} />
+                                    </div>
+                                  </div>
+                                )}
+                                {frlPct != null && (
+                                  <div>
+                                    <div className="flex justify-between text-xs mb-0.5">
+                                      <span className="text-gray-600 font-medium flex items-center gap-1">
+                                        🍎 Free/Reduced Price Lunch
+                                        {frlPct >= 50 && <span className="bg-blue-100 text-blue-700 text-xs px-1.5 rounded-full font-semibold">Title I likely</span>}
+                                      </span>
+                                      <span className="font-bold text-gray-800">{frlPct}%</span>
+                                    </div>
+                                    <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                                      <div className={`h-full rounded-full ${frlPct >= 50 ? "bg-blue-500" : "bg-blue-300"}`}
+                                           style={{ width: `${Math.min(frlPct, 100)}%` }} />
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Race / ethnicity breakdown */}
+                              {Object.keys(races).length > 0 && (
+                                <div>
+                                  <div className="text-xs text-gray-500 mb-1.5 font-medium">Student demographics</div>
+                                  {/* Stacked bar */}
+                                  <div className="h-3 rounded-full overflow-hidden flex">
+                                    {Object.entries(races)
+                                      .filter(([,v]) => v >= 1)
+                                      .sort((a,b) => b[1]-a[1])
+                                      .map(([k, v]) => (
+                                        <div key={k}
+                                             title={`${RACE_LABELS[k] || k}: ${v}%`}
+                                             className={`${RACE_COLORS[k] || "bg-gray-400"} h-full`}
+                                             style={{ width: `${v}%` }} />
+                                      ))
+                                    }
+                                  </div>
+                                  {/* Legend — top 4 only */}
+                                  <div className="flex flex-wrap gap-x-3 gap-y-1 mt-1.5">
+                                    {Object.entries(races)
+                                      .sort((a,b) => b[1]-a[1])
+                                      .slice(0, 4)
+                                      .map(([k, v]) => (
+                                        <span key={k} className="flex items-center gap-1 text-xs text-gray-600">
+                                          <span className={`inline-block w-2.5 h-2.5 rounded-sm ${RACE_COLORS[k] || "bg-gray-400"}`} />
+                                          {RACE_LABELS[k] || k} {v}%
+                                        </span>
+                                      ))
+                                    }
+                                  </div>
+                                </div>
+                              )}
+
+                              {demo?.year && (
+                                <div className="text-xs text-gray-400">
+                                  Source: NCES CCD {demo.year}
+                                  {demo.src && <a href={demo.src} target="_blank" rel="noreferrer" className="ml-1 text-indigo-400 hover:underline">↗</a>}
+                                </div>
+                              )}
+                            </div>
+                          )}
+
+                          {/* Right: Performance */}
+                          {hasPerf && (
+                            <div className="space-y-3">
+
+                              {selectedDistrict.nicheGrade && (
+                                <div className="flex items-center gap-3">
+                                  <div className={`text-2xl font-extrabold px-3 py-1 rounded-lg ${gradeColor(selectedDistrict.nicheGrade)}`}>
+                                    {selectedDistrict.nicheGrade}
+                                  </div>
+                                  <div>
+                                    <div className="text-xs font-semibold text-gray-700">Niche Overall Grade</div>
+                                    {selectedDistrict.nicheSrc && (
+                                      <a href={selectedDistrict.nicheSrc} target="_blank" rel="noreferrer"
+                                         className="text-xs text-indigo-500 hover:underline">View on Niche ↗</a>
+                                    )}
+                                  </div>
+                                </div>
+                              )}
+
+                              {selectedDistrict.kindergartenReadiness && (
+                                <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                                  <div className="text-xs font-semibold text-green-700 mb-0.5">📊 Kindergarten Readiness</div>
+                                  <div className="text-sm text-green-800">{selectedDistrict.kindergartenReadiness}</div>
+                                  {selectedDistrict.kindergartenReadinessSrc && (
+                                    <a href={selectedDistrict.kindergartenReadinessSrc} target="_blank" rel="noreferrer"
+                                       className="text-xs text-green-600 hover:underline mt-0.5 inline-block">Source ↗</a>
+                                  )}
+                                </div>
+                              )}
+
+                              {/* Outreach angle derived from demographics */}
+                              {ellPct != null && ellPct >= 15 && (
+                                <div className="bg-orange-50 border border-orange-200 rounded-lg p-3">
+                                  <div className="text-xs font-semibold text-orange-700 mb-1">💡 Outreach angle</div>
+                                  <p className="text-xs text-orange-700 leading-relaxed">
+                                    {ellPct}% of students are English Language Learners.
+                                    Lead with brightwheel's multilingual family communication
+                                    (Spanish, Portuguese, Mandarin, and 10+ other languages)
+                                    as a key differentiator — few competitors match this.
+                                  </p>
+                                </div>
+                              )}
+
+                              {frlPct != null && frlPct >= 50 && (
+                                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                                  <div className="text-xs font-semibold text-blue-700 mb-1">💡 Funding angle</div>
+                                  <p className="text-xs text-blue-700 leading-relaxed">
+                                    {frlPct}% FRL rate suggests Title I eligibility.
+                                    Pitch brightwheel as a platform that supports federal
+                                    reporting requirements and maximises grant compliance.
+                                  </p>
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })()}
+
                   {(selectedDistrict.recentNews?.length > 0) && (
                     <div className="col-span-2">
                       <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Recent News</h3>
